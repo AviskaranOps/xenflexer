@@ -21,7 +21,7 @@ const Signup = () => {
     e.preventDefault();
     try{
       const response = await axios.post(
-        "http://172.183.187.73/api/register/",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/api/register/",
         {
           username,
           email,

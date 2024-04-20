@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://172.183.187.73/api/login/",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/api/login/",
         {
           username,
           password
