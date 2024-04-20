@@ -37,7 +37,7 @@ module.exports = {
         gray: "#475467",
         gray900: "#101828",
         table: "#777a7e",
-        // gray: "#D1D1D1",
+        gray: "#D1D1D1",
         lightGreen: "#7B964A",
         green: "#53783B",
         cycle: "#7F56D9",
