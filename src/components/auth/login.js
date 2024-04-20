@@ -18,6 +18,7 @@ const Login = () => {
     e.preventDefault();
     if(email === 'admin@xenspire.com' && password === 'Admin@123') {
       message.success("LogedIn successfully");
+      localStorage.setItem('token', '123eewfieje320382092rwije');
       navigate('/userProfile');
 
     }
