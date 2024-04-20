@@ -1,0 +1,217 @@
+.form_row {
+    display: flex;
+    flex-direction: row;
+
+    >div {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .form_col {
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .logo_wrap {
+        text-align: center;
+        max-width: 300px;
+        margin: 0 auto;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .image_col {
+        background: linear-gradient(180deg, rgba(123, 150, 74, 1) 0%, rgba(123, 150, 74, 1) 100%);
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 50vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px;
+        text-align: center;
+
+        .image_wrap {
+            max-width: 500px;
+            margin: 0 auto;
+
+            img {
+                width: 100%;
+            }
+
+            @media (max-width: 1600px) {
+                max-width: 400px;
+            }
+
+            @media (max-width: 1400px) {
+                max-width: 320px;
+            }
+        }
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            right: 0px;
+            top: 0;
+            width: 10vw;
+            height: 8vw;
+            background-position: bottom;
+            background-image: url(../../assets/images/line-pattern.svg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        &::after {
+            top: auto;
+            bottom: 0;
+            left: 0;
+            right: auto;
+        }
+
+        .content_wrap {
+            color: #fff;
+            margin-top: -10px;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 500;
+            max-width: 550px;
+
+            @media (max-width: 1400px) {
+                font-size: 12px;
+            }
+
+            h3 {
+                font-size: 20px;
+                font-weight: 500;
+                margin-bottom: 5px;
+
+                @media (max-width: 1400px) {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+
+    .form_wrapper {
+        max-width: 360px;
+        min-height: calc(100vh - 150px);
+        padding-bottom: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+
+        .section_title {
+            color: #53783B;
+            font-size: 26px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        form {
+            width: 100%;
+
+        }
+
+        .sub_title {
+            font-size: 16px;
+            color: #008080;
+        }
+
+        .title_wrap {
+            margin-bottom: 32px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #344054;
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .remember_wrap {
+            input {
+                height: 16px;
+                width: 16px;
+            }
+        }
+
+        .forgot_wrap a {
+            color: #7B964A;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .forgot_wrap a:hover {
+            text-decoration: underline;
+        }
+
+        .remember_wrap label {
+            display: inline-block;
+            margin-left: 4px;
+            vertical-align: middle;
+            margin-bottom: 0;
+            margin-top: -5px;
+        }
+
+        .form_group_row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form_group {
+            margin-bottom: 20px;
+
+            button {
+                width: 100%;
+                display: block;
+                padding: 12px 20px;
+                font-size: 16px;
+                color: #fff;
+                border: none;
+                background-color: #53783B;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 300ms ease-in-out;
+
+            }
+
+            button:hover {
+                background-color: #7B964A;
+            }
+
+            input[type="email"],
+            input[type="password"] {
+                height: 44px;
+                padding: 10px 14px;
+                color: #344054;
+                width: 100%;
+                border: 1px solid #D0D5DD;
+                border-radius: 8px;
+            }
+
+            .form_text {
+                text-align: center;
+                display: block;
+                color: #008080;
+                font-size: 17px;
+                margin-top: 32px;
+
+                a {
+                    color: #53783B;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
