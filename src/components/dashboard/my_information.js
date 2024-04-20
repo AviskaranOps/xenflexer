@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
+import axios from "axios";
 
 export const My_Information = ({ next }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
@@ -24,14 +25,27 @@ export const My_Information = ({ next }) => {
     "Kelly Snyder",
   ];
 
-  const handleClick = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("My_Information");
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/information/",
+        { hearAboutUs, country, xenspire, email, no, project, doYouWant }
+      );
+
+      if (response.status === 200) {
+        console.log("user info save successfully");
+      } else {
+        console.log("info save failed");
+      }
+    } catch (error) {
+      console.error("info save error:", error.message);
+    }
   };
 
   return (
     <div>
-      <form className="mx-40" onSubmit={handleClick}>
+      <form className="mx-40" onSubmit={handleSubmit}>
         <div className="grid grid-flow-col justify-between items-center">
           <FormLabel style={{ color: "#344054" }}>
             How did you hear about Us?

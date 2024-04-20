@@ -7,6 +7,11 @@ import Login  from './components/auth/login'
 import Signup from './components/auth/signup';
 import Forgot_Pass from './components/auth/forgot_pass';
 import PrivateRoute from './components/auth/PrivateRoute';
+import { DashboardTimeSheet } from './components/dashboard/dashboardTimeSheet';
+import { Approval } from './components/admin/approval';
+import { TimeSheet } from './components/admin/timesheet';
+import { Home } from './components/dashboard/home';
+
 
 function App() {
  
@@ -20,7 +25,10 @@ function App() {
         <Route path="" element={<PrivateRoute/>}>
           <Route path="signup" element={<Signup />} />
           <Route path="forgotPass" element={<Forgot_Pass />} />
-          <Route path="userProfile" element={<DashBoard/>}/>
+          <Route path="userProfile" element={<Home/>}/>
+          <Route path="dashboard" element={<DashboardTimeSheet />} />
+          <Route path="adminTimesheet" element={<TimeSheet />} />
+          <Route path="approval" element={<Approval />} />
           <Route path="*" element={<Navigate to="login" replace />} />
         </Route>
       </Routes>

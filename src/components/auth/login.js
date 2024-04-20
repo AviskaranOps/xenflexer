@@ -4,6 +4,7 @@ import logo from "../../assets/images/app-logo.png";
 import loginImage from "../../assets/images/login-app-icon.png";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from 'antd';
+import axios  from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,19 +15,31 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const username = email;
     e.preventDefault();
-    if(email === 'admin@xenspire.com' && password === 'Admin@123') {
-      message.success("LogedIn successfully");
-      localStorage.setItem('token', '123eewfieje320382092rwije');
-      navigate('/userProfile');
+    try {
+      const response = await axios.post(
+        "http://172.183.187.73/api/login/",
+        {
+          username,
+          password
+        }
+      );
+      if (response.status === 200) {
+        console.log(response.data);
+        console.log("user experience save successfully");
+        localStorage.setItem('token', response.data.token);
+        message.success("LogedIn successfully");
+        navigate('/userProfile');
 
+      } else {
+        message.error("Login failed");
+        console.log("experience save failed");
+      }
+    } catch (error) {
+      console.error("experience save error:", error.message);
     }
-    else{
-      message.error("Login failed");
-    }
-    console.log("Email:", email);
-    console.log("Password:", password);
   };
 
   return (

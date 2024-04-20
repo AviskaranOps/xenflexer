@@ -2,22 +2,47 @@ import React, { useState } from "react";
 import styles from "./signup.module.css";
 import logo from "../../assets/images/app-logo.png";
 import loginImage from "../../assets/images/login-app-icon.png";
+import { Link, useNavigate } from "react-router-dom";
+import { message } from 'antd';
+import axios  from "axios";
 
 const Signup = () => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleNameChange = (e) => setName(e.target.value);
+  const handleNameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
 
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try{
+      const response = await axios.post(
+        "http://172.183.187.73/api/register/",
+        {
+          username,
+          email,
+          password
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log(response.data);
+        console.log("user experience save successfully");
+        message.success("register successfully");
+        navigate('/signin');
+
+      } else {
+        message.error("register failed");
+        console.log("experience save failed");
+      }
+    } catch (error) {
+      console.log(error.message);
+      message.error(error.response.data.username[0]);
+    }
   };
 
   return (
@@ -41,7 +66,7 @@ const Signup = () => {
                         type="text"
                         id="name"
                         placeholder="Enter your name"
-                        value={name}
+                        value={username}
                         onChange={handleNameChange}
                       />
                     </div>

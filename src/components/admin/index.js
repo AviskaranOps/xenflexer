@@ -1,18 +1,18 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Footer from "../widgets/footer";
-import { Home } from "./home";
+import { TimeSheet } from "./timesheet";
 import { SideNav } from "../widgets/sidenav";
-import { DashboardTimeSheet } from "./dashboardTimeSheet";
+import { Approval } from "./approval";
 
-export const DashBoard = ({ setUser, email }) => {
+export const Admin = ({ setUser, email }) => {
   return (
     <div className="min-h-screen bg-white">
       <SideNav setUser={setUser} email={email} />
-      <div className="ml-72 border-cyan-500 ">
+      <div className="ml-72">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="dashboard" element={<DashboardTimeSheet />} />
+          <Route path="/" element={<TimeSheet />} />
+          <Route path="approval" element={<Approval />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

@@ -12,6 +12,8 @@ import { My_Experience } from "./my_experience";
 import { My_Information } from "./my_information";
 import { Upload_Document } from "./upload_document";
 import { Volantary_Disclosures } from "./volantary_disclosures";
+import { SideNav } from "../widgets/sidenav";
+import Footer  from "../widgets/footer";
 
 const steps = [
   "My Information",
@@ -102,80 +104,86 @@ export function Home() {
   }
 
   return (
-    <div className="pb-20">
-      <div className="py-10">
-        <Stepper
-          activeStep={activeStep}
-          alternativeLabel
-          connector={<QontoConnector />}>
-          {steps.map((label, index) => {
-            const labelProps = {};
+    <div className="min-h-screen bg-white">
+      <SideNav/>
+      <div className="ml-72 border-cyan-500 ">
+        <div className="pb-20">
+          <div className="py-10">
+            <Stepper
+              activeStep={activeStep}
+              alternativeLabel
+              connector={<QontoConnector />}>
+              {steps.map((label, index) => {
+                const labelProps = {};
 
-            if (index === 0) {
-              labelProps.optional = (
-                <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                  Name and Email
-                </Typography>
-              );
-            }
-            if (index === 1) {
-              labelProps.optional = (
-                <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                  Your Experiences
-                </Typography>
-              );
-            }
-            if (index === 2) {
-              labelProps.optional = (
-                <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                  Start Collaborating
-                </Typography>
-              );
-            }
-            if (index === 3) {
-              labelProps.optional = (
-                <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                  Automatic Sharing
-                </Typography>
-              );
-            }
+                if (index === 0) {
+                  labelProps.optional = (
+                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
+                      Name and Email
+                    </Typography>
+                  );
+                }
+                if (index === 1) {
+                  labelProps.optional = (
+                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
+                      Your Experiences
+                    </Typography>
+                  );
+                }
+                if (index === 2) {
+                  labelProps.optional = (
+                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
+                      Start Collaborating
+                    </Typography>
+                  );
+                }
+                if (index === 3) {
+                  labelProps.optional = (
+                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
+                      Automatic Sharing
+                    </Typography>
+                  );
+                }
 
-            return (
-              <Step key={label}>
-                <StepLabel StepIconComponent={QontoStepIcon} {...labelProps}>
-                  {label}
-                </StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
+                return (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={QontoStepIcon} {...labelProps}>
+                      {label}
+                    </StepLabel>
+                  </Step>
+                );
+              })}
+            </Stepper>
+          </div>
+
+          {/* <React.Fragment>
+            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}>
+                Back
+              </Button>
+              <Box sx={{ flex: "1 1 auto" }} />
+              {isStepOptional(activeStep) && (
+                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                  Skip
+                </Button>
+              )}
+
+              <Button onClick={handleNext}>
+                {activeStep === steps.length - 1 ? "Finish" : "Next"}
+              </Button>
+            </Box>
+          </React.Fragment> */}
+          <div>
+            <Show_Fragment />
+          </div>
+        </div>
       </div>
-
-      {/* <React.Fragment>
-        <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-        <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-          <Button
-            color="inherit"
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            sx={{ mr: 1 }}>
-            Back
-          </Button>
-          <Box sx={{ flex: "1 1 auto" }} />
-          {isStepOptional(activeStep) && (
-            <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-              Skip
-            </Button>
-          )}
-
-          <Button onClick={handleNext}>
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-          </Button>
-        </Box>
-      </React.Fragment> */}
-      <div>
-        <Show_Fragment />
-      </div>
+      <Footer />
     </div>
   );
 }
