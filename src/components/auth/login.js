@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./login.module.css";
 import logo from "../../assets/images/app-logo.png";
 import loginImage from "../../assets/images/login-app-icon.png";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from 'antd';
 import axios  from "axios";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +15,14 @@ const Login = () => {
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('token');
+    console.log(isAuthenticated);
+    if(isAuthenticated) {
+      navigate('/userProfile');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     const username = email;
