@@ -1,5 +1,5 @@
 import React from "react";
-import { Main } from "./main";
+import Main  from "./main";
 import { Values } from "./values";
 import { Feature } from "./feature";
 import { Benefit } from "./benefits";

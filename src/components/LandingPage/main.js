@@ -6,7 +6,7 @@ import line from "../../assets/images/Line pattern.png";
 import profile from "../../assets/images/Untitled design (5) 1.png";
 import { Link, useNavigate } from "react-router-dom";
 
-export const Main = () => {
+const Main = () => {
 
   const navigate = useNavigate();
 
@@ -170,3 +170,6 @@ export const Main = () => {
     </div>
   );
 };
+
+
+export default Main;

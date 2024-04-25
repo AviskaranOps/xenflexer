@@ -15,24 +15,52 @@ import mp4 from "../../assets/images/mp4-icon.png";
 import fig from "../../assets/images/fig-icon.png";
 import docx from "../../assets/images/docx-icon.png";
 import axios from "axios";
+import { useEffect } from "react";
 
 export const Upload_Document = ({ next }) => {
-  const [resume, setResume] = React.useState("");
-  const [certificate, setCretificate] = React.useState("");
-  const [proof, setProf] = React.useState("");
-  const [tax, setTax] = React.useState("");
-  const [agreement, setAgreement] = React.useState("");
+  const [resume, setResume] = React.useState();
+  const [certificate, setCretificate] = React.useState();
+  const [proof, setProf] = React.useState();
+  const [tax, setTax] = React.useState();
+  const [agreement, setAgreement] = React.useState();
+
+
+  useEffect( () => {
+    const userId = 1;
+    axios.get("https://xenflexer.northcentralus.cloudapp.azure.com/documents?userId="+userId).then(response => {
+      if(response.status === 200){
+        setResume(response.data.resume);
+        setCretificate(response.data.certificate);
+        setProf(response.data.proof);
+        setTax(response.data.tax);
+        setAgreement(response.data.agreement);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("resume", resume);
+    formData.append("certificate", certificate);
+    formData.append("proof", proof);
+    formData.append("tax", tax);
+    formData.append("agreement", agreement);
+
     try {
-      const response = await axios.post("http://localhost:3000/api/document/", {
-        resume,
-        certificate,
-        proof,
-        tax,
-        agreement,
-      });
+      const response = await axios.post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/documents/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 200) {
         console.log("user document save successfully");
@@ -79,7 +107,7 @@ export const Upload_Document = ({ next }) => {
             Upload your Documents
           </text>
         </div>
-        <div className="mt-3  border border-app-border rounded-md ">
+        <div className="mt-3  border border-app-border rounded-md max-h-96 overflow-y-auto">
           <Table aria-label="customized table">
             <TableHead>
               <TableRow>
@@ -105,8 +133,12 @@ export const Upload_Document = ({ next }) => {
                   <div className="grid grid-flow-col justify-start">
                     <img src={pdf} alt="pdf logo" />
                     <div className="grid grid-flow-row ml-5">
-                      <text style={{ color: "#101828" }}>Resume</text>
-                      <text style={{ color: "#475467" }}>200 KB</text>
+                      <text style={{ color: "#101828" }}>
+                        {resume ? resume.name : "Resume"}
+                      </text>
+                      <text style={{ color: "#475467" }}>
+                        {resume ? resume.size : "0"} KB
+                      </text>
                     </div>
                   </div>
                 </TableCell>
@@ -123,7 +155,7 @@ export const Upload_Document = ({ next }) => {
                     Upload
                     <VisuallyHiddenInput
                       type="file"
-                      onChange={(e) => setResume(e.target.value)}
+                      onChange={(e) => setResume(e.target.files[0])}
                     />
                   </Button>
                 </TableCell>
@@ -137,8 +169,12 @@ export const Upload_Document = ({ next }) => {
                   <div className="grid grid-flow-col justify-start">
                     <img src={jpg} alt="jpg logo" />
                     <div className="grid grid-flow-row ml-5">
-                      <text style={{ color: "#101828" }}>Certificates</text>
-                      <text style={{ color: "#475467" }}>720 KB</text>
+                      <text style={{ color: "#101828" }}>
+                        {certificate ? certificate.name : "Certificates"}
+                      </text>
+                      <text style={{ color: "#475467" }}>
+                        {certificate ? certificate.size : "0"} KB
+                      </text>
                     </div>
                   </div>
                 </TableCell>
@@ -155,7 +191,7 @@ export const Upload_Document = ({ next }) => {
                     Upload
                     <VisuallyHiddenInput
                       type="file"
-                      onChange={(e) => setCretificate(e.target.value)}
+                      onChange={(e) => setCretificate(e.target.files[0])}
                     />
                   </Button>
                 </TableCell>
@@ -170,9 +206,11 @@ export const Upload_Document = ({ next }) => {
                     <img src={mp4} alt="mp4 logo" />
                     <div className="grid grid-flow-row ml-5">
                       <text style={{ color: "#101828" }}>
-                        Proof of Identification
+                        {proof ? proof.name : "Proof of Identification"}
                       </text>
-                      <text style={{ color: "#475467" }}>16 MB</text>
+                      <text style={{ color: "#475467" }}>
+                        {proof ? proof.size : "0"} KB
+                      </text>
                     </div>
                   </div>
                 </TableCell>
@@ -189,7 +227,7 @@ export const Upload_Document = ({ next }) => {
                     Upload
                     <VisuallyHiddenInput
                       type="file"
-                      onChange={(e) => setProf(e.target.value)}
+                      onChange={(e) => setProf(e.target.files[0])}
                     />
                   </Button>
                 </TableCell>
@@ -203,8 +241,12 @@ export const Upload_Document = ({ next }) => {
                   <div className="grid grid-flow-col justify-start">
                     <img src={fig} alt="fig logo" />
                     <div className="grid grid-flow-row ml-5">
-                      <text style={{ color: "#101828" }}>Tax Document</text>
-                      <text style={{ color: "#475467" }}>4.2 MB</text>
+                      <text style={{ color: "#101828" }}>
+                        {tax ? tax.name : "Tax Document"}
+                      </text>
+                      <text style={{ color: "#475467" }}>
+                        {tax ? tax.size : "0"} KB
+                      </text>
                     </div>
                   </div>
                 </TableCell>
@@ -221,7 +263,7 @@ export const Upload_Document = ({ next }) => {
                     Upload
                     <VisuallyHiddenInput
                       type="file"
-                      onChange={(e) => setTax(e.target.value)}
+                      onChange={(e) => setTax(e.target.files[0])}
                     />
                   </Button>
                 </TableCell>
@@ -235,8 +277,12 @@ export const Upload_Document = ({ next }) => {
                   <div className="grid grid-flow-col justify-start">
                     <img src={docx} alt="docx logo" />
                     <div className="grid grid-flow-row ml-5">
-                      <text style={{ color: "#101828" }}>Agreement</text>
-                      <text style={{ color: "#475467" }}>400 KB</text>
+                      <text style={{ color: "#101828" }}>
+                        {agreement ? agreement.name : "Agreement"}
+                      </text>
+                      <text style={{ color: "#475467" }}>
+                        {agreement ? agreement.size : "0"} KB
+                      </text>
                     </div>
                   </div>
                 </TableCell>
@@ -253,7 +299,7 @@ export const Upload_Document = ({ next }) => {
                     Upload
                     <VisuallyHiddenInput
                       type="file"
-                      onChange={(e) => setAgreement(e.target.value)}
+                      onChange={(e) => setAgreement(e.target.files[0])}
                     />
                   </Button>
                 </TableCell>

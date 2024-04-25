@@ -2,46 +2,37 @@ import React, { useState } from "react";
 import styles from "./signup.module.css";
 import logo from "../../assets/images/app-logo.png";
 import loginImage from "../../assets/images/login-app-icon.png";
-import { Link, useNavigate } from "react-router-dom";
-import { message } from 'antd';
-import axios  from "axios";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleNameChange = (e) => setUsername(e.target.value);
+  const handleNameChange = (e) => setName(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      const response = await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/api/register/",
-        {
-          username,
-          email,
-          password
-        }
-      );
-      console.log(response);
-      if (response.status === 200) {
-        console.log(response.data);
-        console.log("user experience save successfully");
-        message.success("register successfully");
-        navigate('/signin');
+    try {
+      const username = name;
+      const response = await axios.post("http://localhost:3000/api/register/", {
+        username,
+        email,
+        password,
+      });
 
+      if (response.status === 200) {
+        console.log("user register successfully");
+        navigate("/login");
       } else {
-        message.error("register failed");
-        console.log("experience save failed");
+        console.log("registration failed");
       }
     } catch (error) {
-      console.log(error.message);
-      message.error(error.response.data.username[0]);
+      console.error("Signup error:", error.message);
     }
   };
 
@@ -66,7 +57,7 @@ const Signup = () => {
                         type="text"
                         id="name"
                         placeholder="Enter your name"
-                        value={username}
+                        value={name}
                         onChange={handleNameChange}
                       />
                     </div>

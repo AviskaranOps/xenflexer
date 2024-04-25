@@ -3,6 +3,7 @@ import styles from "./forgot_pass.module.css";
 import logo from "../../assets/images/app-logo.png";
 import loginImage from "../../assets/images/login-app-icon.png";
 import icon from "../../assets/images/Featured icon.png";
+import axios from "axios";
 
 const Forgot_Pass = () => {
   const [password, setPassword] = useState("");
@@ -10,11 +11,26 @@ const Forgot_Pass = () => {
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfimPassword(e.target.value);
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add login logic here (e.g., API call)
-    console.log("Password:", password);
-    console.log("Confirm Password:", confimrPassword);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/forgotpassword/",
+        {
+          password,
+          confimrPassword,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("change password successfully");
+      } else {
+        console.log("change password failed");
+      }
+    } catch (error) {
+      console.error("change password error:", error.message);
+    }
   };
 
   return (

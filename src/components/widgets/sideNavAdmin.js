@@ -1,32 +1,30 @@
-import React from "react";
-import {
-  IconButton,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import { LogoutOutlined } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import * as React from "react";
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
-import avtar from "../../assets/images/Avatar.png";
+import { LogoutOutlined } from "@mui/icons-material";
+import logo from "../../assets/images/Logo.png";
+import Footer from "./footer";
 import home from "../../assets/images/home-icon.png";
 import profile from "../../assets/images/profile-icon.png";
 import time from "../../assets/images/timesheets-icon.png";
-import logo from "../../assets/images/Logo.png";
-import Footer from "./footer";
+import avtar from "../../assets/images/Avatar.png";
+import { useNavigate } from "react-router-dom";
 
-export const SideNav = ({ setUser, email }) => {
-  const [expanded, setExpanded] = React.useState(false);
+export const SideNavAdmin = ({ setUser, email }) => {
   const navigation = useNavigate();
-
   const [open, setOpen] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
   const [data, setData] = React.useState([]);
+
 
   const handleChange = () => {
     setExpanded(!expanded);
@@ -83,14 +81,14 @@ export const SideNav = ({ setUser, email }) => {
   }));
 
   const drawer_Data = [
-    { name: "Home", icon: home, path: "/user/onboard" },
-    { name: "Timesheets", icon: time, path: "/user/timesheet" },
+    { name: "Home", icon: home, path: "/admin" },
+    { name: "Profile", icon: profile, path: "/admin/profile" },
   ];
 
   const drawer_Data_new = [
-    { name: "Home", icon: home, path: "/user/onboard" },
-    { name: "Timesheets", icon: time, path: "/user/timesheet" },
-    { name: "Profile", icon: profile, path: "/user/profile" },
+    { name: "Home", icon: home, path: "/admin" },
+    { name: "Profile", icon: profile, path: "/admin/profile" },
+    { name: "Timesheets", icon: time, path: "/admin/approval" },
   ];
 
   React.useEffect(() => {
@@ -101,15 +99,16 @@ export const SideNav = ({ setUser, email }) => {
     }
   }, [open]);
 
+  const name = [
+    { name: "Approve", path: "/admin/approval" },
+    { name: "Create", path: "/admin/create" },
+  ];
+
   const handleDrawer = () => {
     setOpen(!open);
   };
-  const profile_name = [
-    { name: "Documents", path: "/" },
-    { name: "Benifits", path: "/" },
-    { name: "Payroll", path: "/" },
-    { name: "Profile Details", path: "/profile" },
-  ];
+
+  
 
   return (
     <>
@@ -142,7 +141,6 @@ export const SideNav = ({ setUser, email }) => {
                 }}
               />
             </ListItem>
-
             {data.map((data, index) => (
               <ListItemButton
                 key={index}
@@ -165,11 +163,10 @@ export const SideNav = ({ setUser, email }) => {
                 </ListItemIcon>
                 <ListItemText
                   primary={data.name}
-                  sx={{ opacity: open ? 1 : 0 }}
+                  sx={{ opacity: open ? 1 : 0, ":hover": { color: "white" } }}
                 />
               </ListItemButton>
             ))}
-
             {open && (
               <ListItemButton
                 sx={{
@@ -187,18 +184,17 @@ export const SideNav = ({ setUser, email }) => {
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
                   }}>
-                  <img src={profile} alt="logo" />
+                  <img src={time} alt="logo" />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Profile"}
+                  primary={"TimeSheet"}
                   sx={{ ":hover": { color: "white" } }}
                 />
               </ListItemButton>
             )}
-
             {open &&
               expanded &&
-              profile_name.map((data, index) => (
+              name.map((data, index) => (
                 <ListItemButton
                   key={index}
                   sx={{

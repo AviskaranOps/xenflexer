@@ -12,12 +12,13 @@ import { My_Experience } from "./my_experience";
 import { My_Information } from "./my_information";
 import { Upload_Document } from "./upload_document";
 import { Volantary_Disclosures } from "./volantary_disclosures";
+import { My_Education } from "./my_education";
 import { SideNav } from "../widgets/sidenav";
-import Footer  from "../widgets/footer";
 
 const steps = [
   "My Information",
   "My Experience",
+  "My Education",
   "Upload Documents",
   "Voluntary Disclosures",
 ];
@@ -36,8 +37,10 @@ export function Home() {
       case 1:
         return <My_Experience next={handleNext} />;
       case 2:
-        return <Upload_Document next={handleNext} />;
+        return <My_Education next={handleNext} />;
       case 3:
+        return <Upload_Document next={handleNext} />;
+      case 4:
         return <Volantary_Disclosures />;
       default:
         break;
@@ -133,11 +136,18 @@ export function Home() {
                 if (index === 2) {
                   labelProps.optional = (
                     <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                      Start Collaborating
+                      Your Education
                     </Typography>
                   );
                 }
                 if (index === 3) {
+                  labelProps.optional = (
+                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
+                      Start Collaborating
+                    </Typography>
+                  );
+                }
+                if (index === 4) {
                   labelProps.optional = (
                     <Typography variant="caption" sx={{ color: "#7B964A" }}>
                       Automatic Sharing
@@ -183,7 +193,6 @@ export function Home() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

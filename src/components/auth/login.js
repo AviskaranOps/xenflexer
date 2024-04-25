@@ -17,10 +17,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('token');
+    const isAuthenticated = JSON.parse(localStorage.getItem('token'));
     console.log(isAuthenticated);
     if(isAuthenticated) {
-      navigate('/userProfile');
+      if(isAuthenticated.role === 'admin') {
+        navigate('/admin')
+      }
+      if(isAuthenticated.role === 'user') {
+        navigate('/user/onboard')
+      }
     }
   }, []);
 
@@ -28,26 +33,59 @@ const Login = () => {
     const username = email;
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/api/login/",
-        {
-          username,
-          password
-        }
-      );
-      if (response.status === 200) {
-        console.log(response.data);
-        console.log("user experience save successfully");
-        localStorage.setItem('token', response.data.token);
-        message.success("LogedIn successfully");
-        navigate('/userProfile');
+      // const response = await axios.post(
+      //   "https://xenflexer.northcentralus.cloudapp.azure.com/api/login/",
+      //   {
+      //     username,
+      //     password
+      //   }
+      // );
+      // console.log(response);
+      // if (response.status === 200) {
+      //   console.log(response.data);
+      //   localStorage.setItem('token', response.data.token);
+      //   message.success("LogedIn successfully");
+      //   navigate('/user/onboard');
 
-      } else {
-        message.error("Login failed");
-        console.log("experience save failed");
+      // } else {
+      //   message.error("Login failed");
+      // }
+      if(email === "admin@xenspire.com" && password == "Admin@123"){
+        const token = {
+          userId : 1,
+          username : 'Ram',
+          email : 'admin@xenspire.com',
+          token : '103ujfwioej3290rjfioejafweujfefoifmoijf9j',
+          role : 'admin'
+        }
+        console.log(token);
+        localStorage.setItem("token", JSON.stringify(token));
+        message.success("LogedIn successfully");
+      }
+      if(email === "user@xenspire.com" && password == "user@123"){
+        const token = {
+          userId : 1,
+          username : 'Nilesh',
+          email : 'user@xenspire.com',
+          token : '103ujfwioej3290rjfioejafweujfefoifmoijf9j',
+          role : 'user'
+        }
+        console.log(token);
+        localStorage.setItem("token", JSON.stringify(token));
+        message.error("Login successfull");
+      }
+
+      const user = JSON.parse(localStorage.getItem("token"));
+      console.log("user  = ", user);
+      if(user.role === 'admin') {
+
+        navigate('/admin')
+      }
+      if(user.role === 'user') {
+        navigate('/user/onboard')
       }
     } catch (error) {
-      console.error("experience save error:", error.message);
+      console.error(error.message);
     }
   };
 

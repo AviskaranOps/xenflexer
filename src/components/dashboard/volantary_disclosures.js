@@ -8,9 +8,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const Volantary_Disclosures = () => {
-  const [update, setUpdate] = React.useState("");
+  const [recieveUpdates, setRecieveUpdates] = React.useState("");
   const [notification, setNotification] = React.useState();
   const navigation = useNavigate();
 
@@ -18,8 +19,8 @@ export const Volantary_Disclosures = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/volantary/",
-        { update, notification }
+        "https://xenflexer.northcentralus.cloudapp.azure.com/disclosures/",
+        { recieveUpdates, notification }
       );
 
       if (response.status === 200) {
@@ -44,8 +45,8 @@ export const Volantary_Disclosures = () => {
           <RadioGroup
             aria-labelledby="update"
             name="update"
-            value={update}
-            onChange={(e) => setUpdate(e.target.value)}>
+            value={recieveUpdates}
+            onChange={(e) => setRecieveUpdates(e.target.value)}>
             <FormControlLabel
               value="yes"
               control={<Radio color="success" />}

@@ -11,6 +11,12 @@ import { DashboardTimeSheet } from './components/dashboard/dashboardTimeSheet';
 import { Approval } from './components/admin/approval';
 import { TimeSheet } from './components/admin/timesheet';
 import { Home } from './components/dashboard/home';
+import { AdminHome } from './components/admin/adminhome';
+import { CreateTimeSheet } from './components/admin/createTimeSheet';
+import { PendingApproval } from './components/admin/pendingApproval';
+import { Logout } from './components/auth/logout';
+import { AdminProfile } from './components/admin/adminprofile';
+import { Profile } from './components/dashboard/profile';
 
 
 function App() {
@@ -19,16 +25,22 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="website" replace />} />
-        <Route path="website" element={<LandingPage />} />
+        <Route path="/" element={<Navigate to="login" replace />} />
+        {/* <Route path="website" element={<LandingPage />} /> */}
         <Route path="login" element={<Login />} />
         <Route path="" element={<PrivateRoute/>}>
+          <Route path='logout' element={<Logout/>}/>
           <Route path="signup" element={<Signup />} />
           <Route path="forgotPass" element={<Forgot_Pass />} />
-          <Route path="userProfile" element={<Home/>}/>
-          <Route path="dashboard" element={<DashboardTimeSheet />} />
-          <Route path="adminTimesheet" element={<TimeSheet />} />
-          <Route path="approval" element={<Approval />} />
+          <Route path="user/onboard" element={<Home/>}/>
+          <Route path="user/profile" element={<Profile/>}/>
+          <Route path="user/timesheet" element={<DashboardTimeSheet />} />
+          <Route path='admin' element={<AdminHome/>}/>
+          <Route path='admin/profile' element={<AdminProfile/>}/>
+          <Route path="admin/timesheet" element={<TimeSheet />} />
+          <Route path="admin/approval" element={<Approval />} />
+          <Route path='admin/create' element={<CreateTimeSheet/>}/>
+          <Route path='admin/pendingApproval' element={<PendingApproval/>}/>
           <Route path="*" element={<Navigate to="login" replace />} />
         </Route>
       </Routes>
