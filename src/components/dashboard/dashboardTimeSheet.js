@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   FormLabel,
+  TableContainer,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CloudUploadOutlined } from "@mui/icons-material";
@@ -39,10 +40,10 @@ export const DashboardTimeSheet = () => {
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
     },
     "&:nth-of-type(even)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
     },
     // hide last border
     "&:last-child td, &:last-child th": {
@@ -87,10 +88,24 @@ export const DashboardTimeSheet = () => {
     setArray(newFormValues);
   };
 
+  const StyledTableHead = styled(TableHead)`
+    & .MuiTableCell-root {
+      background-color: #f9fafb;
+    }
+  `;
+
+  const StyledTableContainer = styled(TableContainer)`
+    border-radius: 1rem;
+    max-height: 400px;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  `;
+
   return (
     <div className="min-h-screen bg-white">
-    <div className="flex">
-      <SideNav />
+      <div className="flex">
+        <SideNav/>
         <div className="mx-32 pt-10 pb-20 w-full">
           <div className="flex justify-center">
             <text
@@ -142,30 +157,29 @@ export const DashboardTimeSheet = () => {
           {timeSheet ? (
             <>
               {/* table submit */}
-              <div className="mt-3  border border-app-border rounded-md max-h-96 overflow-y-auto">
-                <Table aria-label="customized table">
-                  <TableHead sx={{ backgroundColor: "#53783B" }}>
+              <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+                <Table aria-label="customized table" stickyHeader>
+                  <StyledTableHead>
                     <TableRow>
-                      <TableCell style={{ fontWeight: "bold", color: "#ffffff" }}>
+                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
                         Date Range
                       </TableCell>
-                      <TableCell style={{ fontWeight: "bold", color: "#ffffff" }}>
+                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
                         Date
                       </TableCell>
-
                       <TableCell
                         align="center"
-                        style={{ fontWeight: "bold", color: "#ffffff" }}>
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Hours
                       </TableCell>
                       <TableCell
                         align="center"
-                        style={{ fontWeight: "bold", color: "#ffffff" }}>
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Status
                       </TableCell>
                       <TableCell> </TableCell>
                     </TableRow>
-                  </TableHead>
+                  </StyledTableHead>
                   <TableBody>
                     {array.map((row) => (
                       <StyledTableRow key={row.name}>
@@ -195,7 +209,7 @@ export const DashboardTimeSheet = () => {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
+              </StyledTableContainer>
               <div className="mt-6 flex justify-center">
                 <Button
                   variant="contained"
@@ -208,24 +222,24 @@ export const DashboardTimeSheet = () => {
           ) : (
             <>
               {/* table  approval */}
-              <div className="mt-3  border border-app-border rounded-md max-h-96 overflow-y-auto">
-                <Table aria-label="customized table">
-                  <TableHead sx={{ backgroundColor: "#53783B" }}>
+              <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+                <Table aria-label="customized table" stickyHeader>
+                  <StyledTableHead>
                     <TableRow>
-                      <TableCell style={{ fontWeight: "bold", color: "#ffffff" }}>
+                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
                         Date Range
                       </TableCell>
-                      <TableCell style={{ fontWeight: "bold", color: "#ffffff" }}>
+                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
                         Date
                       </TableCell>
 
                       <TableCell
                         align="center"
-                        style={{ fontWeight: "bold", color: "#ffffff" }}>
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Hours
                       </TableCell>
                     </TableRow>
-                  </TableHead>
+                  </StyledTableHead>
                   <TableBody>
                     {array.map((row, index) => (
                       <StyledTableRow key={index}>
@@ -247,7 +261,7 @@ export const DashboardTimeSheet = () => {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
+              </StyledTableContainer>
               <div className="mt-6 grid grid-flow-col justify-around">
                 <Button
                   component="label"

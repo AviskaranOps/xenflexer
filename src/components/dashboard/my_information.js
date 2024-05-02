@@ -1,8 +1,6 @@
 import React from "react";
 import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
-import { useEffect } from "react";
-
 
 export const My_Information = ({ next }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
@@ -12,7 +10,6 @@ export const My_Information = ({ next }) => {
   const [project, setProject] = React.useState("");
   const [xenspire, setXenspire] = React.useState("");
   const [doYouWant, setDoYouWant] = React.useState("");
-  //const [profileData, setProfileData] = React.useState(data);
 
   const yes_no = ["Yes", "No"];
   const names = [
@@ -28,36 +25,12 @@ export const My_Information = ({ next }) => {
     "Kelly Snyder",
   ];
 
- useEffect(() => {
-    const userId = 1;
-      axios.get("https://xenflexer.northcentralus.cloudapp.azure.com/profile?userId="+userId).then( response => {
-      console.log(response.data);
-      if(response.status === 200){
-        setHearAboutUs(response.data.how_did_you_hear_about_us);
-        setCountry(response.data.country);
-        setEmail(response.data.setEmail);
-        setNo(response.data.mobile);
-        setProject(response.data.working_on_project);
-        setXenspire(response.data.xenspire_is_the_employer);
-        setDoYouWant(response.data.do_you_want_xensprie_to_be);
-      }
-    })
-    .catch(error => {
-      console.error("experience save error:", error.message);
-    })
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const mobile = no;
-      const how_did_you_hear_about_us = hearAboutUs;
-      const working_on_project = project;
-      const xenspire_is_the_employer = xenspire;
-      const do_you_want_xensprie_to_be = doYouWant;
       const response = await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/profile/",
-        { how_did_you_hear_about_us, country, xenspire_is_the_employer, email, mobile, working_on_project, do_you_want_xensprie_to_be }
+        "http://localhost:3000/api/information/",
+        { hearAboutUs, country, xenspire, email, no, project, doYouWant }
       );
 
       if (response.status === 200) {

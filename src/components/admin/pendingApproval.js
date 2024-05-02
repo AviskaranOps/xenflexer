@@ -18,9 +18,11 @@ import { styled } from "@mui/material/styles";
 import pdf from "../../assets/images/pdf-icon.png";
 import avtar from "../../assets/images/Avatar.png";
 import { Dummy_Approval, Dummy_Pending } from "../utils/dummy";
+import { useNavigate } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
 
 export const PendingApproval = () => {
+  const navigation = useNavigate();
   const [data, setData] = React.useState(Dummy_Pending);
   const [searchData, setSearchData] = React.useState([]);
   const [selected, setSelected] = React.useState([]);
@@ -29,10 +31,10 @@ export const PendingApproval = () => {
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
     },
     "&:nth-of-type(even)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
     },
     // hide last border
     "&:last-child td, &:last-child th": {
@@ -65,14 +67,16 @@ export const PendingApproval = () => {
 
   const StyledTableHead = styled(TableHead)`
     & .MuiTableCell-root {
-      background-color: #53783b;
+      background-color: #f9fafb;
     }
   `;
 
   const StyledTableContainer = styled(TableContainer)`
-    border-top-left-radius: 0.3rem;
-    border-top-right-radius: 0.3rem;
+    border-radius: 1rem;
     max-height: 400px;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   `;
 
   const statusChagehandler = (e, index) => {
@@ -89,6 +93,27 @@ export const PendingApproval = () => {
   React.useEffect(() => {
     searchHandle();
   }, [search]);
+
+  const DownloadFile = () => {
+    // const pdfUrl = URL.createObjectURL(require("../../assets/GIL Letter.pdf"));
+    const pdfUrl = require("../../assets/Dummy_Pdf.pdf");
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.download = "newPdf.pdf"; // specify the filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const returnFileSize = (number) => {
+    if (number < 1024) {
+      return `${number} bytes`;
+    } else if (number >= 1024 && number < 1048576) {
+      return `${(number / 1024).toFixed(1)} KB`;
+    } else if (number >= 1048576) {
+      return `${(number / 1048576).toFixed(1)} MB`;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -146,27 +171,27 @@ export const PendingApproval = () => {
           <div className="grid grid-flow-col">
             <div className="grid grid-flow-row">
               {/* table */}
-              <StyledTableContainer sx={{ borderWidth: 1 }}>
+              <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
                 <Table aria-label="customized table" stickyHeader>
                   <StyledTableHead>
                     <TableRow>
                       <TableCell></TableCell>
-                      <TableCell style={{ fontWeight: "bold", color: "#ffffff" }}>
+                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
                         Name
                       </TableCell>
                       <TableCell
                         align="center"
-                        style={{ fontWeight: "bold", color: "#ffffff" }}>
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Date
                       </TableCell>
                       <TableCell
                         align="center"
-                        style={{ fontWeight: "bold", color: "#ffffff" }}>
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Hours
                       </TableCell>
                       <TableCell
                         align="center"
-                        style={{ fontWeight: "bold", color: "#ffffff" }}>
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Status
                       </TableCell>
                     </TableRow>
@@ -217,16 +242,15 @@ export const PendingApproval = () => {
                     <div className="grid grid-flow-col">
                       <img src={pdf} alt="pdf logo" />
                       <div className="grid grid-flow-row ml-5">
-                        <text style={{ color: "#101828" }}>
-                          Receipt_January_2022.pdf
-                        </text>
-                        <text style={{ color: "#475467" }}>200 KB</text>
+                        <text style={{ color: "#101828" }}>Dummy_Pdf</text>
+                        <text style={{ color: "#475467" }}>366 KB</text>
                       </div>
                     </div>
-                    <div>
+                    <div className="items-center flex">
                       <Button
                         variant="outlined"
-                        style={{ color: "#344054", borderColor: "#D0D5DD" }}>
+                        style={{ color: "#344054", borderColor: "#D0D5DD" }}
+                        onClick={DownloadFile}>
                         Download
                       </Button>
                       <Button
@@ -235,33 +259,9 @@ export const PendingApproval = () => {
                           backgroundColor: "#53783B",
                           color: "#ffffff",
                           marginLeft: 15,
-                        }}>
-                        View
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="grid grid-flow-col justify-between border border-app-simpleBorder rounded-md p-2 m-5">
-                    <div className="grid grid-flow-col">
-                      <img src={pdf} alt="pdf logo" />
-                      <div className="grid grid-flow-row ml-5">
-                        <text style={{ color: "#101828" }}>
-                          Receipt_January_2022.pdf
-                        </text>
-                        <text style={{ color: "#475467" }}>200 KB</text>
-                      </div>
-                    </div>
-                    <div>
-                      <Button
-                        variant="outlined"
-                        style={{ color: "#344054", borderColor: "#D0D5DD" }}>
-                        Download
-                      </Button>
-                      <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#53783B",
-                          color: "#ffffff",
-                          marginLeft: 15,
+                        }}
+                        onClick={() => {
+                          navigation("/pdfview", { state: "" });
                         }}>
                         View
                       </Button>
@@ -282,7 +282,7 @@ export const PendingApproval = () => {
                       key={index}
                       className="grid grid-flow-col border border-app-gray p-2 mx-3 mb-2 rounded-md">
                       <div className="grid grid-flow-col justify-start gap-5 pl-5">
-                        <img src={avtar} alt="image" />
+                        <img src={avtar} alt="avtar" />
                         <div className="grid grid-flow-row">
                           <text>{data.timesheetName}</text>
                           <text>{data.status}</text>

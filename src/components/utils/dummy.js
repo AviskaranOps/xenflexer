@@ -345,3 +345,128 @@ export const get_Data = async () => {
     return error;
   }
 };
+
+export const Dummy_Benifits = [
+  {
+    benifits: "Immigration/Attorney Help ",
+    status: "Active",
+    effectiveDate: "2024-04-01",
+    cost: "20",
+  },
+  {
+    benifits: "Legal Plan  ",
+    status: "Processing",
+    effectiveDate: "2024-08-01",
+    cost: "26",
+  },
+  {
+    benifits: "Medical plan ",
+    status: "InActive",
+    effectiveDate: "2025-01-20",
+    cost: "13",
+  },
+  {
+    benifits: "Dental ",
+    status: "Active",
+    effectiveDate: "2024-04-01",
+    cost: "27",
+  },
+  {
+    benifits: "Immigration/Attorney Help ",
+    status: "Active",
+    effectiveDate: "2023-08-01",
+    cost: "20",
+  },
+  {
+    benifits: "Legal Plan ",
+    status: "Active",
+    effectiveDate: "2024-10-18",
+    cost: "22",
+  },
+  {
+    benifits: "Vision ",
+    status: "Processing",
+    effectiveDate: "2024-04-01",
+    cost: "24",
+  },
+  {
+    benifits: "Vision plan",
+    status: "Active",
+    effectiveDate: "2022-04-21",
+    cost: "20",
+  },
+  {
+    benifits: "Short Term",
+    status: "InActive",
+    effectiveDate: "2022-04-21",
+    cost: "20",
+  },
+  {
+    benifits: "Long Term",
+    status: "InActive",
+    effectiveDate: "2022-04-21",
+    cost: "20",
+  },
+  {
+    benifits: "Vision plan",
+    status: "Active",
+    effectiveDate: "2022-04-21",
+    cost: "20",
+  },
+  {
+    benifits: "Education Benifits",
+    status: "Processing",
+    effectiveDate: "2024-04-01",
+    cost: "24",
+  },
+  {
+    benifits: "401k Benifits",
+    status: "Active",
+    effectiveDate: "2025-06-30",
+    cost: "20",
+  },
+  {
+    benifits: "Child & Family Care",
+    status: "InActive",
+    effectiveDate: "2025-06-30",
+    cost: "20",
+  },
+  {
+    benifits: "401k Benifits",
+    status: "InActive",
+    effectiveDate: "2025-06-30",
+    cost: "20",
+  },
+  {
+    benifits: "Commuter Benefits ",
+    status: "Processing",
+    effectiveDate: "2024-04-01",
+    cost: "25",
+  },
+  {
+    benifits: "Dental ",
+    status: "Processing",
+    effectiveDate: "2026-01-10",
+    cost: "20",
+  },
+  {
+    benifits: "Commuter Benefits ",
+    status: "Active",
+    effectiveDate: "2024-12-01",
+    cost: "18",
+  },
+];
+
+export const Dummy_Payroll = [
+  { type: "Flexer Share", amount: 100, lastUpdate: "2024-04-01" },
+  { type: "Flexer Recognized Share", amount: 100, lastUpdate: "2024-04-01" },
+  { type: "Current payroll Amount", amount: 100, lastUpdate: "2024-04-01" },
+  { type: "Next payroll Amount", amount: 100, lastUpdate: "2024-04-01" },
+  { type: "Pre Payment payroll Amount", amount: 100, lastUpdate: "2024-04-01" },
+  { type: "Pre Payment Locator", amount: 100, lastUpdate: "2024-04-01" },
+  {
+    type: "Forecast with next Payroll Amount",
+    amount: 100,
+    lastUpdate: "2024-04-01",
+  },
+];

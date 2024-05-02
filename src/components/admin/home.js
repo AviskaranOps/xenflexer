@@ -25,10 +25,10 @@ export const Home = () => {
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
     },
     "&:nth-of-type(even)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
     },
     // hide last border
     "&:last-child td, &:last-child th": {
@@ -38,16 +38,18 @@ export const Home = () => {
 
   const StyledTableHead = styled(TableHead)`
     & .MuiTableCell-root {
-      background-color: #53783b;
+      background-color: #f9fafb;
     }
   `;
 
   const StyledTableContainer = styled(TableContainer)`
-    border-top-left-radius: 0.3rem;
-    border-top-right-radius: 0.3rem;
+    border-radius: 1rem;
     max-height: 400px;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   `;
-
+  // max-height: 400px;
   return (
     <div className="py-16 px-10 w-full">
       <div className="ml-10 mb-5">
@@ -63,32 +65,33 @@ export const Home = () => {
               </InputAdornment>
             ),
           }}
-          className="w-72 bg-app-ligeen"
+          className="w-72 bg-app-offWhite"
         />
       </div>
       {/* table */}
-      <StyledTableContainer sx={{ borderWidth: 1 }}>
+
+      <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
         <Table aria-label="customized table" stickyHeader>
           <StyledTableHead>
             <TableRow>
               <TableCell
                 align="center"
-                style={{ fontWeight: "bold", color: "#ffffff" }}>
+                style={{ fontWeight: "bold", color: "#475467" }}>
                 Name
               </TableCell>
               <TableCell
                 align="center"
-                style={{ fontWeight: "bold", color: "#ffffff" }}>
+                style={{ fontWeight: "bold", color: "#475467" }}>
                 Email
               </TableCell>
               <TableCell
                 align="center"
-                style={{ fontWeight: "bold", color: "#ffffff" }}>
+                style={{ fontWeight: "bold", color: "#475467" }}>
                 TimeSheet
               </TableCell>
               <TableCell
                 align="center"
-                style={{ fontWeight: "bold", color: "#ffffff" }}>
+                style={{ fontWeight: "bold", color: "#475467" }}>
                 Actions
               </TableCell>
             </TableRow>
@@ -99,15 +102,10 @@ export const Home = () => {
                 <TableCell align="center">{row.name}</TableCell>
                 <TableCell align="center">{row.email}</TableCell>
                 <TableCell align="center">{row.timesheet}</TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    backgroundColor:
-                      row.status === "Pending" ? "#FFFFFF" : "#F9FAFB",
-                  }}>
+                <TableCell align="center">
                   <a
                     onClick={() => navigation("/approval")}
-                    className="underline">
+                    className="underline hover:cursor-pointer hover:text-app-green">
                     Approve TimeSheet
                   </a>
                 </TableCell>

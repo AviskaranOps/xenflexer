@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
-import { useEffect } from "react";
 
 export const My_Education = ({ next }) => {
   const [educationData, setEducationData] = React.useState([
@@ -20,25 +19,6 @@ export const My_Education = ({ next }) => {
     "Virginia Andrews",
     "Kelly Snyder",
   ];
-
-
-  useEffect( () => {
-    const userId = 1;
-    axios.get("https://xenflexer.northcentralus.cloudapp.azure.com/education/"+userId).then( response => {
-      if(response.status === 200){
-        const educationList = response.data;
-        educationList.forEach(element => {
-          setEducationData([
-            ...educationData,
-            { school: element.school, graduation: element.graduation, field: element.field, startDate: element.startDate, endDate: element.endDate },
-          ]);
-        });
-      }
-  })
-  .catch(error => {
-    console.log(error);
-  })
-  }, []);
 
   const addEduFields = () => {
     setEducationData([
@@ -60,14 +40,12 @@ export const My_Education = ({ next }) => {
     setEducationData(newFormValues);
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(educationData);
     try {
       const response = await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/education/",
+        "http://localhost:3000/api/experiance/",
         {
           educationData,
         }

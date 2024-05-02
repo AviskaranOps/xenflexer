@@ -7,6 +7,7 @@ import { Profile } from "./profile";
 import { SideNavAdmin } from "../widgets/sidenavAdmin";
 import { CreateTimeSheet } from "./createTimeSheet";
 import { PendingApproval } from "./pendingApproval";
+import { PdfView } from "./pdfview";
 
 export const Admin = ({ setUser, email }) => {
   return (
@@ -21,6 +22,7 @@ export const Admin = ({ setUser, email }) => {
           <Route path="approval" element={<Approval />} />
           <Route path="pendingApproval" element={<PendingApproval />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="pdfview" element={<PdfView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

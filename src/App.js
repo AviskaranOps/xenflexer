@@ -17,6 +17,9 @@ import { PendingApproval } from './components/admin/pendingApproval';
 import { Logout } from './components/auth/logout';
 import { AdminProfile } from './components/admin/adminprofile';
 import { Profile } from './components/dashboard/profile';
+import { PdfView } from './components/admin/pdfview';
+import { Benifit } from './components/dashboard/benifit';
+import { Payroll } from './components/dashboard/payroll';
 
 
 function App() {
@@ -35,12 +38,15 @@ function App() {
           <Route path="user/onboard" element={<Home/>}/>
           <Route path="user/profile" element={<Profile/>}/>
           <Route path="user/timesheet" element={<DashboardTimeSheet />} />
+          <Route path='user/benifit' element={<Benifit/>}/>
+          <Route path='user/payroll' element={<Payroll/>}/>
           <Route path='admin' element={<AdminHome/>}/>
           <Route path='admin/profile' element={<AdminProfile/>}/>
           <Route path="admin/timesheet" element={<TimeSheet />} />
           <Route path="admin/approval" element={<Approval />} />
           <Route path='admin/create' element={<CreateTimeSheet/>}/>
           <Route path='admin/pendingApproval' element={<PendingApproval/>}/>
+          <Route path="pdfview" element={<PdfView/>} />
           <Route path="*" element={<Navigate to="login" replace />} />
         </Route>
       </Routes>

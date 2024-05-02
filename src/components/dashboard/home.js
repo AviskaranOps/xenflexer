@@ -108,9 +108,9 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <SideNav/>
-      <div className="ml-72 border-cyan-500 ">
-        <div className="pb-20">
+      <div className="flex">
+        <SideNav />
+        <div className="pb-20 w-full">
           <div className="py-10">
             <Stepper
               activeStep={activeStep}

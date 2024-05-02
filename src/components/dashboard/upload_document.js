@@ -6,6 +6,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TableContainer,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { UploadFileOutlined } from "@mui/icons-material";
@@ -15,7 +16,6 @@ import mp4 from "../../assets/images/mp4-icon.png";
 import fig from "../../assets/images/fig-icon.png";
 import docx from "../../assets/images/docx-icon.png";
 import axios from "axios";
-import { useEffect } from "react";
 
 export const Upload_Document = ({ next }) => {
   const [resume, setResume] = React.useState();
@@ -23,24 +23,6 @@ export const Upload_Document = ({ next }) => {
   const [proof, setProf] = React.useState();
   const [tax, setTax] = React.useState();
   const [agreement, setAgreement] = React.useState();
-
-
-  useEffect( () => {
-    const userId = 1;
-    axios.get("https://xenflexer.northcentralus.cloudapp.azure.com/documents?userId="+userId).then(response => {
-      if(response.status === 200){
-        setResume(response.data.resume);
-        setCretificate(response.data.certificate);
-        setProf(response.data.proof);
-        setTax(response.data.tax);
-        setAgreement(response.data.agreement);
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }, []);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,7 +35,7 @@ export const Upload_Document = ({ next }) => {
 
     try {
       const response = await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/documents/",
+        "http://localhost:3000/api/document/",
         formData,
         {
           headers: {
@@ -74,7 +56,10 @@ export const Upload_Document = ({ next }) => {
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#ffffff",
+    },
+    "&:nth-of-type(even)": {
+      backgroundColor: "#ffffff",
     },
     // hide last border
     "&:last-child td, &:last-child th": {
@@ -94,6 +79,20 @@ export const Upload_Document = ({ next }) => {
     width: 1,
   });
 
+  const StyledTableHead = styled(TableHead)`
+    & .MuiTableCell-root {
+      background-color: #f9fafb;
+    }
+  `;
+
+  const StyledTableContainer = styled(TableContainer)`
+    border-radius: 1rem;
+    max-height: 400px;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  `;
+
   return (
     <div>
       <form className="mx-20" onSubmit={handleSubmit}>
@@ -107,9 +106,10 @@ export const Upload_Document = ({ next }) => {
             Upload your Documents
           </text>
         </div>
-        <div className="mt-3  border border-app-border rounded-md max-h-96 overflow-y-auto">
-          <Table aria-label="customized table">
-            <TableHead>
+        {/* table */}
+        <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+          <Table aria-label="customized table" stickyHeader>
+            <StyledTableHead>
               <TableRow>
                 <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
                   Document Name
@@ -125,7 +125,7 @@ export const Upload_Document = ({ next }) => {
                   Updated Status
                 </TableCell>
               </TableRow>
-            </TableHead>
+            </StyledTableHead>
             <TableBody>
               {/* pdf */}
               <StyledTableRow key="pdf">
@@ -309,7 +309,7 @@ export const Upload_Document = ({ next }) => {
               </StyledTableRow>
             </TableBody>
           </Table>
-        </div>
+        </StyledTableContainer>
         <div className="mt-5 justify-end flex">
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}

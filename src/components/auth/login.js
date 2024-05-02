@@ -32,6 +32,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     const username = email;
     e.preventDefault();
+    
     try {
       // const response = await axios.post(
       //   "https://xenflexer.northcentralus.cloudapp.azure.com/api/login/",
@@ -43,7 +44,7 @@ const Login = () => {
       // console.log(response);
       // if (response.status === 200) {
       //   console.log(response.data);
-      //   localStorage.setItem('token', response.data.token);
+      //   localStorage.setItem('token', JSON.stringify(response.data));
       //   message.success("LogedIn successfully");
       //   navigate('/user/onboard');
 

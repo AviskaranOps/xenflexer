@@ -2,7 +2,6 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ListItem from "@mui/material/ListItem";
@@ -10,14 +9,19 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
-import { LogoutOutlined } from "@mui/icons-material";
-import logo from "../../assets/images/Logo.png";
+import { useNavigate } from "react-router-dom";
+import {
+  KeyboardArrowDownOutlined,
+  KeyboardArrowUpOutlined,
+  LogoutOutlined,
+} from "@mui/icons-material";
+import logo1 from "../../assets/images/Logo.png";
+import logo2 from "../../assets/images/app-logo.png";
 import Footer from "./footer";
 import home from "../../assets/images/home-icon.png";
 import profile from "../../assets/images/profile-icon.png";
 import time from "../../assets/images/timesheets-icon.png";
 import avtar from "../../assets/images/Avatar.png";
-import { useNavigate } from "react-router-dom";
 
 export const SideNavAdmin = ({ setUser, email }) => {
   const navigation = useNavigate();
@@ -25,12 +29,12 @@ export const SideNavAdmin = ({ setUser, email }) => {
   const [expanded, setExpanded] = React.useState(false);
   const [data, setData] = React.useState([]);
 
-
   const handleChange = () => {
     setExpanded(!expanded);
   };
 
   const drawerWidth = 250;
+
 
   const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -100,7 +104,7 @@ export const SideNavAdmin = ({ setUser, email }) => {
   }, [open]);
 
   const name = [
-    { name: "Approve", path: "/admin/approval" },
+    { name: "Apporve", path: "/admin/approval" },
     { name: "Create", path: "/admin/create" },
   ];
 
@@ -108,38 +112,33 @@ export const SideNavAdmin = ({ setUser, email }) => {
     setOpen(!open);
   };
 
-  
-
   return (
     <>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{ backgroundColor: "#D1D1D1" }}>
+        <DrawerHeader sx={{ backgroundColor: "#ffffff" }}>
           <IconButton onClick={handleDrawer}>
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
         </DrawerHeader>
-        <Divider />
-        <div className="h-full bg-app-LightTeal bg-app-gray">
+
+        <div className="h-full bg-app-LightTeal bg-white">
           <List>
+            {/* logo */}
             <ListItem
               sx={{
                 justifyContent: open ? "initial" : "center",
-                p: 2.5,
+                px: 2,
               }}>
               <ListItemIcon
                 sx={{
-                  justifyContent: "center",
+                  justifyContent: "left",
                 }}>
-                <img src={logo} alt="logo" width={60} />
+                {open ? (
+                  <img src={logo2} alt="logo" width={180} />
+                ) : (
+                  <img src={logo1} alt="logo" width={45} />
+                )}
               </ListItemIcon>
-              <ListItemText
-                primary={"Xenspire Group"}
-                sx={{ opacity: open ? 1 : 0, color: "#53783B", fontSize: 30 }}
-                primaryTypographyProps={{
-                  fontSize: "21px",
-                  fontWeight: "700",
-                }}
-              />
             </ListItem>
             {data.map((data, index) => (
               <ListItemButton
@@ -147,10 +146,9 @@ export const SideNavAdmin = ({ setUser, email }) => {
                 sx={{
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
-                  backgroundColor: "#53783B",
                   margin: 1,
                   borderRadius: 2,
-                  ":hover": { backgroundColor: "#1283af" },
+                  ":hover": { backgroundColor: "#CEEAB0" },
                 }}
                 onClick={() => navigation(data.path)}>
                 <ListItemIcon
@@ -163,7 +161,11 @@ export const SideNavAdmin = ({ setUser, email }) => {
                 </ListItemIcon>
                 <ListItemText
                   primary={data.name}
-                  sx={{ opacity: open ? 1 : 0, ":hover": { color: "white" } }}
+                  primaryTypographyProps={{
+                    fontWeight: "bold",
+                    color: "#344054",
+                  }}
+                  sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
             ))}
@@ -172,10 +174,9 @@ export const SideNavAdmin = ({ setUser, email }) => {
                 sx={{
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
-                  backgroundColor: "#53783B",
                   margin: 1,
                   borderRadius: 2,
-                  ":hover": { backgroundColor: "#1283af" },
+                  ":hover": { backgroundColor: "#CEEAB0" },
                 }}
                 onClick={() => handleChange()}>
                 <ListItemIcon
@@ -188,25 +189,40 @@ export const SideNavAdmin = ({ setUser, email }) => {
                 </ListItemIcon>
                 <ListItemText
                   primary={"TimeSheet"}
-                  sx={{ ":hover": { color: "white" } }}
+                  primaryTypographyProps={{
+                    fontWeight: "bold",
+                    color: "#344054",
+                  }}
                 />
+                <ListItemIcon
+                  sx={{
+                    justifyContent: "right",
+                  }}>
+                  {expanded ? (
+                    <KeyboardArrowUpOutlined />
+                  ) : (
+                    <KeyboardArrowDownOutlined />
+                  )}
+                </ListItemIcon>
               </ListItemButton>
             )}
+            {/* open widges */}
             {open &&
               expanded &&
               name.map((data, index) => (
                 <ListItemButton
                   key={index}
                   sx={{
-                    justifyContent: "center",
+                    justifyContent: "left",
                     px: 2.5,
-                    backgroundColor: "#CEEAB0",
-                    margin: 1,
+                    pl: 10,
                     borderRadius: 2,
-                    ":hover": { backgroundColor: "#7B964A", color: "#ffffff" },
+                    ":hover": { backgroundColor: "#CEEAB0" },
                   }}
                   onClick={() => navigation(data.path)}>
-                  <text>{data.name}</text>
+                  <text style={{ color: "#344054", fontWeight: "500" }}>
+                    {data.name}
+                  </text>
                 </ListItemButton>
               ))}
           </List>
@@ -214,10 +230,10 @@ export const SideNavAdmin = ({ setUser, email }) => {
         {open && (
           <div className="mx-6 border-t-2 border-app-cycle mb-20">
             <div className="grid grid-flow-col mt-3 justify-between">
-              <div>
+              <div className="mr-1">
                 <img src={avtar} className="w-10" alt="avtar" />
               </div>
-              <div className="grid grid-flow-row">
+              <div className="grid grid-flow-row ">
                 <text style={{ fontSize: 12 }}>{JSON.parse(localStorage.getItem('token')).username}</text>
                 <text style={{ fontSize: 12 }}>
                   {email ? email : JSON.parse(localStorage.getItem('token')).email}

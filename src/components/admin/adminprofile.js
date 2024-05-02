@@ -36,7 +36,7 @@ export const AdminProfile = () => {
   return (
     <div className="min-h-screen bg-white">
     <div className="flex w-full">
-      <SideNavAdmin />
+      <SideNavAdmin/>
             <div className="w-full">
             <div className="px-56 pt-20 grid grid-flow-col  items-center">
                 <div className="rounded-full w-40 h-40 bg-app-gray justify-center items-center">
@@ -74,7 +74,7 @@ export const AdminProfile = () => {
             </div>
             {/* profile */}
             <div className="px-56 py-16">
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Name</label>
                 <TextField
                     size="small"
@@ -84,7 +84,7 @@ export const AdminProfile = () => {
                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                 />
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Email</label>
                 <TextField
                     type="email"
@@ -95,7 +95,7 @@ export const AdminProfile = () => {
                     onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                 />
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Phone</label>
                 <TextField
                     type="tel"
@@ -106,7 +106,7 @@ export const AdminProfile = () => {
                     onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 />
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Status</label>
                 <TextField
                     size="small"
@@ -116,7 +116,7 @@ export const AdminProfile = () => {
                     onChange={(e) => setProfile({ ...profile, status: e.target.value })}
                 />
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Designation</label>
                 <TextField
                     size="small"
@@ -145,7 +145,7 @@ export const AdminProfile = () => {
                     Update Password
                 </Button>
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Current Password</label>
                 <TextField
                     type="password"
@@ -158,7 +158,7 @@ export const AdminProfile = () => {
                     }
                 />
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Update Password</label>
                 <TextField
                     type="password"
@@ -171,7 +171,7 @@ export const AdminProfile = () => {
                     }
                 />
                 </div>
-                <div className="pt-5 grid grid-flow-col ">
+                <div className="pt-5 grid grid-cols-2 ">
                 <label>Confirm Password</label>
                 <TextField
                     type="password"

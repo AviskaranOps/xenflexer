@@ -38,16 +38,6 @@ export const CreateTimeSheet = ({ add_Data }) => {
       <div className="flex w-full">
         <SideNavAdmin />
         <div className="mx-32 pt-10 pb-20 w-full">
-        <div className="flex justify-center">
-            <text
-              style={{
-                color: "#53783B",
-                fontWeight: "bold",
-                fontSize: 28,
-              }}>
-              Create Timesheet
-            </text>
-          </div>
           <form className="mt-16 mx-14" onSubmit={handleClick}>
             <div className="grid grid-flow-col justify-between items-center">
               <FormLabel style={{ color: "#344054" }}>Name</FormLabel>

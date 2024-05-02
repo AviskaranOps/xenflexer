@@ -9,7 +9,6 @@ import {
 import { UploadFileOutlined } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
-import { useEffect } from "react";
 
 export const My_Experience = ({ next }) => {
   const [file, setFile] = React.useState();
@@ -69,34 +68,6 @@ export const My_Experience = ({ next }) => {
     width: 1,
   });
 
-  useEffect(() => {
-    const userId = 1;
-    axios.get("https://xenflexer.northcentralus.cloudapp.azure.com/workexperience/"+userId).then( response => {
-
-      if(response.status === 200){
-        const experienceList = response.data;
-        experienceList.forEach(element => {
-          setExperianceData([
-            ...experianceData,
-            {
-              title: element.title,
-              companyName: element.companyName,
-              location: element.location,
-              radioValue: element.radioValue,
-              startDate: element.startDate,
-              endDate: element.endDate,
-            },
-          ]);
-        });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    })
-    
-  }, []);
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,7 +76,7 @@ export const My_Experience = ({ next }) => {
 
     try {
       const response = await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/workexperience/",
+        "http://localhost:3000/api/experiance/",
         {
           formData,
           experianceData,
