@@ -1,6 +1,9 @@
 import React from "react";
 import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
+import { message } from 'antd';
+import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export const My_Information = ({ next }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
@@ -25,23 +28,78 @@ export const My_Information = ({ next }) => {
     "Kelly Snyder",
   ];
 
+  const navigate = useNavigate();
+
+
+  // useEffect(() => {
+  //     const user = JSON.parse(localStorage.getItem('token'));
+  //     axios.get(
+  //       "https://xenflexer.northcentralus.cloudapp.azure.com/userOnBoarded?userId="+ user.userId,
+  //       {headers: {
+  //         'Authorization': `Bearer ${user.tokens.access}`
+  //       }}
+  //     ).then(response => {
+  //       console.log(response.data);
+  //       if(response.data.isonboarded === true) {
+  //         navigate('/user/profile');
+  //       }
+  //     }).
+  //   catch(error => {
+  //     console.error("info save error:", error.message);
+  //   })
+  // }, []);
+
+
+  useEffect(() => {
+      const user = JSON.parse(localStorage.getItem('token'));
+      axios.get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserInformation?userId="+ user.userId,
+        {headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }}
+      ).then(response => {
+          console.log(response);
+          if(response.status != 204){
+            const data = response.data;
+            setHearAboutUs(data.howDidYouHearAboutUs);
+            setCountry(data.country);
+            setDoYouWant(data.doYouWantXenspireToBe);
+            setEmail(data.email);
+            setNo(data.mobile);
+            setProject(data.workingOnProject);
+            setXenspire(data.xenspireIsTheEmployer);
+          }
+      }).
+    catch(error => {
+      console.error("info save error:", error.message);
+    })
+  }, []);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/information/",
-        { hearAboutUs, country, xenspire, email, no, project, doYouWant }
-      );
-
-      if (response.status === 200) {
-        console.log("user info save successfully");
-      } else {
-        console.log("info save failed");
-      }
-    } catch (error) {
+    const mobile = no;
+    const how_did_you_hear_about_us = hearAboutUs;
+    const working_on_project =  project;
+    const xenspire_is_the_employer = xenspire;
+    const do_you_want_xenspire_to_be = doYouWant;
+    const user = JSON.parse(localStorage.getItem('token'));
+    console.log(user);
+    const my_info = true;
+    await axios.post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId="+user.userId,
+        { how_did_you_hear_about_us, country, xenspire_is_the_employer, email, mobile, working_on_project, do_you_want_xenspire_to_be, my_info },
+        {headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }}
+      ).then(response => {
+          message.success("data saved successfully");
+          console.log(response.data);
+      }).
+     catch(error => {
       console.error("info save error:", error.message);
-    }
-  };
+    })
+  }
 
   return (
     <div>
@@ -55,14 +113,14 @@ export const My_Information = ({ next }) => {
             displayEmpty
             value={hearAboutUs}
             onChange={(e) => setHearAboutUs(e.target.value)}
-            renderValue={(selected) => {
+            renderValue={(selected => {
               if (selected.length === 0) {
                 return (
                   <text style={{ color: "#53783B" }}>Select from the list</text>
                 );
               }
               return selected;
-            }}
+            })}
             sx={{
               color: "#53783B",
               ".MuiOutlinedInput-notchedOutline": {

@@ -20,6 +20,8 @@ import avtar from "../../assets/images/Avatar.png";
 import { Dummy_Approval, Dummy_Pending } from "../utils/dummy";
 import { useNavigate } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
+import axios from 'axios';
+import { useEffect } from "react";
 
 export const PendingApproval = () => {
   const navigation = useNavigate();
@@ -28,6 +30,77 @@ export const PendingApproval = () => {
   const [selected, setSelected] = React.useState([]);
   const [name, setName] = React.useState("");
   const [search, setSearch] = React.useState("");
+  const [timesheets, setTimesheets] = React.useState([]);
+  const [userList, setUserList] = React.useState([]);
+  const [userTimesheet, setUserTimesheet] = React.useState([]);
+  const [pendingts, setPendingts] = React.useState([]);
+  // const [userId, setUserId] = React.useState(0);
+  // const [timesheetId, setTimeSheetId] = React.useState(0);
+
+  
+let userId = -1;
+let timesheetId = -1;
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+      axios.get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserAndTimesheets",
+        {
+          headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }}
+      ).then(response => {
+          console.log(response.data);
+          setTimesheets(response.data.timesheets);
+          // timesheetId = response.data[0].id;
+          setName(response.data.timesheets[0].name);
+          setUserList(response.data.users);
+          setSearch(response.data.users[0].username);
+          getUserTimesheetDetail(response.data.users[0].id, response.data.timesheets[0].id)
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+    }, []);
+
+    useEffect(() => {
+      const user = JSON.parse(localStorage.getItem('token'));
+        axios.get(
+          "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
+          {
+            headers: {
+            'Authorization': `Bearer ${user.accessToken}`
+          }}
+        ).then(response => {
+            setPendingts(response.data)
+        }).
+        catch(error => {
+          console.error("info save error:", error.message);
+        })
+      }, []);
+
+    const getUserTimesheetDetail = (userId, timesheetId) => {
+      const user = JSON.parse(localStorage.getItem('token'));
+      console.log(userId, timesheetId);
+      axios.get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timeesheetId="+ timesheetId,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.accessToken}`
+          }
+        }
+        ).then(response => {
+            console.log(response.data);
+            setUserTimesheet(response.data);
+        }).
+        catch(error => {
+          console.error("info save error:", error.message);
+        })
+    
+    }
+
+
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -60,6 +133,7 @@ export const PendingApproval = () => {
         selected.slice(selectedIndex + 1)
       );
     }
+    console.log("selected = ", newSelected);
     setSelected(newSelected);
   };
 
@@ -79,8 +153,45 @@ export const PendingApproval = () => {
     }
   `;
 
+  const handlePendingApproval = (userId, timesheetId) => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timeesheetId="+ timesheetId,
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }
+      ).then(response => {
+          console.log(response.data);
+          setUserTimesheet(response.data);
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+  }
+
+
+  const savePendingApproval = () => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.post(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
+      userTimesheet,
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }
+      ).then(response => {
+          console.log(response.data);
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+  }
+
   const statusChagehandler = (e, index) => {
-    const newData = [...data];
+    const newData = [...userTimesheet];
     newData[index].status = e;
     setData(newData);
   };
@@ -134,7 +245,7 @@ export const PendingApproval = () => {
             <Autocomplete
               freeSolo
               size="small"
-              options={data.map((option) => option.timesheetName)}
+              options={userList.map((option) => option.username)}
               value={search}
               onChange={(event, newValue) => {
                 setSearch(newValue);
@@ -161,9 +272,9 @@ export const PendingApproval = () => {
                 return selected;
               }}
               className="w-72">
-              {Dummy_Approval.map((data) => (
-                <MenuItem key={data.timesheetName} value={data.timesheetName}>
-                  {data.timesheetName}
+              {timesheets.map((data) => (
+                <MenuItem key={data.name} value={data.value}>
+                  {data.name}
                 </MenuItem>
               ))}
             </Select>
@@ -197,7 +308,7 @@ export const PendingApproval = () => {
                     </TableRow>
                   </StyledTableHead>
                   <TableBody>
-                    {searchData.map((row, index) => (
+                    {userTimesheet.map((row, index) => (
                       <StyledTableRow key={index} role="checkbox">
                         <TableCell
                           padding="checkbox"
@@ -205,10 +316,10 @@ export const PendingApproval = () => {
                           <Checkbox color="primary" checked={isSelected(index)} />
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {row.timesheetName}
+                          {row.name}
                         </TableCell>
                         <TableCell align="center">{row.date}</TableCell>
-                        <TableCell align="center">{row.workingHours}</TableCell>
+                        <TableCell align="center">{row.hoursWorked}</TableCell>
                         <TableCell align="center">
                           <Autocomplete
                             freeSolo
@@ -276,7 +387,7 @@ export const PendingApproval = () => {
                 <text className="text-app-green font-bold my-5 text-xl text-center">
                   Pending Approval
                 </text>
-                {Dummy_Approval.map((data, index) => {
+                {pendingts.map((data, index) => {
                   return (
                     <div
                       key={index}
@@ -284,11 +395,16 @@ export const PendingApproval = () => {
                       <div className="grid grid-flow-col justify-start gap-5 pl-5">
                         <img src={avtar} alt="avtar" />
                         <div className="grid grid-flow-row">
-                          <text>{data.timesheetName}</text>
+                          <text>{data.username}</text>
                           <text>{data.status}</text>
                         </div>
                       </div>
-                      <Checkbox />
+                      <Checkbox 
+                        onChange={e => {
+                          console.log(e.target.checked);
+                          handlePendingApproval(data.userid, data.timesheetid);
+                        }}
+                      />
                     </div>
                   );
                 })}
@@ -296,6 +412,7 @@ export const PendingApproval = () => {
                 <div className="justify-center flex mt-10">
                   <Button
                     variant="contained"
+                    onClick={savePendingApproval }
                     style={{ color: "#ffffff", background: "#53783B" }}>
                     Bulk Approvals
                   </Button>

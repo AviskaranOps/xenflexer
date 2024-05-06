@@ -9,18 +9,19 @@ import {
 import { UploadFileOutlined } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
+import { useEffect } from "react";
 
 export const My_Experience = ({ next }) => {
   const [file, setFile] = React.useState();
 
   const [experianceData, setExperianceData] = React.useState([
     {
-      title: "",
-      companyName: "",
+      job_title: "",
+      company_name: "",
       location: "",
-      radioValue: false,
-      startDate: "",
-      endDate: "",
+      currentCompany: false,
+      start_date: "",
+      end_date: "",
     },
   ]);
 
@@ -28,10 +29,10 @@ export const My_Experience = ({ next }) => {
     setExperianceData([
       ...experianceData,
       {
-        title: "",
-        companyName: "",
+        job_title: "",
+        company_name: "",
         location: "",
-        radioValue: false,
+        currentCompany: false,
         startDate: "",
         endDate: "",
       },
@@ -68,35 +69,82 @@ export const My_Experience = ({ next }) => {
     width: 1,
   });
 
+  const user = JSON.parse(localStorage.getItem('token'));
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserExperience?userId="+ user.userId,
+      {headers: {
+        'Authorization': `Bearer ${user.accessToken}`
+      }}
+    ).then(response => {
+        console.log(response.data);
+        if(response.status != 204){
+          const data = response.data;
+          const explist = [];
+          for(var item of data) {
+            const exp = {
+              job_title: item.jobTitle,
+              company_name: item.companyName,
+              location: item.location,
+              currentCompany: item.currentCompany,
+              startDate: item.startDate,
+              endDate: item.endDate,
+            }
+            explist.push(exp);
+          }
+          setExperianceData(explist);
+        }
+    }).
+  catch(error => {
+    console.error("info save error:", error.message);
+  })
+}, []);
+
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem('token'));
+    await axios.post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userExperience?userId="+user.userId,
+          experianceData,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then(response => {
+
+      }).catch(error => {
+        console.error("experience save error:", error.message);
+      })
+  };
+
+
+  const handleResumeUpload = async(e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/experiance/",
-        {
-          formData,
-          experianceData,
+    setFile(e.target.files[0])
+    formData.append("file", e.target.files[0]);
+    const user = JSON.parse(localStorage.getItem('token'));
+    await axios.post(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadResume?userId=" + user.userId,
+        formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`,
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("user experience save successfully");
-      } else {
-        console.log("experience save failed");
       }
-    } catch (error) {
+    ).then(response => {
+
+    }).catch(error => {
       console.error("experience save error:", error.message);
-    }
-  };
+    })
+  }
 
   return (
     <div>
@@ -127,7 +175,7 @@ export const My_Experience = ({ next }) => {
               Upload Resume/CV
               <VisuallyHiddenInput
                 type="file"
-                onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) => handleResumeUpload(e)}
               />
             </Button>
           </div>
@@ -142,11 +190,11 @@ export const My_Experience = ({ next }) => {
                       Job Title
                     </FormLabel>
                     <TextField
-                      name="title"
+                      name="job_title"
                       size="small"
                       placeholder="Enter Title"
                       className="w-72"
-                      value={element.title}
+                      value={element.job_title}
                       onChange={(e) => handleChange(index, e)}
                     />
                   </div>
@@ -155,11 +203,11 @@ export const My_Experience = ({ next }) => {
                       Company Name
                     </FormLabel>
                     <TextField
-                      name="companyName"
+                      name="company_name"
                       size="small"
                       placeholder="Enter Company"
                       className="w-72"
-                      value={element.companyName}
+                      value={element.company_name}
                       onChange={(e) => handleChange(index, e)}
                     />
                   </div>
@@ -171,19 +219,19 @@ export const My_Experience = ({ next }) => {
                     </FormLabel>
                     <div className="grid grid-flow-col gap-2">
                       <TextField
-                        name="startDate"
+                        name="start_date"
                         size="small"
                         className="w-36"
                         type="date"
-                        value={element.startDate}
+                        value={element.start_date}
                         onChange={(e) => handleChange(index, e)}
                       />
                       <TextField
-                        name="endDate"
+                        name="end_date"
                         size="small"
                         className="w-36"
                         type="date"
-                        value={element.endDate}
+                        value={element.end_date}
                         disabled={element.radioValue ? true : false}
                         onChange={(e) => handleChange(index, e)}
                       />
@@ -206,10 +254,10 @@ export const My_Experience = ({ next }) => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          name="radioValue"
+                          name="currentCompany"
                           size="small"
-                          checked={element.radioValue}
-                          value={element.radioValue}
+                          checked={element.currentCompany}
+                          value={element.currentCompany}
                           onChange={(e) => handleRadioChange(index, e)}
                           color="success"
                         />

@@ -12,19 +12,23 @@ import { EditOutlined } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import avtar from "../../assets/images/Avatar.png";
 import { SideNav } from "../widgets/sidenav";
+import axios  from 'axios';
+import { useEffect } from "react";
+import { jwtDecode } from 'jwt-decode'
+import { useNavigate } from 'react-router-dom';
 
 export const Profile = () => {
   const [editProfile, setEditProfile] = React.useState(true);
   const [image, setImage] = React.useState("");
 
   const [profile, setProfile] = React.useState({
-    name: "My name is this",
-    email: "abc@123.com",
-    phone: "1234567890",
-    designation: "Program manager",
-    xenspireEmploye: "Yes",
-    country: "india",
-    state: "telengana",
+    name: "",
+    email: "",
+    phone: "",
+    designation: "",
+    xenspireEmploye: "",
+    country: "",
+    state: "",
     wantTobe: "Yes",
   });
   const [password, setPassword] = React.useState({
@@ -35,22 +39,24 @@ export const Profile = () => {
 
   const [experianceData, setExperianceData] = React.useState([
     {
-      title: "native developer",
-      companyName: "xyz name",
-      location: "us,canada",
+      title: "",
+      companyName: "",
+      location: "",
       radioValue: true,
-      startDate: "2021-08-15",
+      startDate: "",
       endDate: "",
     },
   ]);
 
+  const navigate = useNavigate();
+
   const [educationData, setEducationData] = React.useState([
     {
-      school: "vd ahmedabad",
-      graduation: "Ralph Hubbard",
-      field: "Information Technology",
-      startDate: "2016-08-15",
-      endDate: "2020-03-05",
+      school: "",
+      graduation: "",
+      field: "",
+      startDate: "",
+      endDate: "",
     },
   ]);
 
@@ -78,6 +84,81 @@ export const Profile = () => {
     "Virginia Andrews",
     "Kelly Snyder",
   ];
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId="+ user.userId,
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }
+    ).then(response => {
+        if(response.data.onboarded === false){
+            navigate('/user/onboard');
+        }
+    }).
+    catch(error => {
+      console.error("info save error:", error.message);
+    })
+  }, []);
+
+  useEffect(() => {
+      const user = JSON.parse(localStorage.getItem('token'));
+      axios.get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userProfile?userId="+ user.userId,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.accessToken}`
+          }
+        }
+      ).then(response => {
+          console.log(response.data);
+          const data = response.data;
+          const profile = {
+            name: user.username,
+            email: user.email,
+            phone: data.userInfo.mobile,
+            designation: "",
+            xenspireEmploye: data.userInfo.xenspireIsTheEmployer,
+            country: data.userInfo.country,
+            state: "",
+            wantTobe: data.userInfo.doYouWantXenspireToBe
+          }
+          var eduList = [];
+          for(var edu of data.education){
+            const education = {
+              school: edu.school,
+              graduation: edu.graduation,
+              field: edu.field,
+              startDate: edu.startDate.substring(0, 11),
+              endDate: edu.endDate.substring(0,11),
+            }
+            eduList.push(education);
+          }
+          var expList = [];
+          for(var exp of data.workExperience){
+            const experience = {
+              title: exp.jobTitle,
+              companyName: exp.companyName,
+              location: exp.location,
+              radioValue: exp.currentCompany,
+              startDate: new Date(exp.startDate.substring(0, 11)),
+              endDate: new Date(exp.endDate.substring(0,11)),
+            }
+            expList.push(experience);
+          }
+          setProfile(profile);
+          setEducationData(eduList);
+          setExperianceData(expList);
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+    }, []);
+
 
   const yes_no = ["Yes", "No"];
 

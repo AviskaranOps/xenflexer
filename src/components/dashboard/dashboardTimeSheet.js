@@ -16,11 +16,17 @@ import { CloudUploadOutlined } from "@mui/icons-material";
 import axios from "axios";
 import { DummyData, get_Data } from "../utils/dummy";
 import { SideNav } from "../widgets/sidenav";
+import { useEffect } from "react";
+import { message } from 'antd';
+
 
 export const DashboardTimeSheet = () => {
-  const [timeSheet, setTimeSheet] = React.useState("");
+  const [timeSheet, setTimeSheet] = React.useState(""); 
   const [submittion, setSubmission] = React.useState("");
   const [array, setArray] = React.useState(DummyData);
+  const [timesheets, setTimesheets] = React.useState([]);
+  const [userTimesheet, setUserTimesheet] = React.useState([]);
+
 
   const names = [
     "Oliver Hansen",
@@ -37,6 +43,41 @@ export const DashboardTimeSheet = () => {
   React.useState(() => {
     get_Data();
   }, []);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
+      {
+        headers: {
+        'Authorization': `Bearer ${user.accessToken}`
+      }}
+    ).then(response => {
+        console.log(response.data);
+        setTimesheets(response.data);
+    }).
+    catch(error => {
+      console.error("info save error:", error.message);
+    })
+    }, []);
+
+    useEffect(() => {
+      const user = JSON.parse(localStorage.getItem('token'));
+      axios.get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + user.userId,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.accessToken}`
+          }
+        }
+      ).then(response => {
+          console.log(response.data);
+          setUserTimesheet(response.data);
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+    }, []);
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -64,28 +105,48 @@ export const DashboardTimeSheet = () => {
   });
 
   const handleSubmit = async (e) => {
+    const user = JSON.parse(localStorage.getItem('token'));
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/dataTimesheet/",
-        { timeSheet, submittion }
-      );
-
-      if (response.status === 200) {
-        console.log("dataTimesheet save successfully");
-      } else {
-        console.log("dataTimesheet save failed");
+    axios.post(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserTimesheet",
+       userTimesheet,
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
       }
-    } catch (error) {
-      console.error("dataTimesheet save error:", error.message);
-    }
-    setTimeSheet("");
+    ).then(response => {
+        message.success("saved successfully");
+    }).
+    catch(error => {
+      console.error("info save error:", error.message);
+    })
   };
 
+  const handleTimesheetSelect = (e) => {
+      const user = JSON.parse(localStorage.getItem('token'));
+      setTimeSheet(e.target.value.name);
+      console.log(e);
+      axios.get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + user.userId + "&timesheetId="+e.target.value.id,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.accessToken}`
+          }
+        }
+      ).then(response => {
+          console.log(response.data);
+          setUserTimesheet(response.data);
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+  }
+
   const handleHouerChange = (e, index) => {
-    let newFormValues = [...array];
-    newFormValues[index].hour = e.target.value;
-    setArray(newFormValues);
+    let newFormValues = [...userTimesheet];
+    newFormValues[index].hoursWorked = e.target.value;
+    setUserTimesheet(newFormValues);
   };
 
   const StyledTableHead = styled(TableHead)`
@@ -123,7 +184,7 @@ export const DashboardTimeSheet = () => {
               size="small"
               displayEmpty
               value={timeSheet}
-              onChange={(e) => setTimeSheet(e.target.value)}
+              onChange={(e) => handleTimesheetSelect(e)}
               renderValue={(selected) => {
                 if (selected.length === 0) {
                   return <text style={{ color: "#53783B" }}>Select TimeSheet</text>;
@@ -146,9 +207,9 @@ export const DashboardTimeSheet = () => {
                 },
               }}
               className="w-72">
-              {names.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
+              {timesheets.map((item) => (
+                <MenuItem key={item.id} value={item}>
+                  {item.name}
                 </MenuItem>
               ))}
             </Select>
@@ -181,14 +242,14 @@ export const DashboardTimeSheet = () => {
                     </TableRow>
                   </StyledTableHead>
                   <TableBody>
-                    {array.map((row) => (
+                    {userTimesheet.map((row) => (
                       <StyledTableRow key={row.name}>
                         <TableCell>
-                          {row.from} to {row.tofrom}
+                          {row.dateRange}
                         </TableCell>
-                        <TableCell>{row.from}</TableCell>
+                        <TableCell>{row.date}</TableCell>
 
-                        <TableCell align="center">{row.hour}</TableCell>
+                        <TableCell align="center">{row.hoursWorked}</TableCell>
                         <TableCell align="center">{row.status}</TableCell>
                         <TableCell align="center">
                           {row.status === "Rejected" ? (
@@ -241,17 +302,17 @@ export const DashboardTimeSheet = () => {
                     </TableRow>
                   </StyledTableHead>
                   <TableBody>
-                    {array.map((row, index) => (
+                    {userTimesheet.map((row, index) => (
                       <StyledTableRow key={index}>
                         <TableCell>
-                          {row.from} to {row.tofrom}
+                          {row.dateRange}
                         </TableCell>
-                        <TableCell>{row.from}</TableCell>
+                        <TableCell>{row.date}</TableCell>
 
                         <TableCell align="center">
                           <div className=" justify-center">
                             <input
-                              value={row.hour}
+                              value={row.hoursWorked}
                               className=" w-10  text-center"
                               onChange={(e) => handleHouerChange(e, index)}
                             />

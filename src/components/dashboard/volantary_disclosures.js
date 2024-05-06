@@ -8,29 +8,32 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { message } from 'antd';
 
 export const Volantary_Disclosures = () => {
-  const [update, setUpdate] = React.useState("");
+  const [update, setUpdate] = React.useState();
   const [notification, setNotification] = React.useState();
   const navigation = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/volantary/",
-        { update, notification }
-      );
-
-      if (response.status === 200) {
-        console.log("volantary save successfully");
-      } else {
-        console.log("volantary save failed");
-      }
-    } catch (error) {
-      console.error("volantary save error:", error.message);
-    }
-    navigation("/dashboard");
+    const user = JSON.parse(localStorage.getItem("token"));
+    if(update === "yes") setUpdate(true);
+    if(notification === "yes") setNotification(true);
+    await axios.post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDisclosure?userId="+user.userId,
+        { update, notification },
+        {
+          headers: {
+            "Authorization" : `Bearer ${user.accessToken}`
+          },
+        }
+      ).then(response => {
+        message.success("saved successfully");
+        navigation('/user/profile');
+      }).catch(error => {
+        console.error("volantary save error:", error.message);
+    })
   };
 
   return (

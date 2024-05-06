@@ -16,6 +16,7 @@ import mp4 from "../../assets/images/mp4-icon.png";
 import fig from "../../assets/images/fig-icon.png";
 import docx from "../../assets/images/docx-icon.png";
 import axios from "axios";
+import { message } from 'antd';
 
 export const Upload_Document = ({ next }) => {
   const [resume, setResume] = React.useState();
@@ -23,6 +24,7 @@ export const Upload_Document = ({ next }) => {
   const [proof, setProf] = React.useState();
   const [tax, setTax] = React.useState();
   const [agreement, setAgreement] = React.useState();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,27 +34,23 @@ export const Upload_Document = ({ next }) => {
     formData.append("proof", proof);
     formData.append("tax", tax);
     formData.append("agreement", agreement);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/document/",
+    formData.append("docs", true);
+    const user = JSON.parse(localStorage.getItem("token"));
+    await axios.post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDocuments?userId="+ user.userId,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization" : `Bearer ${user.accessToken}`
           },
         }
-      );
-
-      if (response.status === 200) {
-        console.log("user document save successfully");
-      } else {
-        console.log("document save failed");
-      }
-    } catch (error) {
+      ).then(response => {
+        message.success("data saved successfully");
+      }).catch(error => {
       console.error("document save error:", error.message);
-    }
-  };
+    })
+  }
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {

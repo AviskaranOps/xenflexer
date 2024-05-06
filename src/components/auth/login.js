@@ -32,58 +32,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     const username = email;
     e.preventDefault();
-    
+    const role = "";
     try {
-      // const response = await axios.post(
-      //   "https://xenflexer.northcentralus.cloudapp.azure.com/api/login/",
-      //   {
-      //     username,
-      //     password
-      //   }
-      // );
-      // console.log(response);
-      // if (response.status === 200) {
-      //   console.log(response.data);
-      //   localStorage.setItem('token', JSON.stringify(response.data));
-      //   message.success("LogedIn successfully");
-      //   navigate('/user/onboard');
-
-      // } else {
-      //   message.error("Login failed");
-      // }
-      if(email === "admin@xenspire.com" && password == "Admin@123"){
-        const token = {
-          userId : 1,
-          username : 'Ram',
-          email : 'admin@xenspire.com',
-          token : '103ujfwioej3290rjfioejafweujfefoifmoijf9j',
-          role : 'admin'
+      const response = await axios.post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/login",
+        {
+          username,
+          password
         }
-        console.log(token);
-        localStorage.setItem("token", JSON.stringify(token));
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log(response.data);
+        localStorage.setItem('token', JSON.stringify(response.data));
         message.success("LogedIn successfully");
+        //role = response.data.role;
+      } else {
+        message.error("Login failed");
       }
-      if(email === "user@xenspire.com" && password == "user@123"){
-        const token = {
-          userId : 1,
-          username : 'Nilesh',
-          email : 'user@xenspire.com',
-          token : '103ujfwioej3290rjfioejafweujfefoifmoijf9j',
-          role : 'user'
-        }
-        console.log(token);
-        localStorage.setItem("token", JSON.stringify(token));
-        message.error("Login successfull");
-      }
-
-      const user = JSON.parse(localStorage.getItem("token"));
-      console.log("user  = ", user);
-      if(user.role === 'admin') {
-
+      const role = JSON.parse(localStorage.getItem("token")).role;
+      console.log("role = ", role);
+      if(role === 'ROLE_ADMIN') {
         navigate('/admin')
       }
-      if(user.role === 'user') {
-        navigate('/user/onboard')
+      if(role === 'ROLE_USER') {
+        navigate('/user/profile')
       }
     } catch (error) {
       console.error(error.message);

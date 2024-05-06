@@ -31,9 +31,9 @@ function App() {
         <Route path="/" element={<Navigate to="login" replace />} />
         {/* <Route path="website" element={<LandingPage />} /> */}
         <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
         <Route path="" element={<PrivateRoute/>}>
           <Route path='logout' element={<Logout/>}/>
-          <Route path="signup" element={<Signup />} />
           <Route path="forgotPass" element={<Forgot_Pass />} />
           <Route path="user/onboard" element={<Home/>}/>
           <Route path="user/profile" element={<Profile/>}/>

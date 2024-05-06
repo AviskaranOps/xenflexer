@@ -49,6 +49,9 @@ export const Home = () => {
       display: none;
     }
   `;
+
+
+  
   // max-height: 400px;
   return (
     <div className="py-16 px-10 w-full">

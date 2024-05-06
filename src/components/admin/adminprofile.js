@@ -4,6 +4,8 @@ import { EditOutlined } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import avtar from "../../assets/images/Avatar.png";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
+import { useEffect } from "react";
+import axios from 'axios';
 
 export const AdminProfile = () => {
   const [editProfile, setEditProfile] = React.useState(false);
@@ -20,6 +22,34 @@ export const AdminProfile = () => {
     update: "",
     confirm: "",
   });
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getAdminProfile?userId="+ user.userId,
+      {headers: {
+        'Authorization': `Bearer ${user.accessToken}`
+      }}
+    ).then(response => {
+        console.log(response);
+        if(response.status != 204){
+          const data = {
+            name: response.data.username,
+            email: response.data.email,
+            phone: "1234567890",
+            designation: "Program manager",
+            status: response.data.roles[0].name,
+          }
+          setProfile(data);
+        }
+    }).
+  catch(error => {
+    console.error("info save error:", error.message);
+  })
+}, []);
+
+
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",

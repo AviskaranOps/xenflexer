@@ -88,12 +88,12 @@ export const SideNav = ({ setUser, email }) => {
   }));
 
   const drawer_Data = [
-    { name: "Home", icon: home, path: "/home" },
+    { name: "Home", icon: home, path: "/user/profile" },
     { name: "Timesheets", icon: time, path: "/user/timesheet" },
   ];
 
   const drawer_Data_new = [
-    { name: "Home", icon: home, path: "/home" },
+    { name: "Home", icon: home, path: "/user/profile" },
     { name: "Timesheets", icon: time, path: "/user/timesheet" },
     { name: "Profile", icon: profile, path: "/user/profile" },
   ];
