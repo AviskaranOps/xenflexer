@@ -21,39 +21,39 @@ export const Difference = () => {
     ),
     createData(
       "BENEFITS",
-      "Ala Carte Services for Various Insurance types, 401K, Immigration, HSA etc.",
+      "Ala Carte Services for Various Insurance types, 401K, Immigration, HSA, etc.",
       "Non-standard, but predominantly based on a tiered percentage cut",
       "Flexibility to choose"
     ),
     createData(
-      "COLLOBORATION",
-      "Open Forum Structure to communicate with other Consultants. All Metrics are displayed openly across network.",
+      "COLLABORATION",
+      "Open Forum Structure to communicate with other Consultants. All Metrics are displayed openly across the network",
       "Not Structured",
-      "Clear Expectations & Transparent Operations since Employer has lot to lose"
+      "Clear Expectations & Transparent Operations since the Employer has a lot to lose"
     ),
     createData(
       "COMMUNITY",
-      "All Consultants are part of larger Xenspire Community program/network to yield all the benefits of being together.",
+      "All Consultants are part of a larger Xenspire Community program/network to yield all the benefits of being together.",
       "NO COMMUNITY",
-      "Consultants can grow and improve during their Career. Opportunity to join Direct Client/Permanent Placement"
+      "Consultants can grow and improve during their Careers. Opportunity to join Direct Client/Permanent Placement"
     ),
   ];
 
   return (
-    <div className="px-40 py-10 bg-app-moss">
+    <div className="px-12 md:px-20 lg:px-40 py-10 bg-app-moss overflow-scroll">
       <div className="mt-5 grid grid-flow-row justify-center gap-4 text-center">
         <text className="text-white text-4xl font-semibold">
-          Unleash the Power of Your Contracting Potential
+        Unleash the Power of Your Contracting Potential
         </text>
         <text className="text-white text-lg">
-          Earn more and manage freely with XenFlexer: Outshine the industry with
-          tailored benefits,
-          <br /> boundless growth, and a community that learns and prospers
-          together.
+        Earn more and manage freely with <b>XenFlexer</b>. Outshine the industry with tailored benefits, 
+          <br /> boundless growth, and a community that learns and prospers together.
         </text>
       </div>
-      <div className="rounded-lg bg-white mt-10">
-        <div className="grid grid-cols-4 px-3 bg-app-table rounded-ss-lg rounded-se-lg py-2">
+      <div className="rounded-lg bg-white mt-10" style={{ minWidth: 650 }}>
+        <div
+          className="grid grid-cols-4 px-3 bg-app-table rounded-ss-lg rounded-se-lg py-2"
+          style={{ minWidth: 400 }}>
           <div>
             <text className="text-white font-semibold text-base">FEATURE</text>
           </div>
