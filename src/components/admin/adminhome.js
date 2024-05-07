@@ -17,7 +17,12 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { AddOutlined, CloseOutlined, Search } from "@mui/icons-material";
+import {
+  AddOutlined,
+  CloseOutlined,
+  PersonAddAltOutlined,
+  Search,
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { DummyData } from "../utils/dummy";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +32,7 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { message } from "antd";
 import SelectReact from "react-select";
+import plusUser from "../../assets/images/user-plus-01.png";
 
 export const AdminHome = () => {
   const navigation = useNavigate();
@@ -207,7 +213,9 @@ export const AdminHome = () => {
                   backgroundColor: "#7B964A",
                 },
               }}
-              startIcon={<AddOutlined />}
+              startIcon={
+                <img src={plusUser} alt="plus" style={{ width: 16 }} />
+              }
               onClick={() => setDialogeOpen(true)}>
               Create TimeSheet
             </Button>
@@ -412,6 +420,13 @@ export const AdminHome = () => {
                   placeholder="Select..."
                   isMulti // Allow multiple selections
                   isSearchable // Enable searching
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      minWidth: 170,
+                      maxWidth: 350,
+                    }),
+                  }}
                 />
               </div>
               <div className="mt-5 justify-end flex">
