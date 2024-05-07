@@ -45,7 +45,7 @@ let timesheetId = -1;
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
       axios.get(
-        "http://localhost:8080/xen/getUserAndTimesheets",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserAndTimesheets",
         {
           headers: {
           'Authorization': `Bearer ${user.accessToken}`
@@ -67,7 +67,7 @@ let timesheetId = -1;
     useEffect(() => {
       const user = JSON.parse(localStorage.getItem('token'));
         axios.get(
-          "http://localhost:8080/xen/getUserPendingTS?timesheetId=1",
+          "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
           {
             headers: {
             'Authorization': `Bearer ${user.accessToken}`
@@ -84,7 +84,7 @@ let timesheetId = -1;
       const user = JSON.parse(localStorage.getItem('token'));
       console.log(userId, timesheetId);
       axios.get(
-        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ timesheetId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ timesheetId,
         {
           headers: {
             'Authorization': `Bearer ${user.accessToken}`
@@ -159,7 +159,7 @@ let timesheetId = -1;
     setSearch(username);
     const tId = timesheets.find(item => item['name'] === name);
     axios.get(
-      "http://localhost:8080/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ tId.id,
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ tId.id,
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`
@@ -187,7 +187,7 @@ let timesheetId = -1;
     // const userd = JSON.parse(uId);
     // const timeshId = JSON.parse(tId);
     axios.get(
-      "http://localhost:8080/xen/getUserTimesheetDetail?userId=" + uId.id + "&timesheetId="+ tId.id,
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + uId.id + "&timesheetId="+ tId.id,
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`
@@ -206,7 +206,7 @@ let timesheetId = -1;
   const savePendingApproval = () => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.post(
-      "http://localhost:8080/xen/saveUserPendingTimesheet",
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
       userTimesheet,
       {
         headers: {

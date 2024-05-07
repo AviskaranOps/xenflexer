@@ -33,7 +33,7 @@ export const AdminHome = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "http://localhost:8080/xen/getUsersActiveTS",
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUsersActiveTS",
       {
         headers: {
         'Authorization': `Bearer ${user.accessToken}`
@@ -54,7 +54,7 @@ const getOptionValue = (option) => option.id;
 useEffect(() => {
   const user = JSON.parse(localStorage.getItem('token'));
   axios.get(
-    "http://localhost:8080/xen/getTimesheets",
+    "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
     {
       headers: {
       'Authorization': `Bearer ${user.accessToken}`

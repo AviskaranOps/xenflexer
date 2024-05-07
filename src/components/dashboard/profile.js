@@ -89,7 +89,7 @@ export const Profile = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "http://localhost:8080/xen/getUserOnboarded?userId="+ user.userId,
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId="+ user.userId,
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`
@@ -108,7 +108,7 @@ export const Profile = () => {
   useEffect(() => {
       const user = JSON.parse(localStorage.getItem('token'));
       axios.get(
-        "http://localhost:8080/xen/userProfile?userId="+ user.userId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userProfile?userId="+ user.userId,
         {
           headers: {
             'Authorization': `Bearer ${user.accessToken}`
