@@ -30,18 +30,22 @@ export function Home() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
   const Show_Fragment = () => {
     switch (activeStep) {
       case 0:
-        return <My_Information next={handleNext} />;
+        return <My_Information next={handleNext} back={handleBack} />;
       case 1:
-        return <My_Experience next={handleNext} />;
+        return <My_Experience next={handleNext} back={handleBack} />;
       case 2:
-        return <My_Education next={handleNext} />;
+        return <My_Education next={handleNext} back={handleBack} />;
       case 3:
-        return <Upload_Document next={handleNext} />;
+        return <Upload_Document next={handleNext} back={handleBack} />;
       case 4:
-        return <Volantary_Disclosures />;
+        return <Volantary_Disclosures back={handleBack} />;
       default:
         break;
     }
@@ -157,7 +161,16 @@ export function Home() {
 
                 return (
                   <Step key={label}>
-                    <StepLabel StepIconComponent={QontoStepIcon} {...labelProps}>
+                    <StepLabel
+                      onClick={() => setActiveStep(index)}
+                      sx={{
+                        ":hover": {
+                          cursor: "pointer",
+                          textDecoration: "underline",
+                        },
+                      }}
+                      StepIconComponent={QontoStepIcon}
+                      {...labelProps}>
                       {label}
                     </StepLabel>
                   </Step>

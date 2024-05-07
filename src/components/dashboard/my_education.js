@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
-import { message } from 'antd';
+import { message } from "antd";
 import { useEffect } from "react";
 
-export const My_Education = ({ next }) => {
+export const My_Education = ({ next, back }) => {
   const [educationData, setEducationData] = React.useState([
     { school: "", graduation: "", field: "", startDate: "", endDate: "" },
   ]);
@@ -45,55 +45,62 @@ export const My_Education = ({ next }) => {
   const user = JSON.parse(localStorage.getItem("token"));
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserEducation?userId="+ user.userId,
-      {headers: {
-        'Authorization': `Bearer ${user.accessToken}`
-      }}
-    ).then(response => {
-        console.log(response.data);
-        if(response.status != 204){
-            const data = response.data;
-            const explist = [];
-            for(var item of data) {
-              const exp = {
-                school: item.school, 
-                graduation: item.graduation, 
-                field: item.field, 
-                startDate: new Date(item.startDate), 
-                endDate: new Date(item.endDate) 
-              }
-              explist.push(exp);
-            }
-            setEducationData(explist);
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserEducation?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
+      )
+      .then((response) => {
+        console.log(response.data);
+        if (response.status != 204) {
+          const data = response.data;
+          const explist = [];
+          for (var item of data) {
+            const exp = {
+              school: item.school,
+              graduation: item.graduation,
+              field: item.field,
+              startDate: new Date(item.startDate),
+              endDate: new Date(item.endDate),
+            };
+            explist.push(exp);
+          }
+          setEducationData(explist);
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   }, []);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(educationData);
-    await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userEducation?userId="+ user.userId,
-          educationData,
-          {
-            "headers" : {
-              "Authorization" : `Bearer ${user.accessToken}`
-            }
-          }
-      ).then(response => {
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userEducation?userId=" +
+          user.userId,
+        educationData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
         message.success("data saved successfully");
         console.log(response.data);
-      }).catch(error => {
-        console.error("experience save error:", error.message);
       })
-  }
-
+      .catch((error) => {
+        console.error("experience save error:", error.message);
+      });
+  };
 
   return (
     <div>
@@ -224,6 +231,19 @@ export const My_Education = ({ next }) => {
             }}
             onClick={() => addEduFields()}>
             Add Education
+          </Button>
+          <Button
+            style={{ color: "white", borderColor: "#7F56D9" }}
+            variant="contained"
+            sx={{
+              marginLeft: 5,
+              backgroundColor: "#7B964A",
+              "&:hover": {
+                backgroundColor: "#7B964A",
+              },
+            }}
+            onClick={back}>
+            Previous
           </Button>
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}

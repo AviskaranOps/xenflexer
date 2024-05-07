@@ -10,6 +10,7 @@ import {
   MenuItem,
   FormLabel,
   TableContainer,
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CloudUploadOutlined } from "@mui/icons-material";
@@ -17,16 +18,15 @@ import axios from "axios";
 import { DummyData, get_Data } from "../utils/dummy";
 import { SideNav } from "../widgets/sidenav";
 import { useEffect } from "react";
-import { message } from 'antd';
-
+import { message } from "antd";
+import { DataGrid } from "@mui/x-data-grid";
 
 export const DashboardTimeSheet = () => {
-  const [timeSheet, setTimeSheet] = React.useState(""); 
+  const [timeSheet, setTimeSheet] = React.useState("");
   const [submittion, setSubmission] = React.useState("");
   const [array, setArray] = React.useState(DummyData);
   const [timesheets, setTimesheets] = React.useState([]);
   const [userTimesheet, setUserTimesheet] = React.useState([]);
-
 
   const names = [
     "Oliver Hansen",
@@ -45,39 +45,45 @@ export const DashboardTimeSheet = () => {
   }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
-      {
-        headers: {
-        'Authorization': `Bearer ${user.accessToken}`
-      }}
-    ).then(response => {
-        console.log(response.data);
-        setTimesheets(response.data);
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
-    }, []);
-
-    useEffect(() => {
-      const user = JSON.parse(localStorage.getItem('token'));
-      axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + user.userId,
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
         {
           headers: {
-            'Authorization': `Bearer ${user.accessToken}`
-          }
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      ).then(response => {
-          console.log(response.data);
-          setUserTimesheet(response.data);
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+      )
+      .then((response) => {
+        console.log(response.data);
+        setTimesheets(response.data);
       })
-    }, []);
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setUserTimesheet(response.data);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -105,48 +111,50 @@ export const DashboardTimeSheet = () => {
   });
 
   const handleSubmit = async (e) => {
-    const user = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem("token"));
     e.preventDefault();
-    axios.post(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserTimesheet",
-       userTimesheet,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserTimesheet",
+        userTimesheet,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-    ).then(response => {
+      )
+      .then((response) => {
         message.success("saved successfully");
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
+        setUserTimesheet(userTimesheet);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   };
 
   const handleTimesheetSelect = (e) => {
-      const user = JSON.parse(localStorage.getItem('token'));
-      setTimeSheet(e.target.value.name);
-      console.log(e);
-      axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + user.userId + "&timesheetId="+e.target.value.id,
+    const user = JSON.parse(localStorage.getItem("token"));
+    setTimeSheet(e.target.value.name);
+    console.log(e);
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+          user.userId +
+          "&timesheetId=" +
+          e.target.value.id,
         {
           headers: {
-            'Authorization': `Bearer ${user.accessToken}`
-          }
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      ).then(response => {
-          console.log(response.data);
-          setUserTimesheet(response.data);
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+      )
+      .then((response) => {
+        console.log(response.data);
+        setUserTimesheet(response.data);
       })
-  }
-
-  const handleHouerChange = (e, index) => {
-    let newFormValues = [...userTimesheet];
-    newFormValues[index].hoursWorked = e.target.value;
-    setUserTimesheet(newFormValues);
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   };
 
   const StyledTableHead = styled(TableHead)`
@@ -163,10 +171,45 @@ export const DashboardTimeSheet = () => {
     }
   `;
 
+  const columns = [
+    {
+      field: "dateRange",
+      headerName: "Date Range",
+      minWidth: 400,
+      editable: false,
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      width: 200,
+      editable: false,
+    },
+    {
+      field: "hoursWorked",
+      headerName: "Hours",
+      type: "number",
+      width: 200,
+      editable: true,
+    },
+  ];
+
+  function saveDeviceCell(params) {
+    const oldDevices = [...userTimesheet];
+
+    const rowDeviceIndex = oldDevices.findIndex((dev) => dev.id === params.id);
+
+    oldDevices[rowDeviceIndex] = {
+      ...oldDevices[rowDeviceIndex],
+      hoursWorked: params.hoursWorked,
+    };
+
+    setUserTimesheet(oldDevices);
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <div className="flex">
-        <SideNav/>
+        <SideNav />
         <div className="mx-32 pt-10 pb-20 w-full">
           <div className="flex justify-center">
             <text
@@ -187,7 +230,9 @@ export const DashboardTimeSheet = () => {
               onChange={(e) => handleTimesheetSelect(e)}
               renderValue={(selected) => {
                 if (selected.length === 0) {
-                  return <text style={{ color: "#53783B" }}>Select TimeSheet</text>;
+                  return (
+                    <text style={{ color: "#53783B" }}>Select TimeSheet</text>
+                  );
                 }
                 return selected;
               }}
@@ -218,14 +263,17 @@ export const DashboardTimeSheet = () => {
           {timeSheet ? (
             <>
               {/* table submit */}
-              <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+              <StyledTableContainer
+                sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
                 <Table aria-label="customized table" stickyHeader>
                   <StyledTableHead>
                     <TableRow>
-                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
+                      <TableCell
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Date Range
                       </TableCell>
-                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
+                      <TableCell
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Date
                       </TableCell>
                       <TableCell
@@ -244,9 +292,7 @@ export const DashboardTimeSheet = () => {
                   <TableBody>
                     {userTimesheet.map((row) => (
                       <StyledTableRow key={row.name}>
-                        <TableCell>
-                          {row.dateRange}
-                        </TableCell>
+                        <TableCell>{row.dateRange}</TableCell>
                         <TableCell>{row.date}</TableCell>
 
                         <TableCell align="center">{row.hoursWorked}</TableCell>
@@ -283,46 +329,17 @@ export const DashboardTimeSheet = () => {
           ) : (
             <>
               {/* table  approval */}
-              <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
-                <Table aria-label="customized table" stickyHeader>
-                  <StyledTableHead>
-                    <TableRow>
-                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
-                        Date Range
-                      </TableCell>
-                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
-                        Date
-                      </TableCell>
-
-                      <TableCell
-                        align="center"
-                        style={{ fontWeight: "bold", color: "#475467" }}>
-                        Hours
-                      </TableCell>
-                    </TableRow>
-                  </StyledTableHead>
-                  <TableBody>
-                    {userTimesheet.map((row, index) => (
-                      <StyledTableRow key={index}>
-                        <TableCell>
-                          {row.dateRange}
-                        </TableCell>
-                        <TableCell>{row.date}</TableCell>
-
-                        <TableCell align="center">
-                          <div className=" justify-center">
-                            <input
-                              value={row.hoursWorked}
-                              className=" w-10  text-center"
-                              onChange={(e) => handleHouerChange(e, index)}
-                            />
-                          </div>
-                        </TableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </StyledTableContainer>
+              <Box sx={{ height: 400 }}>
+                <DataGrid
+                  rows={userTimesheet}
+                  columns={columns}
+                  pageSizeOptions={false}
+                  disableRowSelectionOnClick
+                  hideFooter
+                  editMode="row"
+                  processRowUpdate={saveDeviceCell}
+                />
+              </Box>
               <div className="mt-6 grid grid-flow-col justify-around">
                 <Button
                   component="label"

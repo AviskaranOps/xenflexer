@@ -18,13 +18,14 @@ import { styled } from "@mui/material/styles";
 import pdf from "../../assets/images/pdf-icon.png";
 import avtar from "../../assets/images/Avatar.png";
 import { Dummy_Approval, Dummy_Pending } from "../utils/dummy";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
-import axios from 'axios';
+import axios from "axios";
 import { useEffect } from "react";
 
 export const PendingApproval = () => {
   const navigation = useNavigate();
+  const history = useLocation();
   const [data, setData] = React.useState(Dummy_Pending);
   const [searchData, setSearchData] = React.useState([]);
   const [selected, setSelected] = React.useState([]);
@@ -37,70 +38,81 @@ export const PendingApproval = () => {
   // const [userId, setUserId] = React.useState(0);
   // const [timesheetId, setTimeSheetId] = React.useState(0);
 
-  
-let userId = -1;
-let timesheetId = -1;
-
+  let userId = -1;
+  let timesheetId = -1;
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-      axios.get(
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserAndTimesheets",
         {
           headers: {
-          'Authorization': `Bearer ${user.accessToken}`
-        }}
-      ).then(response => {
-          console.log(response.data);
-          setTimesheets(response.data.timesheets);
-          // timesheetId = response.data[0].id;
-          setName(response.data.timesheets[0].name);
-          setUserList(response.data.users);
-          setSearch(response.data.users[0].username);
-          getUserTimesheetDetail(response.data.users[0].id, response.data.timesheets[0].id)
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setTimesheets(response.data.timesheets);
+        // timesheetId = response.data[0].id;
+        setName(response.data.timesheets[history.state - 1].name);
+        setUserList(response.data.users);
+        setSearch(response.data.users[0].username);
+        getUserTimesheetDetail(
+          response.data.users[0].id,
+          response.data.timesheets[history.state - 1].id
+        );
       })
-    }, []);
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
-    useEffect(() => {
-      const user = JSON.parse(localStorage.getItem('token'));
-        axios.get(
-          "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
-          {
-            headers: {
-            'Authorization': `Bearer ${user.accessToken}`
-          }}
-        ).then(response => {
-            setPendingts(response.data)
-        }).
-        catch(error => {
-          console.error("info save error:", error.message);
-        })
-      }, []);
-
-    const getUserTimesheetDetail = (userId, timesheetId) => {
-      const user = JSON.parse(localStorage.getItem('token'));
-      console.log(userId, timesheetId);
-      axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ timesheetId,
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
         {
           headers: {
-            'Authorization': `Bearer ${user.accessToken}`
-          }
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-        ).then(response => {
-            console.log(response.data);
-            setUserTimesheet(response.data);
-        }).
-        catch(error => {
-          console.error("info save error:", error.message);
-        })
-    
-    }
+      )
+      .then((response) => {
+        console.log(response.data, "pending------");
+        setPendingts(response.data);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
-
+  const getUserTimesheetDetail = (userId, timesheetId) => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    console.log(userId, timesheetId);
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+          userId +
+          "&timesheetId=" +
+          timesheetId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setUserTimesheet(response.data);
+        // setName(response.data)
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -154,72 +166,83 @@ let timesheetId = -1;
   `;
 
   const handlePendingApproval = (username, userId) => {
-    const user = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem("token"));
     console.log(name);
     setSearch(username);
-    const tId = timesheets.find(item => item['name'] === name);
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ tId.id,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    const tId = timesheets.find((item) => item["name"] === name);
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+          userId +
+          "&timesheetId=" +
+          tId.id,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-      ).then(response => {
-          console.log(response.data);
-          setUserTimesheet(response.data);
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+      )
+      .then((response) => {
+        console.log(response.data);
+        setUserTimesheet(response.data);
       })
-  }
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
 
-
-  const handleUserSelectChange = (e, selected, type) => {
-    e.preventDefault();
-    let uId = userList.find(item => item['username'] === selected);
-    let tId = timesheets.find(item => item['name'] === selected);
+  const handleUserSelectChange = (selected, type) => {
+    let uId = userList.find((item) => item["username"] === selected);
+    let tId = timesheets.find((item) => item["name"] === selected);
     console.log(uId, tId);
-    if(type != "user") uId = userList.find(item => item['username'] === search);
-    if(type != "timesheet") tId = timesheets.find(item => item['name'] === name);
-    console.log(uId, tId);
-    const user = JSON.parse(localStorage.getItem('token'));
+    if (type != "user")
+      uId = userList.find((item) => item["username"] === search);
+    if (type != "timesheet")
+      tId = timesheets.find((item) => item["name"] === name);
+    console.log(uId, tId, "check alll timr-------------");
+    const user = JSON.parse(localStorage.getItem("token"));
     // const userd = JSON.parse(uId);
     // const timeshId = JSON.parse(tId);
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + uId.id + "&timesheetId="+ tId.id,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+          uId.id +
+          "&timesheetId=" +
+          tId.id,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-      ).then(response => {
-          console.log(response.data);
-          setUserTimesheet(response.data);
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+      )
+      .then((response) => {
+        console.log(response.data);
+        setUserTimesheet(response.data);
       })
-
-  }
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
 
   const savePendingApproval = () => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.post(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
-      userTimesheet,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
+        userTimesheet,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-      ).then(response => {
-          console.log(response.data);
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+      )
+      .then((response) => {
+        console.log(response.data);
       })
-  }
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
 
   const statusChagehandler = (e, index) => {
     const newData = [...userTimesheet];
@@ -258,7 +281,7 @@ let timesheetId = -1;
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white w-full">
       <div className="flex w-full">
         <SideNavAdmin />
         <div className="mx-20 pt-10 pb-20 w-full">
@@ -280,7 +303,7 @@ let timesheetId = -1;
               options={userList.map((option) => option.username)}
               value={search}
               onChange={(event, newValue) => {
-                handleUserSelectChange(event, newValue, "user");
+                handleUserSelectChange(newValue, "user");
                 setSearch(newValue);
               }}
               renderInput={(params) => (
@@ -295,7 +318,7 @@ let timesheetId = -1;
               name="timesheet"
               value={name}
               onChange={(event, newValue) => {
-                handleUserSelectChange(event, newValue, "timesheet");
+                handleUserSelectChange(newValue, "timesheet");
                 setName(newValue);
               }}
               renderInput={(params) => (
@@ -331,15 +354,17 @@ let timesheetId = -1;
               ))}
             </Select> */}
           </div>
-          <div className="grid grid-flow-col">
-            <div className="grid grid-flow-row">
+          <div className="flex w-full ">
+            <div className="grid grid-flow-row w-full pr-10">
               {/* table */}
-              <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+              <StyledTableContainer
+                sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
                 <Table aria-label="customized table" stickyHeader>
                   <StyledTableHead>
                     <TableRow>
                       <TableCell></TableCell>
-                      <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
+                      <TableCell
+                        style={{ fontWeight: "bold", color: "#475467" }}>
                         Name
                       </TableCell>
                       <TableCell
@@ -365,10 +390,13 @@ let timesheetId = -1;
                         <TableCell
                           padding="checkbox"
                           onClick={(event) => handleClick(event, index)}>
-                          <Checkbox color="primary" checked={isSelected(index)} />
+                          <Checkbox
+                            color="primary"
+                            checked={isSelected(index)}
+                          />
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {row.timesheetName} 
+                          {row.timesheetName}
                         </TableCell>
                         <TableCell align="center">{row.date}</TableCell>
                         <TableCell align="center">{row.hoursWorked}</TableCell>
@@ -434,37 +462,37 @@ let timesheetId = -1;
               </div>
             </div>
             {/* pending Approval */}
-            <div>
-              <div className="grid grid-flow-row pl-16">
+            <div className="w-72 ">
+              <div className="grid grid-flow-row  items-center ">
                 <text className="text-app-green font-bold my-5 text-xl text-center">
                   Pending Approval
                 </text>
-                {pendingts.map((data, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="grid grid-flow-col border border-app-gray p-2 mx-3 mb-2 rounded-md">
-                      <div className="grid grid-flow-col justify-start gap-5 pl-5">
-                        <img src={avtar} alt="avtar" />
-                        <div className="grid grid-flow-row">
-                          <text>{data.username}</text>
-                          <text>{data.status}</text>
+                <div className="justify-center grid grid-flow-row">
+                  {pendingts.map((data, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="grid grid-flow-col border border-app-gray p-2 mx-3 mb-2 rounded-md w-64"
+                        onClick={() => {
+                          handleUserSelectChange(data?.username, "user");
+                          setSearch(data?.username);
+                        }}>
+                        <div className="grid grid-flow-col justify-start gap-5 pl-5">
+                          <img src={avtar} alt="avtar" />
+                          <div className="grid grid-flow-row">
+                            <text>{data.username}</text>
+                            <text>{data.status}</text>
+                          </div>
                         </div>
                       </div>
-                      <Checkbox 
-                        onChange={e => {
-                          console.log(e.target.checked);
-                          handlePendingApproval(data.username, data.userid);
-                        }}
-                      />
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
 
                 <div className="justify-center flex mt-10">
                   <Button
                     variant="contained"
-                    onClick={savePendingApproval }
+                    onClick={savePendingApproval}
                     style={{ color: "#ffffff", background: "#53783B" }}>
                     Bulk Approvals
                   </Button>

@@ -9,6 +9,8 @@ import {
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
   LogoutOutlined,
+  PeopleAltOutlined,
+  PieChartOutlined,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -20,8 +22,6 @@ import ListItem from "@mui/material/ListItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import avtar from "../../assets/images/Avatar.png";
 import home from "../../assets/images/home-icon.png";
-import profile from "../../assets/images/profile-icon.png";
-import time from "../../assets/images/timesheets-icon.png";
 import logo1 from "../../assets/images/Logo.png";
 import logo2 from "../../assets/images/app-logo.png";
 import Footer from "./footer";
@@ -88,14 +88,22 @@ export const SideNav = ({ setUser, email }) => {
   }));
 
   const drawer_Data = [
-    { name: "Home", icon: home, path: "/user/profile" },
-    { name: "Timesheets", icon: time, path: "/user/timesheet" },
+    { name: "Home", icon: home, path: "/user/onboard" },
+    {
+      name: "Timesheets",
+      svgicon: <PieChartOutlined />,
+      path: "/user/timesheet",
+    },
   ];
 
   const drawer_Data_new = [
-    { name: "Home", icon: home, path: "/user/profile" },
-    { name: "Timesheets", icon: time, path: "/user/timesheet" },
-    { name: "Profile", icon: profile, path: "/user/profile" },
+    { name: "Home", icon: home, path: "/user/onboard" },
+    {
+      name: "Timesheets",
+      svgicon: <PieChartOutlined />,
+      path: "/user/timesheet",
+    },
+    { name: "Profile", svgicon: <PeopleAltOutlined />, path: "/user/profile" },
   ];
 
   React.useEffect(() => {
@@ -110,7 +118,7 @@ export const SideNav = ({ setUser, email }) => {
     setOpen(!open);
   };
   const profile_name = [
-    { name: "Documents", path: "/" },
+    { name: "Documents", path: "/user/onboard" },
     { name: "Benefit", path: "/user/benefit" },
     { name: "Payroll", path: "/user/payroll" },
     { name: "Profile Details", path: "/user/profile" },
@@ -160,9 +168,21 @@ export const SideNav = ({ setUser, email }) => {
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
+                    ml: open && data?.svgicon ? -1 : 0,
                     justifyContent: "center",
                   }}>
-                  <img src={data.icon} alt="logo" />
+                  {data?.svgicon ? (
+                    <IconButton
+                      sx={{
+                        ":hover": {
+                          background: "none",
+                        },
+                      }}>
+                      {data?.svgicon}
+                    </IconButton>
+                  ) : (
+                    <img src={data.icon} alt="logo" />
+                  )}
                 </ListItemIcon>
                 <ListItemText
                   primary={data.name}
@@ -170,7 +190,10 @@ export const SideNav = ({ setUser, email }) => {
                     fontWeight: "bold",
                     color: "#344054",
                   }}
-                  sx={{ opacity: open ? 1 : 0 }}
+                  sx={{
+                    opacity: open ? 1 : 0,
+                    ml: open && data?.svgicon ? -1 : 0,
+                  }}
                 />
               </ListItemButton>
             ))}
@@ -191,7 +214,7 @@ export const SideNav = ({ setUser, email }) => {
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
                   }}>
-                  <img src={profile} alt="logo" />
+                  <PeopleAltOutlined />
                 </ListItemIcon>
                 <ListItemText
                   primary={"Profile"}

@@ -14,13 +14,13 @@ import {
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
   LogoutOutlined,
+  PeopleAltOutlined,
+  PieChartOutlined,
 } from "@mui/icons-material";
 import logo1 from "../../assets/images/Logo.png";
 import logo2 from "../../assets/images/app-logo.png";
 import Footer from "./footer";
 import home from "../../assets/images/home-icon.png";
-import profile from "../../assets/images/profile-icon.png";
-import time from "../../assets/images/timesheets-icon.png";
 import avtar from "../../assets/images/Avatar.png";
 
 export const SideNavAdmin = ({ setUser, email }) => {
@@ -85,13 +85,17 @@ export const SideNavAdmin = ({ setUser, email }) => {
 
   const drawer_Data = [
     { name: "Home", icon: home, path: "/admin" },
-    { name: "Profile", icon: profile, path: "/admin/profile" },
+    { name: "Profile", svgicon: <PeopleAltOutlined />, path: "/admin/profile" },
   ];
 
   const drawer_Data_new = [
     { name: "Home", icon: home, path: "/admin" },
-    { name: "Profile", icon: profile, path: "/admin/profile" },
-    { name: "Timesheets", icon: time, path: "/admin/approval" },
+    { name: "Profile", svgicon: <PeopleAltOutlined />, path: "/admin/profile" },
+    {
+      name: "Timesheets",
+      svgicon: <PieChartOutlined />,
+      path: "/admin/approval",
+    },
   ];
 
   React.useEffect(() => {
@@ -155,9 +159,21 @@ export const SideNavAdmin = ({ setUser, email }) => {
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
+                    ml: open && data?.svgicon ? -1 : 0,
                     justifyContent: "center",
                   }}>
-                  <img src={data.icon} alt="logo" />
+                  {data?.svgicon ? (
+                    <IconButton
+                      sx={{
+                        ":hover": {
+                          background: "none",
+                        },
+                      }}>
+                      {data?.svgicon}
+                    </IconButton>
+                  ) : (
+                    <img src={data.icon} alt="logo" />
+                  )}
                 </ListItemIcon>
                 <ListItemText
                   primary={data.name}
@@ -165,7 +181,10 @@ export const SideNavAdmin = ({ setUser, email }) => {
                     fontWeight: "bold",
                     color: "#344054",
                   }}
-                  sx={{ opacity: open ? 1 : 0 }}
+                  sx={{
+                    opacity: open ? 1 : 0,
+                    ml: open && data?.svgicon ? -1 : 0,
+                  }}
                 />
               </ListItemButton>
             ))}
@@ -185,7 +204,7 @@ export const SideNavAdmin = ({ setUser, email }) => {
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
                   }}>
-                  <img src={time} alt="logo" />
+                  <PieChartOutlined />
                 </ListItemIcon>
                 <ListItemText
                   primary={"TimeSheet"}

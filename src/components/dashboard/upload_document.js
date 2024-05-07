@@ -16,15 +16,14 @@ import mp4 from "../../assets/images/mp4-icon.png";
 import fig from "../../assets/images/fig-icon.png";
 import docx from "../../assets/images/docx-icon.png";
 import axios from "axios";
-import { message } from 'antd';
+import { message } from "antd";
 
-export const Upload_Document = ({ next }) => {
+export const Upload_Document = ({ next, back }) => {
   const [resume, setResume] = React.useState();
   const [certificate, setCretificate] = React.useState();
   const [proof, setProf] = React.useState();
   const [tax, setTax] = React.useState();
   const [agreement, setAgreement] = React.useState();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,21 +35,25 @@ export const Upload_Document = ({ next }) => {
     formData.append("agreement", agreement);
     formData.append("docs", true);
     const user = JSON.parse(localStorage.getItem("token"));
-    await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDocuments?userId="+ user.userId,
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDocuments?userId=" +
+          user.userId,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization" : `Bearer ${user.accessToken}`
+            Authorization: `Bearer ${user.accessToken}`,
           },
         }
-      ).then(response => {
+      )
+      .then((response) => {
         message.success("data saved successfully");
-      }).catch(error => {
-      console.error("document save error:", error.message);
-    })
-  }
+      })
+      .catch((error) => {
+        console.error("document save error:", error.message);
+      });
+  };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -313,6 +316,20 @@ export const Upload_Document = ({ next }) => {
             style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
             sx={{
+              marginLeft: 5,
+              backgroundColor: "#7B964A",
+              "&:hover": {
+                backgroundColor: "#7B964A",
+              },
+            }}
+            onClick={back}>
+            Previous
+          </Button>
+          <Button
+            style={{ color: "white", borderColor: "#7F56D9" }}
+            variant="contained"
+            sx={{
+              marginLeft: 5,
               backgroundColor: "#7B964A",
               "&:hover": {
                 backgroundColor: "#7B964A",

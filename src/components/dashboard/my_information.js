@@ -1,11 +1,11 @@
 import React from "react";
 import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
-import { message } from 'antd';
+import { message } from "antd";
 import { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-export const My_Information = ({ next }) => {
+export const My_Information = ({ next, back }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
   const [country, setCountry] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -30,7 +30,6 @@ export const My_Information = ({ next }) => {
 
   const navigate = useNavigate();
 
-
   // useEffect(() => {
   //     const user = JSON.parse(localStorage.getItem('token'));
   //     axios.get(
@@ -49,57 +48,74 @@ export const My_Information = ({ next }) => {
   //   })
   // }, []);
 
-
   useEffect(() => {
-      const user = JSON.parse(localStorage.getItem('token'));
-      axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserInformation?userId="+ user.userId,
-        {headers: {
-          'Authorization': `Bearer ${user.accessToken}`
-        }}
-      ).then(response => {
-          console.log(response);
-          if(response.status != 204){
-            const data = response.data;
-            setHearAboutUs(data.howDidYouHearAboutUs);
-            setCountry(data.country);
-            setDoYouWant(data.doYouWantXenspireToBe);
-            setEmail(data.email);
-            setNo(data.mobile);
-            setProject(data.workingOnProject);
-            setXenspire(data.xenspireIsTheEmployer);
-          }
-      }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserInformation?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status != 204) {
+          const data = response.data;
+          setHearAboutUs(data.howDidYouHearAboutUs);
+          setCountry(data.country);
+          setDoYouWant(data.doYouWantXenspireToBe);
+          setEmail(data.email);
+          setNo(data.mobile);
+          setProject(data.workingOnProject);
+          setXenspire(data.xenspireIsTheEmployer);
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   }, []);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const mobile = no;
     const how_did_you_hear_about_us = hearAboutUs;
-    const working_on_project =  project;
+    const working_on_project = project;
     const xenspire_is_the_employer = xenspire;
     const do_you_want_xenspire_to_be = doYouWant;
-    const user = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem("token"));
     console.log(user);
     const my_info = true;
-    await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId="+user.userId,
-        { how_did_you_hear_about_us, country, xenspire_is_the_employer, email, mobile, working_on_project, do_you_want_xenspire_to_be, my_info },
-        {headers: {
-          'Authorization': `Bearer ${user.accessToken}`
-        }}
-      ).then(response => {
-          message.success("data saved successfully");
-          console.log(response.data);
-      }).
-     catch(error => {
-      console.error("info save error:", error.message);
-    })
-  }
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId=" +
+          user.userId,
+        {
+          how_did_you_hear_about_us,
+          country,
+          xenspire_is_the_employer,
+          email,
+          mobile,
+          working_on_project,
+          do_you_want_xenspire_to_be,
+          my_info,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        message.success("data saved successfully");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
 
   return (
     <div>
@@ -113,14 +129,14 @@ export const My_Information = ({ next }) => {
             displayEmpty
             value={hearAboutUs}
             onChange={(e) => setHearAboutUs(e.target.value)}
-            renderValue={(selected => {
+            renderValue={(selected) => {
               if (selected.length === 0) {
                 return (
                   <text style={{ color: "#53783B" }}>Select from the list</text>
                 );
               }
               return selected;
-            })}
+            }}
             sx={{
               color: "#53783B",
               ".MuiOutlinedInput-notchedOutline": {
@@ -343,7 +359,21 @@ export const My_Information = ({ next }) => {
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
+            disabled
             sx={{
+              backgroundColor: "#7B964A",
+              "&:hover": {
+                backgroundColor: "#7B964A",
+              },
+            }}
+            onClick={back}>
+            Previous
+          </Button>
+          <Button
+            style={{ color: "white", borderColor: "#7F56D9" }}
+            variant="contained"
+            sx={{
+              marginLeft: 5,
               backgroundColor: "#7B964A",
               "&:hover": {
                 backgroundColor: "#7B964A",

@@ -1,11 +1,10 @@
 import React from "react";
-import { Button, FormLabel, MenuItem, TextField } from "@mui/material";
+import { Button, FormLabel, TextField } from "@mui/material";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
-import axios  from "axios";
-import { message } from 'antd';
-import Select  from 'react-select';
+import axios from "axios";
+import { message } from "antd";
+import Select from "react-select";
 import { useEffect } from "react";
-
 
 export const CreateTimeSheet = ({ add_Data }) => {
   const [name, setName] = React.useState("");
@@ -14,25 +13,25 @@ export const CreateTimeSheet = ({ add_Data }) => {
   const [applicable, setApplicable] = React.useState([]);
   const [userList, setUserList] = React.useState([]);
 
-
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserList",
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserList",
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-    ).then(response => {
+      )
+      .then((response) => {
         console.log(response.data);
         setUserList(response.data);
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   }, []);
-
 
   // const names = [
   //   "Oliver Hansen",
@@ -47,33 +46,36 @@ export const CreateTimeSheet = ({ add_Data }) => {
   //   "Kelly Snyder",
   // ];
 
-
   const getOptionLabel = (option) => option.username;
   const getOptionValue = (option) => option.id;
 
-  const handleClick = async(e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("token"));
     console.log(applicable);
-    const selectedValues = applicable.map(option => option.id);
-    await axios.post(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId="+user.userId,
-      {
-        name: name,
-        startDate: startDate,
-        endDate: endDate,
-        userIdList: selectedValues,
-      },
-      {
-        headers: {
-          Authorization : `Bearer ${user.accessToken}`
+    const selectedValues = applicable.map((option) => option.id);
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
+          user.userId,
+        {
+          name: name,
+          startDate: startDate,
+          endDate: endDate,
+          userIdList: selectedValues,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-      ).then(response => {
+      )
+      .then((response) => {
         message.success("saved successfully");
-      }).catch(error => {
+      })
+      .catch((error) => {
         console.error("volantary save error:", error.message);
-    })
+      });
   };
 
   // const options = [
@@ -82,7 +84,7 @@ export const CreateTimeSheet = ({ add_Data }) => {
   //   { value: 3, label: 'mahi' }
   // ];
 
-  const handleChange = selectedOptions => {
+  const handleChange = (selectedOptions) => {
     setApplicable(selectedOptions);
   };
 

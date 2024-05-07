@@ -11,7 +11,7 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect } from "react";
 
-export const My_Experience = ({ next }) => {
+export const My_Experience = ({ next, back }) => {
   const [file, setFile] = React.useState();
 
   const [experianceData, setExperianceData] = React.useState([
@@ -69,22 +69,26 @@ export const My_Experience = ({ next }) => {
     width: 1,
   });
 
-  const user = JSON.parse(localStorage.getItem('token'));
-
+  const user = JSON.parse(localStorage.getItem("token"));
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserExperience?userId="+ user.userId,
-      {headers: {
-        'Authorization': `Bearer ${user.accessToken}`
-      }}
-    ).then(response => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserExperience?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
         console.log(response.data);
-        if(response.status != 204){
+        if (response.status != 204) {
           const data = response.data;
           const explist = [];
-          for(var item of data) {
+          for (var item of data) {
             const exp = {
               job_title: item.jobTitle,
               company_name: item.companyName,
@@ -92,59 +96,62 @@ export const My_Experience = ({ next }) => {
               currentCompany: item.currentCompany,
               startDate: item.startDate,
               endDate: item.endDate,
-            }
+            };
             explist.push(exp);
           }
           setExperianceData(explist);
         }
-    }).
-  catch(error => {
-    console.error("info save error:", error.message);
-  })
-}, []);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = JSON.parse(localStorage.getItem('token'));
-    await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userExperience?userId="+user.userId,
-          experianceData,
+    const user = JSON.parse(localStorage.getItem("token"));
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userExperience?userId=" +
+          user.userId,
+        experianceData,
         {
           headers: {
-            'Authorization': `Bearer ${user.accessToken}`,
+            Authorization: `Bearer ${user.accessToken}`,
             "Content-Type": "application/json",
           },
         }
-      ).then(response => {
-
-      }).catch(error => {
+      )
+      .then((response) => {})
+      .catch((error) => {
         console.error("experience save error:", error.message);
-      })
+      });
   };
 
-
-  const handleResumeUpload = async(e) => {
+  const handleResumeUpload = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    setFile(e.target.files[0])
+    setFile(e.target.files[0]);
     formData.append("file", e.target.files[0]);
-    const user = JSON.parse(localStorage.getItem('token'));
-    await axios.post(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadResume?userId=" + user.userId,
+    const user = JSON.parse(localStorage.getItem("token"));
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadResume?userId=" +
+          user.userId,
         formData,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    ).then(response => {
-
-    }).catch(error => {
-      console.error("experience save error:", error.message);
-    })
-  }
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then((response) => {})
+      .catch((error) => {
+        console.error("experience save error:", error.message);
+      });
+  };
 
   return (
     <div>
@@ -175,7 +182,7 @@ export const My_Experience = ({ next }) => {
               Upload Resume/CV
               <VisuallyHiddenInput
                 type="file"
-                  onChange={(e) => handleResumeUpload(e)}
+                onChange={(e) => handleResumeUpload(e)}
               />
             </Button>
           </div>
@@ -298,6 +305,19 @@ export const My_Experience = ({ next }) => {
             }}
             onClick={() => addEepFields()}>
             Add Education
+          </Button>
+          <Button
+            style={{ color: "white", borderColor: "#7F56D9" }}
+            variant="contained"
+            sx={{
+              marginLeft: 5,
+              backgroundColor: "#7B964A",
+              "&:hover": {
+                backgroundColor: "#7B964A",
+              },
+            }}
+            onClick={back}>
+            Previous
           </Button>
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}

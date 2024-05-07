@@ -17,14 +17,8 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import {
-  AddOutlined,
-  CloseOutlined,
-  PersonAddAltOutlined,
-  Search,
-} from "@mui/icons-material";
+import { CloseOutlined, Search } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
-import { DummyData } from "../utils/dummy";
 import { useNavigate } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
 import axios from "axios";
@@ -40,9 +34,10 @@ export const AdminHome = () => {
   const [array, setArray] = React.useState([]);
   const [oneOf, setOneof] = React.useState("");
   const [timesheets, setTimesheets] = React.useState([]);
-  const [dialogeOpen, setDialogeOpen] = React.useState(false);
+  const [filterArray, setFilterArray] = React.useState([]);
 
   // dialoge data
+  const [dialogeOpen, setDialogeOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
   const [endDate, setEndDate] = React.useState("");
@@ -92,6 +87,24 @@ export const AdminHome = () => {
       });
   }, []);
 
+  useEffect(() => {
+    setFilterArray(array);
+  }, [array]);
+
+  const filterSearch = () => {
+    const data = array.filter((e) =>
+      e?.username?.toLowerCase().includes(search?.toLowerCase())
+    );
+    setFilterArray(data ? data : array);
+  };
+
+  useEffect(() => {
+    if (search === "") {
+      return setFilterArray(array);
+    }
+    filterSearch();
+  }, [search]);
+
   const onCloseDialoge = () => {
     setDialogeOpen(false);
   };
@@ -115,16 +128,13 @@ export const AdminHome = () => {
     }
   `;
 
-  const handleChange = (selectedOptions) => {
-    setOneof(selectedOptions);
-  };
-
   const handleChangeDialoge = (selectedOptions) => {
     setApplicable(selectedOptions);
   };
 
   const handleClickDialoge = async (e) => {
     e.preventDefault();
+
     const user = JSON.parse(localStorage.getItem("token"));
     console.log(applicable);
     const selectedValues = applicable.map((option) => option.id);
@@ -150,6 +160,7 @@ export const AdminHome = () => {
       .catch((error) => {
         console.error("volantary save error:", error.message);
       });
+    onCloseDialoge();
   };
 
   useEffect(() => {
@@ -249,8 +260,8 @@ export const AdminHome = () => {
                 </TableRow>
               </StyledTableHead>
               <TableBody>
-                {array.map((row) => (
-                  <StyledTableRow key={row.name}>
+                {filterArray.map((row) => (
+                  <StyledTableRow key={row.username}>
                     <TableCell align="center">{row.username}</TableCell>
                     <TableCell align="center">{row.email}</TableCell>
                     <TableCell align="center">{row.timesheet}</TableCell>

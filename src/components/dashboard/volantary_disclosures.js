@@ -8,9 +8,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { message } from 'antd';
+import { message } from "antd";
 
-export const Volantary_Disclosures = () => {
+export const Volantary_Disclosures = ({ back }) => {
   const [update, setUpdate] = React.useState();
   const [notification, setNotification] = React.useState();
   const navigation = useNavigate();
@@ -18,22 +18,26 @@ export const Volantary_Disclosures = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("token"));
-    if(update === "yes") setUpdate(true);
-    if(notification === "yes") setNotification(true);
-    await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDisclosure?userId="+user.userId,
+    if (update === "yes") setUpdate(true);
+    if (notification === "yes") setNotification(true);
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDisclosure?userId=" +
+          user.userId,
         { update, notification },
         {
           headers: {
-            "Authorization" : `Bearer ${user.accessToken}`
+            Authorization: `Bearer ${user.accessToken}`,
           },
         }
-      ).then(response => {
+      )
+      .then((response) => {
         message.success("saved successfully");
-        navigation('/user/profile');
-      }).catch(error => {
+        navigation("/user/profile");
+      })
+      .catch((error) => {
         console.error("volantary save error:", error.message);
-    })
+      });
   };
 
   return (
@@ -84,6 +88,19 @@ export const Volantary_Disclosures = () => {
           </RadioGroup>
         </div>
         <div className="mt-5 justify-end flex">
+          <Button
+            style={{ color: "white", borderColor: "#7F56D9" }}
+            variant="contained"
+            sx={{
+              marginLeft: 5,
+              backgroundColor: "#7B964A",
+              "&:hover": {
+                backgroundColor: "#7B964A",
+              },
+            }}
+            onClick={back}>
+            Previous
+          </Button>
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
