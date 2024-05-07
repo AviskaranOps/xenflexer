@@ -10,13 +10,13 @@ import {
   TableRow,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Dummy_Benifits } from "../utils/dummy";
 import { PopUp } from "../common/popup";
 import { FiberManualRecord } from "@mui/icons-material";
 import { SideNav } from "../widgets/sidenav";
+import { Dummy_benefits } from "../utils/dummy";
 
-export const Benifit = () => {
-  const [array, serArray] = React.useState(Dummy_Benifits);
+export const Benefit = () => {
+  const [array, serArray] = React.useState(Dummy_benefits);
   const [dialogeOpen, setDialogeOpen] = React.useState(false);
   const [dialogeData, setDialogeData] = React.useState();
 
@@ -111,13 +111,16 @@ export const Benifit = () => {
                   </TableCell>
                   <TableCell
                     align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}></TableCell>
+                    style={{
+                      fontWeight: "bold",
+                      color: "#475467",
+                    }}></TableCell>
                 </TableRow>
               </StyledTableHead>
               <TableBody>
                 {array.map((row, index) => (
                   <StyledTableRow key={index}>
-                    <TableCell align="center">{row.benifits}</TableCell>
+                    <TableCell align="center">{row.benefits}</TableCell>
                     <TableCell align="center">
                       <RenderStatus data={row.status} />
                     </TableCell>
@@ -148,7 +151,11 @@ export const Benifit = () => {
 
           {/* Dialog */}
           {dialogeOpen && (
-            <PopUp open={dialogeOpen} data={dialogeData} onClose={onCloseDialoge} />
+            <PopUp
+              open={dialogeOpen}
+              data={dialogeData}
+              onClose={onCloseDialoge}
+            />
           )}
         </div>
       </div>

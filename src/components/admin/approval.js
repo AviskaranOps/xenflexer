@@ -12,7 +12,7 @@ import { Dummy_Approval, get_Data } from "../utils/dummy";
 import { useNavigate } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
 import { useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 export const Approval = () => {
   const navigation = useNavigate();
@@ -23,22 +23,24 @@ export const Approval = () => {
   const [timesheets, setTimesheets] = React.useState([]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
-      {
-        headers: {
-        'Authorization': `Bearer ${user.accessToken}`
-      }}
-    ).then(response => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
         console.log(response.data);
         setTimesheets(response.data);
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
-    }, []);
-  
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -50,6 +52,11 @@ export const Approval = () => {
     // hide last border
     "&:last-child td, &:last-child th": {
       border: 0,
+    },
+
+    ":hover": {
+      backgroundColor: "#f9fafb",
+      cursor: "pointer",
     },
   }));
 
@@ -123,7 +130,7 @@ export const Approval = () => {
                       align="center"
                       sx={{
                         backgroundColor:
-                          row.status === "Pending" ? "#FFFFFF" : "#F9FAFB",
+                          row.status === "Pending" ? "#F9FAFB" : "#FFFFFF",
                       }}>
                       {row.status}
                     </TableCell>

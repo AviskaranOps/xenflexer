@@ -35,7 +35,6 @@ export const SideNavAdmin = ({ setUser, email }) => {
 
   const drawerWidth = 250;
 
-
   const openedMixin = (theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -131,7 +130,8 @@ export const SideNavAdmin = ({ setUser, email }) => {
               }}>
               <ListItemIcon
                 sx={{
-                  justifyContent: "left",
+                  justifyContent: "center",
+                  flex: 1,
                 }}>
                 {open ? (
                   <img src={logo2} alt="logo" width={180} />
@@ -234,12 +234,16 @@ export const SideNavAdmin = ({ setUser, email }) => {
                 <img src={avtar} className="w-10" alt="avtar" />
               </div>
               <div className="grid grid-flow-row ">
-                <text style={{ fontSize: 12 }}>{JSON.parse(localStorage.getItem('token')).username}</text>
                 <text style={{ fontSize: 12 }}>
-                  {email ? email : JSON.parse(localStorage.getItem('token')).email}
+                  {JSON.parse(localStorage.getItem("token")).username}
+                </text>
+                <text style={{ fontSize: 12 }}>
+                  {email
+                    ? email
+                    : JSON.parse(localStorage.getItem("token")).email}
                 </text>
               </div>
-              <IconButton onClick={() => navigation('/logout')}>
+              <IconButton onClick={() => navigation("/logout")}>
                 <LogoutOutlined color="success" />
               </IconButton>
             </div>

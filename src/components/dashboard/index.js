@@ -5,7 +5,7 @@ import { Home } from "./home";
 import { SideNav } from "../widgets/sidenav";
 import { DashboardTimeSheet } from "./dashboardTimeSheet";
 import { Profile } from "./profile";
-import { Benifit } from "./benifit";
+import { Benefit } from "./benefit";
 import { Payroll } from "./payroll";
 
 export const DashBoard = ({ setUser, email }) => {
@@ -18,7 +18,7 @@ export const DashBoard = ({ setUser, email }) => {
           <Route path="home" element={<Home />} />
           <Route path="dashboard" element={<DashboardTimeSheet />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="benifit" element={<Benifit />} />
+          <Route path="benefit" element={<Benefit />} />
           <Route path="payroll" element={<Payroll />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

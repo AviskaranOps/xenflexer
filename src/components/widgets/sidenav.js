@@ -111,7 +111,7 @@ export const SideNav = ({ setUser, email }) => {
   };
   const profile_name = [
     { name: "Documents", path: "/" },
-    { name: "Benifit", path: "/user/benifit" },
+    { name: "Benefit", path: "/user/benefit" },
     { name: "Payroll", path: "/user/payroll" },
     { name: "Profile Details", path: "/user/profile" },
   ];
@@ -240,12 +240,16 @@ export const SideNav = ({ setUser, email }) => {
                 <img src={avtar} className="w-10" alt="avtar" />
               </div>
               <div className="grid grid-flow-row ">
-                <text style={{ fontSize: 12 }}>{JSON.parse(localStorage.getItem('token')).username}</text>
                 <text style={{ fontSize: 12 }}>
-                  {email ? email : JSON.parse(localStorage.getItem('token')).email}
+                  {JSON.parse(localStorage.getItem("token")).username}
+                </text>
+                <text style={{ fontSize: 12 }}>
+                  {email
+                    ? email
+                    : JSON.parse(localStorage.getItem("token")).email}
                 </text>
               </div>
-              <IconButton onClick={() => navigation('/logout')}>
+              <IconButton onClick={() => navigation("/logout")}>
                 <LogoutOutlined color="success" />
               </IconButton>
             </div>
