@@ -25,7 +25,7 @@ export const Approval = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
+      "http://localhost:8080/xen/getTimesheets",
       {
         headers: {
         'Authorization': `Bearer ${user.accessToken}`

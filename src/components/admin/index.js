@@ -4,7 +4,7 @@ import { TimeSheet } from "./timesheet";
 import { Approval } from "./approval";
 import { Home } from "./home";
 import { Profile } from "./profile";
-import { SideNavAdmin } from "../widgets/sidenavAdmin";
+import { SideNavAdmin } from "../widgets/sideNavAdmin";
 import { CreateTimeSheet } from "./createTimeSheet";
 import { PendingApproval } from "./pendingApproval";
 import { PdfView } from "./pdfview";

@@ -45,7 +45,7 @@ let timesheetId = -1;
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
       axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserAndTimesheets",
+        "http://localhost:8080/xen/getUserAndTimesheets",
         {
           headers: {
           'Authorization': `Bearer ${user.accessToken}`
@@ -67,7 +67,7 @@ let timesheetId = -1;
     useEffect(() => {
       const user = JSON.parse(localStorage.getItem('token'));
         axios.get(
-          "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
+          "http://localhost:8080/xen/getUserPendingTS?timesheetId=1",
           {
             headers: {
             'Authorization': `Bearer ${user.accessToken}`
@@ -84,7 +84,7 @@ let timesheetId = -1;
       const user = JSON.parse(localStorage.getItem('token'));
       console.log(userId, timesheetId);
       axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timeesheetId="+ timesheetId,
+        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ timesheetId,
         {
           headers: {
             'Authorization': `Bearer ${user.accessToken}`
@@ -153,10 +153,13 @@ let timesheetId = -1;
     }
   `;
 
-  const handlePendingApproval = (userId, timesheetId) => {
+  const handlePendingApproval = (username, userId) => {
     const user = JSON.parse(localStorage.getItem('token'));
+    console.log(name);
+    setSearch(username);
+    const tId = timesheets.find(item => item['name'] === name);
     axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" + userId + "&timeesheetId="+ timesheetId,
+      "http://localhost:8080/xen/getUserTimesheetDetail?userId=" + userId + "&timesheetId="+ tId.id,
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`
@@ -172,10 +175,38 @@ let timesheetId = -1;
   }
 
 
+  const handleUserSelectChange = (e, selected, type) => {
+    e.preventDefault();
+    let uId = userList.find(item => item['username'] === selected);
+    let tId = timesheets.find(item => item['name'] === selected);
+    console.log(uId, tId);
+    if(type != "user") uId = userList.find(item => item['username'] === search);
+    if(type != "timesheet") tId = timesheets.find(item => item['name'] === name);
+    console.log(uId, tId);
+    const user = JSON.parse(localStorage.getItem('token'));
+    // const userd = JSON.parse(uId);
+    // const timeshId = JSON.parse(tId);
+    axios.get(
+      "http://localhost:8080/xen/getUserTimesheetDetail?userId=" + uId.id + "&timesheetId="+ tId.id,
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }
+      ).then(response => {
+          console.log(response.data);
+          setUserTimesheet(response.data);
+      }).
+      catch(error => {
+        console.error("info save error:", error.message);
+      })
+
+  }
+
   const savePendingApproval = () => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.post(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
+      "http://localhost:8080/xen/saveUserPendingTimesheet",
       userTimesheet,
       {
         headers: {
@@ -245,23 +276,44 @@ let timesheetId = -1;
             <Autocomplete
               freeSolo
               size="small"
+              name="user"
               options={userList.map((option) => option.username)}
               value={search}
               onChange={(event, newValue) => {
+                handleUserSelectChange(event, newValue, "user");
                 setSearch(newValue);
               }}
               renderInput={(params) => (
-                <TextField {...params} label="Select Approval" />
+                <TextField {...params} label="Select user" />
               )}
               className="w-72"
             />
-            <Select
+            <Autocomplete
+              freeSolo
+              size="small"
+              options={timesheets.map((option) => option.name)}
+              name="timesheet"
+              value={name}
+              onChange={(event, newValue) => {
+                handleUserSelectChange(event, newValue, "timesheet");
+                setName(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Select timesheet" />
+              )}
+              className="w-72"
+            />
+            {/* <Select
               size="small"
               required
               displayEmpty
               value={name}
               onChange={(e) => setName(e.target.value)}
               renderValue={(selected) => {
+                console.log("selected  = ", selected);
+                if(selected === undefined){
+                  return selected;
+                }
                 if (selected.length === 0) {
                   return (
                     <text style={{ color: "#667085" }}>
@@ -277,7 +329,7 @@ let timesheetId = -1;
                   {data.name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
           </div>
           <div className="grid grid-flow-col">
             <div className="grid grid-flow-row">
@@ -316,7 +368,7 @@ let timesheetId = -1;
                           <Checkbox color="primary" checked={isSelected(index)} />
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {row.name}
+                          {row.timesheetName} 
                         </TableCell>
                         <TableCell align="center">{row.date}</TableCell>
                         <TableCell align="center">{row.hoursWorked}</TableCell>
@@ -402,7 +454,7 @@ let timesheetId = -1;
                       <Checkbox 
                         onChange={e => {
                           console.log(e.target.checked);
-                          handlePendingApproval(data.userid, data.timesheetid);
+                          handlePendingApproval(data.username, data.userid);
                         }}
                       />
                     </div>

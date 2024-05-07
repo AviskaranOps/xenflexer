@@ -33,7 +33,7 @@ export const AdminHome = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUsersActiveTS",
+      "http://localhost:8080/xen/getUsersActiveTS",
       {
         headers: {
         'Authorization': `Bearer ${user.accessToken}`
@@ -54,7 +54,7 @@ const getOptionValue = (option) => option.id;
 useEffect(() => {
   const user = JSON.parse(localStorage.getItem('token'));
   axios.get(
-    "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
+    "http://localhost:8080/xen/getTimesheets",
     {
       headers: {
       'Authorization': `Bearer ${user.accessToken}`
@@ -191,7 +191,7 @@ useEffect(() => {
               }}
               className="w-72">
               {timesheets.map((data) => (
-                <MenuItem key={data.id} value={data.id}>
+                <MenuItem key={data.id} value={data.name}>
                   {data.name}
                 </MenuItem>
               ))}

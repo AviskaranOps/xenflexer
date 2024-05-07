@@ -53,7 +53,7 @@ export const My_Information = ({ next }) => {
   useEffect(() => {
       const user = JSON.parse(localStorage.getItem('token'));
       axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserInformation?userId="+ user.userId,
+        "http://localhost:8080/xen/getUserInformation?userId="+ user.userId,
         {headers: {
           'Authorization': `Bearer ${user.accessToken}`
         }}
@@ -87,7 +87,7 @@ export const My_Information = ({ next }) => {
     console.log(user);
     const my_info = true;
     await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId="+user.userId,
+        "http://localhost:8080/xen/userInformation?userId="+user.userId,
         { how_did_you_hear_about_us, country, xenspire_is_the_employer, email, mobile, working_on_project, do_you_want_xenspire_to_be, my_info },
         {headers: {
           'Authorization': `Bearer ${user.accessToken}`

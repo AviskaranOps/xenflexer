@@ -37,7 +37,7 @@ export const Upload_Document = ({ next }) => {
     formData.append("docs", true);
     const user = JSON.parse(localStorage.getItem("token"));
     await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDocuments?userId="+ user.userId,
+        "http://localhost:8080/xen/userDocuments?userId="+ user.userId,
         formData,
         {
           headers: {

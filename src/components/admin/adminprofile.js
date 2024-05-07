@@ -27,7 +27,7 @@ export const AdminProfile = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getAdminProfile?userId="+ user.userId,
+      "http://localhost:8080/xen/getAdminProfile?userId="+ user.userId,
       {headers: {
         'Authorization': `Bearer ${user.accessToken}`
       }}

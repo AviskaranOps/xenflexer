@@ -75,7 +75,7 @@ export const My_Experience = ({ next }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserExperience?userId="+ user.userId,
+      "http://localhost:8080/xen/getUserExperience?userId="+ user.userId,
       {headers: {
         'Authorization': `Bearer ${user.accessToken}`
       }}
@@ -107,7 +107,7 @@ export const My_Experience = ({ next }) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem('token'));
     await axios.post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userExperience?userId="+user.userId,
+        "http://localhost:8080/xen/userExperience?userId="+user.userId,
           experianceData,
         {
           headers: {
@@ -131,7 +131,7 @@ export const My_Experience = ({ next }) => {
     formData.append("file", e.target.files[0]);
     const user = JSON.parse(localStorage.getItem('token'));
     await axios.post(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadResume?userId=" + user.userId,
+      "http://localhost:8080/xen/uploadResume?userId=" + user.userId,
         formData,
       {
         headers: {
