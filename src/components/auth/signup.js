@@ -88,7 +88,7 @@ const Signup = () => {
                     </div>
                     <div className={`${styles.form_group}`}>
                       <p className={styles.form_text}>
-                        Already have an account? <a href="/">Log in</a>
+                        Already have an account? <a href="/login">Log in</a>
                       </p>
                     </div>
                   </div>

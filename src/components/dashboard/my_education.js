@@ -8,6 +8,7 @@ export const My_Education = ({ next, back }) => {
   const [educationData, setEducationData] = React.useState([
     { school: "", graduation: "", field: "", startDate: "", endDate: "" },
   ]);
+  const [graduationList, setGraduationList] = React.useState([]);
 
   const names = [
     "Oliver Hansen",
@@ -78,6 +79,23 @@ export const My_Education = ({ next, back }) => {
         console.error("info save error:", error.message);
       });
   }, []);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getGraduationList",
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }
+    ).then(response => {
+        setGraduationList(response.data);
+    }).
+    catch(error => {
+      console.error("info save error:", error.message);
+    })
+  }, []);  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -154,9 +172,9 @@ export const My_Education = ({ next, back }) => {
                         return selected;
                       }}
                       className="w-72">
-                      {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          {name}
+                      {graduationList.map((name) => (
+                        <MenuItem key={name.name} value={name.name}>
+                          {name.name}
                         </MenuItem>
                       ))}
                     </Select>

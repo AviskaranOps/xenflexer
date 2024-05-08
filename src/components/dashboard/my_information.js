@@ -13,6 +13,8 @@ export const My_Information = ({ next, back }) => {
   const [project, setProject] = React.useState("");
   const [xenspire, setXenspire] = React.useState("");
   const [doYouWant, setDoYouWant] = React.useState("");
+  const [countries, setCountries] = React.useState([]);
+  const [ comm, setComm] = React.useState([]);
 
   const yes_no = ["Yes", "No"];
   const names = [
@@ -30,23 +32,23 @@ export const My_Information = ({ next, back }) => {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //     const user = JSON.parse(localStorage.getItem('token'));
-  //     axios.get(
-  //       "https://xenflexer.northcentralus.cloudapp.azure.com/userOnBoarded?userId="+ user.userId,
-  //       {headers: {
-  //         'Authorization': `Bearer ${user.tokens.access}`
-  //       }}
-  //     ).then(response => {
-  //       console.log(response.data);
-  //       if(response.data.isonboarded === true) {
-  //         navigate('/user/profile');
-  //       }
-  //     }).
-  //   catch(error => {
-  //     console.error("info save error:", error.message);
-  //   })
-  // }, []);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    axios.get(
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getCountryAndComm",
+      {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }
+    ).then(response => {
+        setCountries(response.data.country);
+        setComm(response.data.communication);
+    }).
+    catch(error => {
+      console.error("info save error:", error.message);
+    })
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
@@ -153,9 +155,9 @@ export const My_Information = ({ next, back }) => {
               },
             }}
             className="w-72">
-            {names.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
+            {comm.map((name) => (
+              <MenuItem key={name.name} value={name.name}>
+                {name.name}
               </MenuItem>
             ))}
           </Select>
@@ -191,9 +193,9 @@ export const My_Information = ({ next, back }) => {
               },
             }}
             className="w-72">
-            {names.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
+            {countries.map((name) => (
+              <MenuItem key={name.name} value={name.name}>
+                {name.name}
               </MenuItem>
             ))}
           </Select>
