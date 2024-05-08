@@ -83,7 +83,7 @@ export const My_Education = ({ next, back }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "http://localhost:8080/xen/getGraduationList",
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getGraduationList",
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`

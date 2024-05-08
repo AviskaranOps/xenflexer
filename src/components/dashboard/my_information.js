@@ -35,7 +35,7 @@ export const My_Information = ({ next, back }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     axios.get(
-      "http://localhost:8080/xen/getCountryAndComm",
+      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getCountryAndComm",
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`
