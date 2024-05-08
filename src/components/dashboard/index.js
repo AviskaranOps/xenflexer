@@ -7,6 +7,7 @@ import { DashboardTimeSheet } from "./dashboardTimeSheet";
 import { Profile } from "./profile";
 import { Benefit } from "./benefit";
 import { Payroll } from "./payroll";
+import { Documents } from "./documents";
 
 export const DashBoard = ({ setUser, email }) => {
   return (
@@ -20,6 +21,7 @@ export const DashBoard = ({ setUser, email }) => {
           <Route path="profile" element={<Profile />} />
           <Route path="benefit" element={<Benefit />} />
           <Route path="payroll" element={<Payroll />} />
+          <Route path="documnets" element={<Documents />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

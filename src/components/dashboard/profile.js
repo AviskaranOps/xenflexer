@@ -28,7 +28,7 @@ export const Profile = () => {
     xenspireEmploye: "",
     country: "",
     state: "",
-    wantTobe: "Yes",
+    wantTobe: "No",
   });
   const [password, setPassword] = React.useState({
     curret: "",
@@ -253,21 +253,22 @@ export const Profile = () => {
               )}
             </div>
             <div>
-              <Button
-                style={{ color: "white", borderColor: "#7F56D9" }}
-                variant="contained"
-                sx={{
-                  marginLeft: 5,
-                  backgroundColor: "#7B964A",
-                  "&:hover": {
+              {editProfile ? (
+                <Button
+                  style={{ color: "white", borderColor: "#7F56D9" }}
+                  variant="contained"
+                  sx={{
+                    marginLeft: 5,
                     backgroundColor: "#7B964A",
-                  },
-                }}
-                startIcon={<EditOutlined />}
-                onClick={() => setEditProfile(!editProfile)}>
-                Edit Profile
-              </Button>
-              {editProfile === false && (
+                    "&:hover": {
+                      backgroundColor: "#7B964A",
+                    },
+                  }}
+                  startIcon={<EditOutlined />}
+                  onClick={() => setEditProfile(!editProfile)}>
+                  Edit Profile
+                </Button>
+              ) : (
                 <Button
                   style={{ color: "white", borderColor: "#7F56D9" }}
                   variant="contained"
@@ -288,7 +289,7 @@ export const Profile = () => {
 
           {/* profile */}
           <div className="px-56 py-16 grid grid-cols-2 gap-x-6">
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2">
               <label>Name</label>
               <TextField
                 size="small"
@@ -300,7 +301,7 @@ export const Profile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2 ">
               <label>Email</label>
               <TextField
                 type="email"
@@ -313,7 +314,7 @@ export const Profile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2 ">
               <label>Phone</label>
               <TextField
                 type="tel"
@@ -326,7 +327,7 @@ export const Profile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2 ">
               <label>Country</label>
               <TextField
                 size="small"
@@ -338,7 +339,7 @@ export const Profile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2 ">
               <label>designation</label>
               <TextField
                 size="small"
@@ -350,7 +351,7 @@ export const Profile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2 ">
               <label>State</label>
               <TextField
                 size="small"
@@ -362,11 +363,12 @@ export const Profile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-flow-col ">
+            <div className="pt-5 grid grid-cols-2 ">
               <label>Xenspire Exployee</label>
               <Select
                 size="small"
                 displayEmpty
+                disabled={editProfile}
                 value={profile.xenspireEmploye}
                 onChange={(e) =>
                   setProfile({ ...profile, xenspireEmploye: e.target.value })
@@ -384,10 +386,11 @@ export const Profile = () => {
                 ))}
               </Select>
             </div>
-            <div className="pt-5 grid grid-flow-col ">
-              <label>Want to be Xenspire Employee</label>
+            <div className="pt-5 grid grid-cols-2 ">
+              <label>Want to be Xenspire Employee?</label>
               <Select
                 size="small"
+                disabled={profile.xenspireEmploye === "Yes" || editProfile}
                 displayEmpty
                 value={profile.wantTobe}
                 onChange={(e) =>

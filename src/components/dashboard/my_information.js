@@ -14,7 +14,8 @@ export const My_Information = ({ next, back }) => {
   const [xenspire, setXenspire] = React.useState("");
   const [doYouWant, setDoYouWant] = React.useState("");
   const [countries, setCountries] = React.useState([]);
-  const [ comm, setComm] = React.useState([]);
+  const [comm, setComm] = React.useState([]);
+  const [onNext, setOnNext] = React.useState(false);
 
   const yes_no = ["Yes", "No"];
   const names = [
@@ -33,21 +34,23 @@ export const My_Information = ({ next, back }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getCountryAndComm",
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getCountryAndComm",
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-    ).then(response => {
+      )
+      .then((response) => {
         setCountries(response.data.country);
         setComm(response.data.communication);
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   }, []);
 
   useEffect(() => {
@@ -73,6 +76,7 @@ export const My_Information = ({ next, back }) => {
           setNo(data.mobile);
           setProject(data.workingOnProject);
           setXenspire(data.xenspireIsTheEmployer);
+          setOnNext(true);
         }
       })
       .catch((error) => {
@@ -113,6 +117,7 @@ export const My_Information = ({ next, back }) => {
       .then((response) => {
         message.success("data saved successfully");
         console.log(response.data);
+        setOnNext(true);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -324,6 +329,7 @@ export const My_Information = ({ next, back }) => {
             Do you want Xenspire to be?
           </FormLabel>
           <Select
+            disabled={xenspire === "Yes"}
             size="small"
             displayEmpty
             value={doYouWant}
@@ -387,6 +393,7 @@ export const My_Information = ({ next, back }) => {
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
+            disabled={!onNext}
             sx={{
               marginLeft: 5,
               backgroundColor: "#7B964A",

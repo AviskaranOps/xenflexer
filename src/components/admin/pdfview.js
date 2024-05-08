@@ -10,7 +10,7 @@ export const PdfView = () => {
   return (
     <div className="h-screen w-full">
       <div className="fixed top-10">
-        <IconButton onClick={() => navigation("/pendingApproval")}>
+        <IconButton onClick={() => navigation("/admin/pendingApproval")}>
           <KeyboardBackspaceOutlined />
         </IconButton>
       </div>
