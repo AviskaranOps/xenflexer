@@ -50,7 +50,7 @@ export const Upload_Document = ({ next, back }) => {
         }
       )
       .then((response) => {
-        message.success("data saved successfully");
+        message.success("Data saved successfully");
       })
       .catch((error) => {
         console.error("document save error:", error.message);

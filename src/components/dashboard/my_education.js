@@ -115,7 +115,7 @@ export const My_Education = ({ next, back }) => {
         }
       )
       .then((response) => {
-        message.success("data saved successfully");
+        message.success("Data saved successfully");
         console.log(response.data);
         setOnNext(true);
       })
