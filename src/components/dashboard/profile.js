@@ -10,12 +10,11 @@ import {
 } from "@mui/material";
 import { EditOutlined } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
-import avtar from "../../assets/images/Avatar.png";
 import { SideNav } from "../widgets/sidenav";
-import axios  from 'axios';
+import axios from "axios";
 import { useEffect } from "react";
-import { jwtDecode } from 'jwt-decode'
-import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const [editProfile, setEditProfile] = React.useState(true);
@@ -85,82 +84,147 @@ export const Profile = () => {
     "Kelly Snyder",
   ];
 
-
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId="+ user.userId,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-    ).then(response => {
-        if(response.data.onboarded === false){
-            navigate('/user/onboard');
+      )
+      .then((response) => {
+        if (response.data.onboarded === false) {
+          // navigate('/user/onboard');
         }
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
   }, []);
 
   useEffect(() => {
-      const user = JSON.parse(localStorage.getItem('token'));
-      axios.get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userProfile?userId="+ user.userId,
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userProfile?userId=" +
+          user.userId,
         {
           headers: {
-            'Authorization': `Bearer ${user.accessToken}`
-          }
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      ).then(response => {
-          console.log(response.data);
-          const data = response.data;
-          const profile = {
-            name: user.username,
-            email: user.email,
-            phone: data.userInfo.mobile,
-            designation: "",
-            xenspireEmploye: data.userInfo.xenspireIsTheEmployer,
-            country: data.userInfo.country,
-            state: "",
-            wantTobe: data.userInfo.doYouWantXenspireToBe
-          }
-          var eduList = [];
-          for(var edu of data.education){
-            const education = {
-              school: edu.school,
-              graduation: edu.graduation,
-              field: edu.field,
-              startDate: edu.startDate.substring(0, 11),
-              endDate: edu.endDate.substring(0,11),
-            }
-            eduList.push(education);
-          }
-          var expList = [];
-          for(var exp of data.workExperience){
-            const experience = {
-              title: exp.jobTitle,
-              companyName: exp.companyName,
-              location: exp.location,
-              radioValue: exp.currentCompany,
-              startDate: new Date(exp.startDate.substring(0, 11)),
-              endDate: new Date(exp.endDate.substring(0,11)),
-            }
-            expList.push(experience);
-          }
-          setProfile(profile);
-          setEducationData(eduList);
-          setExperianceData(expList);
-      }).
-      catch(error => {
-        console.error("info save error:", error.message);
+      )
+      .then((response) => {
+        console.log(response.data);
+        const data = response.data;
+        const profile = {
+          name: user.username,
+          email: user.email,
+          phone: data.userInfo.mobile,
+          designation: "",
+          xenspireEmploye: data.userInfo.xenspireIsTheEmployer,
+          country: data.userInfo.country,
+          state: "",
+          wantTobe: data.userInfo.doYouWantXenspireToBe,
+        };
+        var eduList = [];
+        for (var edu of data.education) {
+          const education = {
+            school: edu.school,
+            graduation: edu.graduation,
+            field: edu.field,
+            startDate: edu.startDate.substring(0, 11),
+            endDate: edu.endDate.substring(0, 11),
+          };
+          eduList.push(education);
+        }
+        var expList = [];
+        for (var exp of data.workExperience) {
+          const experience = {
+            title: exp.jobTitle,
+            companyName: exp.companyName,
+            location: exp.location,
+            radioValue: exp.currentCompany,
+            startDate: new Date(exp.startDate.substring(0, 11)),
+            endDate: new Date(exp.endDate.substring(0, 11)),
+          };
+          expList.push(experience);
+        }
+        setProfile(profile);
+        setEducationData(eduList);
+        setExperianceData(expList);
       })
-    }, []);
-
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
   const yes_no = ["Yes", "No"];
+
+  const update_password = (e) => {
+    e.preventDefault();
+    if (password.update !== password.confirm) {
+      alert("Update and Confirm not same!");
+      return;
+    }
+    const user = JSON.parse(localStorage.getItem("token"));
+
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+          user.userId,
+        { password },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.onboarded === false) {
+          // navigate('/user/onboard');
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
+
+  const save_profile = () => {
+    setEditProfile(true);
+    const user = JSON.parse(localStorage.getItem("token"));
+
+    // save profile
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+          user.userId,
+        { profile, image },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.onboarded === false) {
+          // navigate('/user/onboard');
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
+
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -169,8 +233,12 @@ export const Profile = () => {
         <div className="w-full">
           <div className="px-56 pt-20 grid grid-flow-col  items-center">
             <div className="rounded-full w-40 h-40 bg-app-gray justify-center items-center">
-              {image ? (
-                <img src={avtar} alt="check" className="w-full h-full" />
+              {image && editProfile ? (
+                <img
+                  src={image}
+                  alt="check"
+                  className="w-full h-full rounded-full"
+                />
               ) : (
                 <div className="flex justify-center items-center h-full w-full">
                   <Button component="label">
@@ -178,7 +246,7 @@ export const Profile = () => {
                     <VisuallyHiddenInput
                       type="file"
                       accept="image/jpeg, image/png,image/jpg"
-                      onChange={(e) => setImage(e.target.files[0])}
+                      onChange={onImageChange}
                     />
                   </Button>
                 </div>
@@ -199,6 +267,22 @@ export const Profile = () => {
                 onClick={() => setEditProfile(!editProfile)}>
                 Edit Profile
               </Button>
+              {editProfile === false && (
+                <Button
+                  style={{ color: "white", borderColor: "#7F56D9" }}
+                  variant="contained"
+                  sx={{
+                    marginLeft: 5,
+                    backgroundColor: "#7B964A",
+                    "&:hover": {
+                      backgroundColor: "#7B964A",
+                    },
+                  }}
+                  startIcon={<EditOutlined />}
+                  onClick={save_profile}>
+                  Save Profile
+                </Button>
+              )}
             </div>
           </div>
 
@@ -211,7 +295,9 @@ export const Profile = () => {
                 placeholder="Enter your Name"
                 value={profile.name}
                 disabled={editProfile}
-                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                onChange={(e) =>
+                  setProfile({ ...profile, name: e.target.value })
+                }
               />
             </div>
             <div className="pt-5 grid grid-flow-col ">
@@ -222,7 +308,9 @@ export const Profile = () => {
                 placeholder="Enter your Email"
                 value={profile.email}
                 disabled={editProfile}
-                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                onChange={(e) =>
+                  setProfile({ ...profile, email: e.target.value })
+                }
               />
             </div>
             <div className="pt-5 grid grid-flow-col ">
@@ -233,7 +321,9 @@ export const Profile = () => {
                 placeholder="Enter your Phone NO."
                 value={profile.phone}
                 disabled={editProfile}
-                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                onChange={(e) =>
+                  setProfile({ ...profile, phone: e.target.value })
+                }
               />
             </div>
             <div className="pt-5 grid grid-flow-col ">
@@ -267,7 +357,9 @@ export const Profile = () => {
                 placeholder="your state"
                 value={profile.state}
                 disabled={editProfile}
-                onChange={(e) => setProfile({ ...profile, state: e.target.value })}
+                onChange={(e) =>
+                  setProfile({ ...profile, state: e.target.value })
+                }
               />
             </div>
             <div className="pt-5 grid grid-flow-col ">
@@ -378,7 +470,9 @@ export const Profile = () => {
                         </div>
                       </div>
                       <div className="grid grid-flow-row gap-2">
-                        <FormLabel style={{ color: "#344054" }}>Location</FormLabel>
+                        <FormLabel style={{ color: "#344054" }}>
+                          Location
+                        </FormLabel>
                         <TextField
                           name="location"
                           size="small"
@@ -506,7 +600,7 @@ export const Profile = () => {
           </div>
 
           {/* update password */}
-          <div className="px-56 pb-28">
+          <form className="px-56 pb-28" onSubmit={update_password}>
             <div className="flex justify-end">
               <Button
                 style={{ color: "white", borderColor: "#7F56D9" }}
@@ -517,13 +611,15 @@ export const Profile = () => {
                   "&:hover": {
                     backgroundColor: "#7B964A",
                   },
-                }}>
+                }}
+                type="submit">
                 Update Password
               </Button>
             </div>
             <div className="pt-5 grid grid-flow-col ">
               <label>Current Password</label>
               <TextField
+                required
                 type="password"
                 size="small"
                 name="current"
@@ -537,6 +633,7 @@ export const Profile = () => {
             <div className="pt-5 grid grid-flow-col ">
               <label>Update Password</label>
               <TextField
+                required
                 type="password"
                 size="small"
                 name="update"
@@ -550,6 +647,7 @@ export const Profile = () => {
             <div className="pt-5 grid grid-flow-col ">
               <label>Confirm Password</label>
               <TextField
+                required
                 type="password"
                 size="small"
                 name="confirm"
@@ -560,7 +658,7 @@ export const Profile = () => {
                 }
               />
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ export const PopUp = ({ open, data, onClose }) => {
   const [file, setFile] = React.useState("");
   let uptoRef = useRef("");
   let educationRef = useRef("");
-  let KBenifitsRef = useRef("");
+  let KbenefitsRef = useRef("");
   let visaRef = useRef("");
   let gcRef = useRef("");
   let otherRef = useRef("");
@@ -39,28 +39,29 @@ export const PopUp = ({ open, data, onClose }) => {
   });
 
   const setPopUp = () => {
-    let name = data?.benifits.toLowerCase();
-    if (name.includes("legal")) {
+    let name = data?.benefits?.toLowerCase();
+    console.log(data);
+    if (name?.includes("legal")) {
       setRenderPopUp("legal");
-    } else if (name.includes("medical")) {
+    } else if (name?.includes("medical")) {
       setRenderPopUp("medical");
-    } else if (name.includes("immigration/attorney")) {
+    } else if (name?.includes("immigration/attorney")) {
       setRenderPopUp("immigration/attorney");
-    } else if (name.includes("dental")) {
+    } else if (name?.includes("dental")) {
       setRenderPopUp("dental");
-    } else if (name.includes("vision")) {
+    } else if (name?.includes("vision")) {
       setRenderPopUp("vision");
-    } else if (name.includes("short term")) {
+    } else if (name?.includes("short term")) {
       setRenderPopUp("short");
-    } else if (name.includes("long term")) {
+    } else if (name?.includes("long term")) {
       setRenderPopUp("long");
-    } else if (name.includes("education")) {
+    } else if (name?.includes("education")) {
       setRenderPopUp("education");
-    } else if (name.includes("401k")) {
+    } else if (name?.includes("401k")) {
       setRenderPopUp("401k");
-    } else if (name.includes("family care")) {
+    } else if (name?.includes("family care")) {
       setRenderPopUp("family");
-    } else if (name.includes("commuter")) {
+    } else if (name?.includes("commuter")) {
       setRenderPopUp("commuter");
     }
   };
@@ -73,7 +74,7 @@ export const PopUp = ({ open, data, onClose }) => {
         <div className="grid grid-flow-col justify-between py-3">
           <lable>
             Do you wish to activate
-            <br /> the {data?.benifits}
+            <br /> the {data?.benefits}
           </lable>
           <Switch
             checked={activateSwitch}
@@ -236,7 +237,7 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  const KBenifits = () => {
+  const Kbenefits = () => {
     return (
       <div>
         {/* switch */}
@@ -256,7 +257,7 @@ export const PopUp = ({ open, data, onClose }) => {
           <lable>Your Portion (Upto 6%)</lable>
           <TextField
             size="small"
-            inputRef={KBenifitsRef}
+            inputRef={KbenefitsRef}
             sx={{ width: 150, marginLeft: 6 }}
           />
         </div>
@@ -270,7 +271,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#D0D5DD",
             }}
             onClick={() => {
-              handleSubmit(KBenifitsRef.current.value, activateSwitch);
+              handleSubmit(KbenefitsRef.current.value, activateSwitch);
             }}>
             Raise Request
           </Button>
@@ -282,6 +283,18 @@ export const PopUp = ({ open, data, onClose }) => {
   const EmigrationDialog = () => {
     return (
       <div>
+        {/* switch */}
+        <div className="grid grid-flow-col justify-between py-3">
+          <lable>
+            Do you wish to activate
+            <br /> the {data?.benefits}
+          </lable>
+          <Switch
+            checked={activateSwitch}
+            onChange={(e) => setActivateSwitch(e.target.checked)}
+            color="success"
+          />
+        </div>
         {/* text Filed */}
         <div className="grid grid-flow-col justify-between py-3">
           <lable>Visa</lable>
@@ -324,7 +337,8 @@ export const PopUp = ({ open, data, onClose }) => {
               handleSubmit(
                 visaRef.current.value,
                 gcRef.current.value,
-                otherRef.current.value
+                otherRef.current.value,
+                activateSwitch
               )
             }>
             Raise Request
@@ -335,13 +349,14 @@ export const PopUp = ({ open, data, onClose }) => {
   };
 
   // handle submit
-  const handleSubmit = async (data1, data2, data3) => {
-    console.log(data1, data2, data3);
+  const handleSubmit = async (data1, data2, data3, data4) => {
+    console.log(data1, data2, data3, data4);
     try {
       const response = await axios.post("http://localhost:3000/api/popup/", {
         data1,
         data2,
         data3,
+        data4,
       });
 
       if (response.status === 200) {
@@ -352,6 +367,7 @@ export const PopUp = ({ open, data, onClose }) => {
     } catch (error) {
       console.error("addtimesheet save error:", error.message);
     }
+    onClose();
   };
 
   // which render run
@@ -374,7 +390,7 @@ export const PopUp = ({ open, data, onClose }) => {
       case "education":
         return <EducationDialog />;
       case "401k":
-        return <KBenifits />;
+        return <Kbenefits />;
       case "family":
         return <SwitchTextFile />;
       case "commuter":
@@ -400,7 +416,7 @@ export const PopUp = ({ open, data, onClose }) => {
         <div className="justify-center  text-center p-5">
           <DialogContentText
             sx={{ color: "black", fontWeight: "600", fontSize: 22 }}>
-            {data?.benifits || ""}
+            {data?.benefits || ""}
           </DialogContentText>
         </div>
         {/* main Data */}
