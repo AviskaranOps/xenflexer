@@ -13,7 +13,7 @@ import { useEffect } from "react";
 
 export const My_Experience = ({ next, back }) => {
   const [file, setFile] = React.useState();
-
+  const [onNext, setOnNext] = React.useState(false);
   const [experianceData, setExperianceData] = React.useState([
     {
       job_title: "",
@@ -101,6 +101,7 @@ export const My_Experience = ({ next, back }) => {
           }
           setExperianceData(explist);
         }
+        setOnNext(true);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -122,7 +123,9 @@ export const My_Experience = ({ next, back }) => {
           },
         }
       )
-      .then((response) => {})
+      .then((response) => {
+        setOnNext(true);
+      })
       .catch((error) => {
         console.error("experience save error:", error.message);
       });
@@ -187,6 +190,16 @@ export const My_Experience = ({ next, back }) => {
             </Button>
           </div>
         </div>
+        <div className="mt-5 flex justify-start">
+          <text
+            style={{
+              color: "#53783B",
+              fontWeight: "bold",
+              fontSize: 28,
+            }}>
+            Experience
+          </text>
+        </div>
         <div>
           {experianceData.map((element, index) => {
             return (
@@ -226,6 +239,7 @@ export const My_Experience = ({ next, back }) => {
                     </FormLabel>
                     <div className="grid grid-flow-col gap-2">
                       <TextField
+                        required
                         name="start_date"
                         size="small"
                         className="w-36"
@@ -234,12 +248,13 @@ export const My_Experience = ({ next, back }) => {
                         onChange={(e) => handleChange(index, e)}
                       />
                       <TextField
+                        required={element.currentCompany ? false : true}
                         name="end_date"
                         size="small"
                         className="w-36"
                         type="date"
                         value={element.end_date}
-                        disabled={element.radioValue ? true : false}
+                        disabled={element.currentCompany ? true : false}
                         onChange={(e) => handleChange(index, e)}
                       />
                     </div>
@@ -304,7 +319,7 @@ export const My_Experience = ({ next, back }) => {
               },
             }}
             onClick={() => addEepFields()}>
-            Add Education
+            Add Experience
           </Button>
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}
@@ -335,6 +350,7 @@ export const My_Experience = ({ next, back }) => {
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
+            disabled={!onNext}
             sx={{
               marginLeft: 5,
               backgroundColor: "#7B964A",

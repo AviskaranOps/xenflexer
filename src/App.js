@@ -28,6 +28,7 @@ import { Register } from "./components/website/register";
 import { ContactUp } from "./components/website/contactup";
 import { Contact_Us } from "./components/website/contact_us";
 import { Benefit } from "./components/dashboard/benefit";
+import { Documents } from "./components/dashboard/documents";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path="user/timesheet" element={<DashboardTimeSheet />} />
           <Route path="user/benefit" element={<Benefit />} />
           <Route path="user/payroll" element={<Payroll />} />
+          <Route path="user/documnets" element={<Documents />} />
           <Route path="admin" element={<AdminHome />} />
           <Route path="admin/profile" element={<AdminProfile />} />
           <Route path="admin/timesheet" element={<TimeSheet />} />

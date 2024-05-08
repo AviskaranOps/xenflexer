@@ -444,18 +444,20 @@ export const PendingApproval = () => {
                         onClick={DownloadFile}>
                         Download
                       </Button>
-                      <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#53783B",
-                          color: "#ffffff",
-                          marginLeft: 15,
-                        }}
-                        onClick={() => {
-                          navigation("/pdfview", { state: "" });
-                        }}>
-                        View
-                      </Button>
+                      <a
+                        href={`${process.env.PUBLIC_URL}/pdfview`}
+                        target="_blank"
+                        rel="noreferrer">
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#53783B",
+                            color: "#ffffff",
+                            marginLeft: 15,
+                          }}>
+                          View
+                        </Button>
+                      </a>
                     </div>
                   </div>
                 </div>

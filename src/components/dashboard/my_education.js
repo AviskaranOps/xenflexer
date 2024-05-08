@@ -9,7 +9,7 @@ export const My_Education = ({ next, back }) => {
     { school: "", graduation: "", field: "", startDate: "", endDate: "" },
   ]);
   const [graduationList, setGraduationList] = React.useState([]);
-
+  const [onNext, setOnNext] = React.useState(false);
   const names = [
     "Oliver Hansen",
     "Van Henry",
@@ -74,6 +74,7 @@ export const My_Education = ({ next, back }) => {
           }
           setEducationData(explist);
         }
+        setOnNext(true);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -81,21 +82,23 @@ export const My_Education = ({ next, back }) => {
   }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    axios.get(
-      "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getGraduationList",
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getGraduationList",
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
         }
-      }
-    ).then(response => {
+      )
+      .then((response) => {
         setGraduationList(response.data);
-    }).
-    catch(error => {
-      console.error("info save error:", error.message);
-    })
-  }, []);  
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,8 +115,9 @@ export const My_Education = ({ next, back }) => {
         }
       )
       .then((response) => {
-        message.success("data saved successfully");
+        message.success("Data saved successfully");
         console.log(response.data);
+        setOnNext(true);
       })
       .catch((error) => {
         console.error("experience save error:", error.message);
@@ -200,6 +204,7 @@ export const My_Education = ({ next, back }) => {
                     </FormLabel>
                     <div className="grid grid-flow-col gap-2">
                       <TextField
+                        required
                         name="startDate"
                         size="small"
                         className="w-36"
@@ -208,6 +213,7 @@ export const My_Education = ({ next, back }) => {
                         onChange={(e) => handleChange(index, e)}
                       />
                       <TextField
+                        required
                         name="endDate"
                         size="small"
                         className="w-36"
@@ -279,6 +285,7 @@ export const My_Education = ({ next, back }) => {
           <Button
             style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
+            disabled={!onNext}
             sx={{
               marginLeft: 5,
               backgroundColor: "#7B964A",

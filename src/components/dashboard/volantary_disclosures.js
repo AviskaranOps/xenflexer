@@ -43,6 +43,16 @@ export const Volantary_Disclosures = ({ back }) => {
   return (
     <div>
       <form className="mx-40" onSubmit={handleSubmit}>
+        <div className="my-5">
+          <text
+            style={{
+              color: "#53783B",
+              fontWeight: "bold",
+              fontSize: 28,
+            }}>
+            Volantary Disclosures
+          </text>
+        </div>
         <div>
           <FormLabel>
             Please select YES if you are okay with receiving updates on new jobs
