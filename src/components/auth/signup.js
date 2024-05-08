@@ -26,15 +26,11 @@ const Signup = () => {
           password,
         }
       ).then(response => {
-
-      if (response.status === 201) {
         message.success("user register successfully");
         navigate("/login");
-      } else {
-        console.log("registration failed");
-      }
       }).catch(error => {
         console.error("Signup error:", error.message);
+        message.error(error.response.data);
       })
   };
 

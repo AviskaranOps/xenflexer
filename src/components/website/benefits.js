@@ -7,21 +7,20 @@ import { Chip } from "@mui/material";
 
 export const Benefit = () => {
   return (
-    <div className="pb-10">
+    <div className="pb-20 px-5">
       <div className="mt-16 grid grid-flow-row text-center justify-center gap-4">
-        <div>
+        {/* <div>
           <Chip label="Benefits" variant="outlined" sx={{ color: "#3F621A" }} />
-        </div>
-        <text className="text-app-gray900 font-semibold text-4xl">
+        </div> */}
+        <text className="text-app-gray900 text-4xl font-semibold mt-5">
           Benefits
         </text>
-        <text className="text-app-gray text-xl">
-          Simplify Your Contracting Career with Our All-In-One Employer of
-          Record, Payroll <br />& Other Services – Focus on Your Projects, Not
-          Paperwork!
+        <text className="text-balance text-xl font-normal mt-5">
+        Simplify Your Contracting Career with Our All-In-One Employer of Record, Payroll <br />
+        & Other Services – Focus on Your Projects, Not Paperwork!
         </text>
       </div>
-      <div className="grid  grid-cols-2 mt-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-20">
         <div className="grid grid-flow-row justify-center text-center gap-3">
           <div className="flex justify-center">
             <img src={icon4} alt="icon4" />
@@ -30,7 +29,7 @@ export const Benefit = () => {
             Employer of Record (EOR):
           </text>
           <text className="text-app-gray">
-            Let us take the reins on compliance, invoicing, and timesheets.
+          Let us take the reins on compliance, invoicing, and timesheets.
           </text>
         </div>
         <div className="grid grid-flow-row justify-center text-center gap-3">
@@ -41,11 +40,11 @@ export const Benefit = () => {
             Benefits Management
           </text>
           <text className="text-app-gray">
-            Comprehensive coverage from health insurance to 401K and beyond.
+          Comprehensive coverage from health insurance to 401K and beyond.
           </text>
         </div>
       </div>
-      <div className="grid  grid-cols-2 mt-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 sm:mt-20">
         <div className="grid grid-flow-row justify-center text-center ">
           <div className="flex justify-center">
             <img src={icon2} alt="icon2" />
@@ -54,7 +53,7 @@ export const Benefit = () => {
             Support Services
           </text>
           <text className="text-app-gray">
-            Access to attorney support, visa sponsorship, and legal plans.
+          Access to attorney support, visa sponsorship, and legal plans.
           </text>
         </div>
         <div className="grid grid-flow-row justify-center text-center ">
@@ -65,8 +64,7 @@ export const Benefit = () => {
             Family & Education Perks
           </text>
           <text className="text-app-gray">
-            Enhance your life with child and family care options, plus
-            educational benefits.
+          Enhance your life with child and family care options, plus educational benefits.
           </text>
         </div>
       </div>
