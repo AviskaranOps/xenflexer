@@ -50,7 +50,7 @@ export const Volantary_Disclosures = ({ back }) => {
               fontWeight: "bold",
               fontSize: 28,
             }}>
-            Volantary Disclosures
+            Voluntary Disclosures
           </text>
         </div>
         <div>
