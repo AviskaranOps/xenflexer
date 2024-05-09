@@ -14,6 +14,7 @@ import { Upload_Document } from "./upload_document";
 import { Volantary_Disclosures } from "./volantary_disclosures";
 import { My_Education } from "./my_education";
 import { SideNav } from "../widgets/sidenav";
+import { useLocation } from "react-router-dom";
 
 const steps = [
   "My Information",
@@ -24,6 +25,8 @@ const steps = [
 ];
 
 export function Home() {
+  const location = useLocation();
+
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
@@ -33,6 +36,10 @@ export function Home() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  React.useEffect(() => {
+    setActiveStep(location.state ? location.state : 0);
+  }, []);
 
   const Show_Fragment = () => {
     switch (activeStep) {
