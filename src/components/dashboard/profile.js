@@ -191,10 +191,8 @@ export const Profile = () => {
         }
       )
       .then((response) => {
-        if (response.data.onboarded === false) {
           message.success("password updated successfully")
           navigate('/logout');
-        }
       })
       .catch((error) => {
         console.error("info save error:", error.message);
