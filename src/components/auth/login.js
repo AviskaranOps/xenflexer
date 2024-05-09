@@ -20,10 +20,10 @@ const Login = () => {
     const isAuthenticated = JSON.parse(localStorage.getItem('token'));
     console.log(isAuthenticated);
     if(isAuthenticated) {
-      if(isAuthenticated.role === 'admin') {
+      if(isAuthenticated.role === 'ROLE_ADMIN') {
         navigate('/admin')
       }
-      if(isAuthenticated.role === 'user') {
+      if(isAuthenticated.role === 'ROLE_USER') {
         navigate('/user/onboard')
       }
     }
