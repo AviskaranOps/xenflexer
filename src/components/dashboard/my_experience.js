@@ -10,6 +10,7 @@ import { UploadFileOutlined } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect } from "react";
+import { message } from "antd";
 
 export const My_Experience = ({ next, back }) => {
   const [file, setFile] = React.useState();
@@ -46,9 +47,21 @@ export const My_Experience = ({ next, back }) => {
   };
 
   let handleRadioChange = (i, e) => {
-    let newFormValues = [...experianceData];
-    newFormValues[i][e.target.name] = e.target.checked;
-    setExperianceData(newFormValues);
+    setExperianceData((prev) =>
+      prev.map((item, index) => {
+        if (index === i) {
+          return {
+            ...item,
+            currentCompany: e.target.checked,
+          };
+        } else {
+          return {
+            ...item,
+            currentCompany: false,
+          };
+        }
+      })
+    );
   };
 
   const removeExpFields = (i) => {
@@ -125,6 +138,7 @@ export const My_Experience = ({ next, back }) => {
       )
       .then((response) => {
         setOnNext(true);
+        message.success("Data saved successfully");
       })
       .catch((error) => {
         console.error("experience save error:", error.message);
@@ -150,7 +164,9 @@ export const My_Experience = ({ next, back }) => {
           },
         }
       )
-      .then((response) => {})
+      .then((response) => {
+        message.success("Data saved successfully");
+      })
       .catch((error) => {
         console.error("experience save error:", error.message);
       });
@@ -284,7 +300,7 @@ export const My_Experience = ({ next, back }) => {
                           color="success"
                         />
                       }
-                      label="This is my Current company"
+                      label="Current company"
                     />
                   </div>
 

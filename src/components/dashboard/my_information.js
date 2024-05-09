@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, FormLabel, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Button,
+  FormLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Autocomplete,
+} from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import { useEffect } from "react";
@@ -33,6 +40,11 @@ export const My_Information = ({ next, back }) => {
 
   const navigate = useNavigate();
 
+  const setLoginEmail = () => {
+    let email = JSON.parse(localStorage.getItem("token")).email;
+    setEmail(email);
+  };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
@@ -54,6 +66,7 @@ export const My_Information = ({ next, back }) => {
   }, []);
 
   useEffect(() => {
+    setLoginEmail();
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
@@ -72,7 +85,7 @@ export const My_Information = ({ next, back }) => {
           setHearAboutUs(data.howDidYouHearAboutUs);
           setCountry(data.country);
           setDoYouWant(data.doYouWantXenspireToBe);
-          setEmail(data.email);
+          data.email !== "" ? setEmail(data.email) : setLoginEmail();
           setNo(data.mobile);
           setProject(data.workingOnProject);
           setXenspire(data.xenspireIsTheEmployer);
@@ -89,10 +102,11 @@ export const My_Information = ({ next, back }) => {
     const mobile = no;
     const how_did_you_hear_about_us = hearAboutUs;
     const working_on_project = project;
+    const country_name = country.name;
     const xenspire_is_the_employer = xenspire;
     const do_you_want_xenspire_to_be = doYouWant;
     const user = JSON.parse(localStorage.getItem("token"));
-    console.log(user);
+    console.log(country_name);
     const my_info = true;
     await axios
       .post(
@@ -100,7 +114,7 @@ export const My_Information = ({ next, back }) => {
           user.userId,
         {
           how_did_you_hear_about_us,
-          country,
+          country_name,
           xenspire_is_the_employer,
           email,
           mobile,
@@ -169,7 +183,7 @@ export const My_Information = ({ next, back }) => {
         </div>
         <div className="mt-4 grid grid-flow-col justify-between items-center">
           <FormLabel style={{ color: "#344054" }}>Country</FormLabel>
-          <Select
+          {/* <Select
             size="small"
             displayEmpty
             value={country}
@@ -203,7 +217,40 @@ export const My_Information = ({ next, back }) => {
                 {name.name}
               </MenuItem>
             ))}
-          </Select>
+          </Select> */}
+          <Autocomplete
+            disablePortal
+            size="small"
+            id="combo-box-demo"
+            value={country}
+            options={countries}
+            getOptionLabel={(option) => option.name}
+            onChange={(event, newValue) => {
+              setCountry(newValue);
+            }}
+            sx={{
+              color: "#53783B",
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "& .MuiAutocomplete-inputRoot": {
+                color: "#53783B",
+              },
+              ".MuiSvgIcon-root ": {
+                color: "#7B964A",
+              },
+            }}
+            className="w-72"
+            renderInput={(params) => (
+              <TextField {...params} placeholder="Select the Country" />
+            )}
+          />
         </div>
         <div className="mt-4 grid grid-flow-col justify-between items-center">
           <FormLabel style={{ color: "#344054" }}>Email</FormLabel>
@@ -259,7 +306,7 @@ export const My_Information = ({ next, back }) => {
             onChange={(e) => setProject(e.target.value)}
             renderValue={(selected) => {
               if (selected.length === 0) {
-                return <text style={{ color: "#53783B" }}>Yes / No</text>;
+                return <text style={{ color: "#D1D1D1" }}>Yes / No</text>;
               }
               return selected;
             }}
@@ -297,7 +344,7 @@ export const My_Information = ({ next, back }) => {
             onChange={(e) => setXenspire(e.target.value)}
             renderValue={(selected) => {
               if (selected.length === 0) {
-                return <text style={{ color: "#53783B" }}>Yes / No</text>;
+                return <text style={{ color: "#D1D1D1" }}>Yes / No</text>;
               }
               return selected;
             }}
@@ -336,7 +383,7 @@ export const My_Information = ({ next, back }) => {
             onChange={(e) => setDoYouWant(e.target.value)}
             renderValue={(selected) => {
               if (selected.length === 0) {
-                return <text style={{ color: "#53783B" }}>Yes / No</text>;
+                return <text style={{ color: "#D1D1D1" }}>Yes / No</text>;
               }
               return selected;
             }}

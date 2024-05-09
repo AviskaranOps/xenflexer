@@ -20,7 +20,7 @@ const steps = [
   "My Experience",
   "My Education",
   "Upload Documents",
-  "Volantary Disclosures",
+  "Voluntary Disclosures",
 ];
 
 export function Home() {

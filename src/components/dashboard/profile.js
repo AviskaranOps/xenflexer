@@ -15,10 +15,12 @@ import axios from "axios";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { message } from 'antd';
 
 export const Profile = () => {
   const [editProfile, setEditProfile] = React.useState(true);
+  const [editExperience, setEditExperiance] = React.useState(true);
+  const [editEducation, setEditEducation] = React.useState(true);
+
   const [image, setImage] = React.useState("");
 
   const [profile, setProfile] = React.useState({
@@ -99,7 +101,7 @@ export const Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-         // navigate('/user/onboard');
+          // navigate('/user/onboard');
         }
       })
       .catch((error) => {
@@ -125,26 +127,24 @@ export const Profile = () => {
         const profile = {
           name: user.username,
           email: user.email,
-          phone: data.userInfo?.mobile,
+          phone: data.userInfo.mobile,
           designation: "",
-          xenspireEmploye: data.userInfo?.xenspireIsTheEmployer,
-          country: data.userInfo?.country,
+          xenspireEmploye: data.userInfo.xenspireIsTheEmployer,
+          country: data.userInfo.country,
           state: "",
-          wantTobe: data.userInfo?.doYouWantXenspireToBe,
+          wantTobe: data.userInfo.doYouWantXenspireToBe,
         };
-        setProfile(profile);
         var eduList = [];
         for (var edu of data.education) {
           const education = {
             school: edu.school,
             graduation: edu.graduation,
             field: edu.field,
-            startDate: edu?.startDate.substring(0, 11),
-            endDate: edu?.endDate.substring(0, 11),
+            startDate: edu.startDate.substring(0, 11),
+            endDate: edu.endDate.substring(0, 11),
           };
           eduList.push(education);
         }
-        setEducationData(eduList);
         var expList = [];
         for (var exp of data.workExperience) {
           const experience = {
@@ -152,11 +152,13 @@ export const Profile = () => {
             companyName: exp.companyName,
             location: exp.location,
             radioValue: exp.currentCompany,
-            startDate: new Date(exp?.startDate.substring(0, 11)),
-            endDate: new Date(exp?.endDate.substring(0, 11)),
+            startDate: new Date(exp.startDate.substring(0, 11)),
+            endDate: new Date(exp.endDate.substring(0, 11)),
           };
           expList.push(experience);
         }
+        setProfile(profile);
+        setEducationData(eduList);
         setExperianceData(expList);
       })
       .catch((error) => {
@@ -201,7 +203,6 @@ export const Profile = () => {
   const save_profile = () => {
     setEditProfile(true);
     const user = JSON.parse(localStorage.getItem("token"));
-
     // save profile
     axios
       .post(
@@ -224,10 +225,92 @@ export const Profile = () => {
       });
   };
 
+  const save_Education = () => {
+    setEditEducation(true);
+    const user = JSON.parse(localStorage.getItem("token"));
+
+    // save Education
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+          user.userId,
+        { educationData },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.onboarded === false) {
+          // navigate('/user/onboard');
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
+
+  const save_Experience = () => {
+    setEditExperiance(true);
+    const user = JSON.parse(localStorage.getItem("token"));
+
+    // save Experience
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+          user.userId,
+        { experianceData },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.onboarded === false) {
+          // navigate('/user/onboard');
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]));
     }
+  };
+
+  let handleEduChange = (i, e) => {
+    let newFormValues = [...educationData];
+    newFormValues[i][e.target.name] = e.target.value;
+
+    setEducationData(newFormValues);
+  };
+
+  let handleExpChange = (i, e) => {
+    let newFormValues = [...experianceData];
+    newFormValues[i][e.target.name] = e.target.value;
+    setExperianceData(newFormValues);
+  };
+
+  let handleExpRadioChange = (i, e) => {
+    setExperianceData((prev) =>
+      prev.map((item, index) => {
+        if (index === i) {
+          return {
+            ...item,
+            radioValue: e.target.checked,
+          };
+        } else {
+          return {
+            ...item,
+            radioValue: false,
+          };
+        }
+      })
+    );
   };
 
   return (
@@ -256,175 +339,222 @@ export const Profile = () => {
                 </div>
               )}
             </div>
-            <div>
-              {editProfile ? (
-                <Button
-                  style={{ color: "white", borderColor: "#7F56D9" }}
-                  variant="contained"
-                  sx={{
-                    marginLeft: 5,
-                    backgroundColor: "#7B964A",
-                    "&:hover": {
-                      backgroundColor: "#7B964A",
-                    },
-                  }}
-                  startIcon={<EditOutlined />}
-                  onClick={() => setEditProfile(!editProfile)}>
-                  Edit Profile
-                </Button>
-              ) : (
-                <Button
-                  style={{ color: "white", borderColor: "#7F56D9" }}
-                  variant="contained"
-                  sx={{
-                    marginLeft: 5,
-                    backgroundColor: "#7B964A",
-                    "&:hover": {
-                      backgroundColor: "#7B964A",
-                    },
-                  }}
-                  startIcon={<EditOutlined />}
-                  onClick={save_profile}>
-                  Save Profile
-                </Button>
-              )}
-            </div>
           </div>
 
           {/* profile */}
-          <div className="px-56 py-16 grid grid-cols-2 gap-x-6">
-            <div className="pt-5 grid grid-cols-2">
-              <label>Name</label>
-              <TextField
-                size="small"
-                placeholder="Enter your Name"
-                value={profile.name}
-                disabled={editProfile}
-                onChange={(e) =>
-                  setProfile({ ...profile, name: e.target.value })
-                }
-              />
-            </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>Email</label>
-              <TextField
-                type="email"
-                size="small"
-                placeholder="Enter your Email"
-                value={profile.email}
-                disabled={editProfile}
-                onChange={(e) =>
-                  setProfile({ ...profile, email: e.target.value })
-                }
-              />
-            </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>Phone</label>
-              <TextField
-                type="tel"
-                size="small"
-                placeholder="Enter your Phone NO."
-                value={profile.phone}
-                disabled={editProfile}
-                onChange={(e) =>
-                  setProfile({ ...profile, phone: e.target.value })
-                }
-              />
-            </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>Country</label>
-              <TextField
-                size="small"
-                placeholder="your Country"
-                value={profile.country}
-                disabled={editProfile}
-                onChange={(e) =>
-                  setProfile({ ...profile, country: e.target.value })
-                }
-              />
-            </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>designation</label>
-              <TextField
-                size="small"
-                placeholder="Enter Status"
-                value={profile.designation}
-                disabled={editProfile}
-                onChange={(e) =>
-                  setProfile({ ...profile, designation: e.target.value })
-                }
-              />
-            </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>State</label>
-              <TextField
-                size="small"
-                placeholder="your state"
-                value={profile.state}
-                disabled={editProfile}
-                onChange={(e) =>
-                  setProfile({ ...profile, state: e.target.value })
-                }
-              />
-            </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>Xenspire Exployee</label>
-              <Select
-                size="small"
-                displayEmpty
-                disabled={editProfile}
-                value={profile.xenspireEmploye}
-                onChange={(e) =>
-                  setProfile({ ...profile, xenspireEmploye: e.target.value })
-                }
-                renderValue={(selected) => {
-                  if (selected?.length === 0) {
-                    return <text>Yes / No</text>;
-                  }
-                  return selected;
+          <div className="px-56 pb-20 pt-10">
+            <div className="grid grid-flow-col justify-between pb-3">
+              <text
+                style={{
+                  color: "#53783B",
+                  fontWeight: "bold",
+                  fontSize: 28,
                 }}>
-                {yes_no.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
+                My Profile
+              </text>
+              <div>
+                {editProfile ? (
+                  <Button
+                    style={{ color: "white", borderColor: "#7F56D9" }}
+                    variant="contained"
+                    sx={{
+                      marginLeft: 5,
+                      backgroundColor: "#7B964A",
+                      "&:hover": {
+                        backgroundColor: "#7B964A",
+                      },
+                    }}
+                    startIcon={<EditOutlined />}
+                    onClick={() => setEditProfile(false)}>
+                    Edit Profile
+                  </Button>
+                ) : (
+                  <Button
+                    style={{ color: "white", borderColor: "#7F56D9" }}
+                    variant="contained"
+                    sx={{
+                      marginLeft: 5,
+                      backgroundColor: "#7B964A",
+                      "&:hover": {
+                        backgroundColor: "#7B964A",
+                      },
+                    }}
+                    startIcon={<EditOutlined />}
+                    onClick={save_profile}>
+                    Save Profile
+                  </Button>
+                )}
+              </div>
             </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>Want to be Xenspire Employee?</label>
-              <Select
-                size="small"
-                disabled={profile.xenspireEmploye === "Yes" || editProfile}
-                displayEmpty
-                value={profile.wantTobe}
-                onChange={(e) =>
-                  setProfile({ ...profile, wantTobe: e.target.value })
-                }
-                renderValue={(selected) => {
-                  if (selected?.length === 0) {
-                    return <text>Yes / No</text>;
+            <div className="grid grid-cols-2 gap-x-6">
+              <div className="pt-6 grid grid-cols-2">
+                <label>Name</label>
+                <TextField
+                  size="small"
+                  placeholder="Enter your Name"
+                  value={profile.name}
+                  disabled={editProfile}
+                  onChange={(e) =>
+                    setProfile({ ...profile, name: e.target.value })
                   }
-                  return selected;
-                }}>
-                {yes_no.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
+                />
+              </div>
+              <div className="pt-6 grid grid-cols-2 ">
+                <label>Email</label>
+                <TextField
+                  type="email"
+                  size="small"
+                  placeholder="Enter your Email"
+                  value={profile.email}
+                  disabled={editProfile}
+                  onChange={(e) =>
+                    setProfile({ ...profile, email: e.target.value })
+                  }
+                />
+              </div>
+              <div className="pt-5 grid grid-cols-2 ">
+                <label>Phone</label>
+                <TextField
+                  type="tel"
+                  size="small"
+                  placeholder="Enter your Phone NO."
+                  value={profile.phone}
+                  disabled={editProfile}
+                  onChange={(e) =>
+                    setProfile({ ...profile, phone: e.target.value })
+                  }
+                />
+              </div>
+              <div className="pt-5 grid grid-cols-2 ">
+                <label>Country</label>
+                <TextField
+                  size="small"
+                  placeholder="your Country"
+                  value={profile.country}
+                  disabled={editProfile}
+                  onChange={(e) =>
+                    setProfile({ ...profile, country: e.target.value })
+                  }
+                />
+              </div>
+              <div className="pt-5 grid grid-cols-2 ">
+                <label>designation</label>
+                <TextField
+                  size="small"
+                  placeholder="Enter Status"
+                  value={profile.designation}
+                  disabled={editProfile}
+                  onChange={(e) =>
+                    setProfile({ ...profile, designation: e.target.value })
+                  }
+                />
+              </div>
+              <div className="pt-5 grid grid-cols-2 ">
+                <label>State</label>
+                <TextField
+                  size="small"
+                  placeholder="your state"
+                  value={profile.state}
+                  disabled={editProfile}
+                  onChange={(e) =>
+                    setProfile({ ...profile, state: e.target.value })
+                  }
+                />
+              </div>
+              <div className="pt-5 grid grid-cols-2 ">
+                <label>Xenspire Exployee</label>
+                <Select
+                  size="small"
+                  displayEmpty
+                  disabled={editProfile}
+                  value={profile.xenspireEmploye}
+                  onChange={(e) =>
+                    setProfile({ ...profile, xenspireEmploye: e.target.value })
+                  }
+                  renderValue={(selected) => {
+                    if (selected.length === 0) {
+                      return <text>Yes / No</text>;
+                    }
+                    return selected;
+                  }}>
+                  {yes_no.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+              <div className="pt-5 grid grid-cols-2 ">
+                <label>Want to be Xenspire Employee?</label>
+                <Select
+                  size="small"
+                  disabled={profile.xenspireEmploye === "Yes" || editProfile}
+                  displayEmpty
+                  value={profile.wantTobe}
+                  onChange={(e) =>
+                    setProfile({ ...profile, wantTobe: e.target.value })
+                  }
+                  renderValue={(selected) => {
+                    if (selected.length === 0) {
+                      return <text>Yes / No</text>;
+                    }
+                    return selected;
+                  }}>
+                  {yes_no.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
           </div>
 
-          {/* experiance */}
+          {/* Experience */}
           <div className="px-56 pb-20">
-            <text
-              style={{
-                color: "#53783B",
-                fontWeight: "bold",
-                fontSize: 28,
-              }}>
-              Work Experiance
-            </text>
+            <div className="grid grid-flow-col justify-between">
+              <text
+                style={{
+                  color: "#53783B",
+                  fontWeight: "bold",
+                  fontSize: 28,
+                }}>
+                Work Experience
+              </text>
+              <div>
+                {editExperience ? (
+                  <Button
+                    style={{ color: "white", borderColor: "#7F56D9" }}
+                    variant="contained"
+                    sx={{
+                      marginLeft: 5,
+                      backgroundColor: "#7B964A",
+                      "&:hover": {
+                        backgroundColor: "#7B964A",
+                      },
+                    }}
+                    startIcon={<EditOutlined />}
+                    onClick={() => setEditExperiance(false)}>
+                    Edit Experience
+                  </Button>
+                ) : (
+                  <Button
+                    style={{ color: "white", borderColor: "#7F56D9" }}
+                    variant="contained"
+                    sx={{
+                      marginLeft: 5,
+                      backgroundColor: "#7B964A",
+                      "&:hover": {
+                        backgroundColor: "#7B964A",
+                      },
+                    }}
+                    startIcon={<EditOutlined />}
+                    onClick={save_Experience}>
+                    Save Experience
+                  </Button>
+                )}
+              </div>
+            </div>
             <div>
               {experianceData.map((element, index) => {
                 return (
@@ -438,7 +568,9 @@ export const Profile = () => {
                           name="title"
                           size="small"
                           className="w-72"
+                          disabled={editExperience}
                           value={element.title}
+                          onChange={(e) => handleExpChange(index, e)}
                         />
                       </div>
                       <div className="grid grid-flow-row gap-2 ">
@@ -449,7 +581,9 @@ export const Profile = () => {
                           name="companyName"
                           size="small"
                           className="w-72"
+                          disabled={editExperience}
                           value={element.companyName}
+                          onChange={(e) => handleExpChange(index, e)}
                         />
                       </div>
                     </div>
@@ -464,7 +598,9 @@ export const Profile = () => {
                             size="small"
                             className="w-36"
                             type="date"
+                            disabled={editExperience}
                             value={element.startDate}
+                            onChange={(e) => handleExpChange(index, e)}
                           />
                           <TextField
                             name="endDate"
@@ -472,7 +608,12 @@ export const Profile = () => {
                             className="w-36"
                             type="date"
                             value={element.endDate}
-                            disabled={element.radioValue ? true : false}
+                            onChange={(e) => handleExpChange(index, e)}
+                            disabled={
+                              element.radioValue
+                                ? true
+                                : false || editExperience
+                            }
                           />
                         </div>
                       </div>
@@ -484,7 +625,9 @@ export const Profile = () => {
                           name="location"
                           size="small"
                           className="w-72"
+                          disabled={editExperience}
                           value={element.location}
+                          onChange={(e) => handleExpChange(index, e)}
                         />
                       </div>
                     </div>
@@ -495,12 +638,14 @@ export const Profile = () => {
                             <Checkbox
                               name="radioValue"
                               size="small"
+                              disabled={editExperience}
                               checked={element.radioValue}
                               value={element.radioValue}
                               color="success"
+                              onChange={(e) => handleExpRadioChange(index, e)}
                             />
                           }
-                          label="This is my Current company"
+                          label="Current company"
                         />
                       </div>
                     </div>
@@ -512,14 +657,49 @@ export const Profile = () => {
 
           {/* education */}
           <div className="px-56 pb-20">
-            <text
-              style={{
-                color: "#53783B",
-                fontWeight: "bold",
-                fontSize: 28,
-              }}>
-              Eduaction
-            </text>
+            <div className="grid grid-flow-col justify-between">
+              <text
+                style={{
+                  color: "#53783B",
+                  fontWeight: "bold",
+                  fontSize: 28,
+                }}>
+                Education
+              </text>
+              <div>
+                {editEducation ? (
+                  <Button
+                    style={{ color: "white", borderColor: "#7F56D9" }}
+                    variant="contained"
+                    sx={{
+                      marginLeft: 5,
+                      backgroundColor: "#7B964A",
+                      "&:hover": {
+                        backgroundColor: "#7B964A",
+                      },
+                    }}
+                    startIcon={<EditOutlined />}
+                    onClick={() => setEditEducation(false)}>
+                    Edit Education
+                  </Button>
+                ) : (
+                  <Button
+                    style={{ color: "white", borderColor: "#7F56D9" }}
+                    variant="contained"
+                    sx={{
+                      marginLeft: 5,
+                      backgroundColor: "#7B964A",
+                      "&:hover": {
+                        backgroundColor: "#7B964A",
+                      },
+                    }}
+                    startIcon={<EditOutlined />}
+                    onClick={save_Education}>
+                    Save Education
+                  </Button>
+                )}
+              </div>
+            </div>
             <div>
               {educationData.map((element, index) => {
                 return (
@@ -535,6 +715,8 @@ export const Profile = () => {
                           placeholder="Enter School/University"
                           className="w-72"
                           value={element.school}
+                          disabled={editEducation}
+                          onChange={(e) => handleEduChange(index, e)}
                         />
                       </div>
                       <div className="grid grid-flow-row gap-2 ">
@@ -546,6 +728,8 @@ export const Profile = () => {
                           name="graduation"
                           displayEmpty
                           value={element.graduation}
+                          disabled={editEducation}
+                          onChange={(e) => handleEduChange(index, e)}
                           renderValue={(selected) => {
                             if (selected.length === 0) {
                               return (
@@ -576,6 +760,8 @@ export const Profile = () => {
                           placeholder="Enter Field of Study"
                           className="w-72"
                           value={element.field}
+                          disabled={editEducation}
+                          onChange={(e) => handleEduChange(index, e)}
                         />
                       </div>
                       <div className="grid grid-flow-row gap-2 ">
@@ -589,6 +775,8 @@ export const Profile = () => {
                             className="w-36"
                             type="date"
                             value={element.startDate}
+                            disabled={editEducation}
+                            onChange={(e) => handleEduChange(index, e)}
                           />
                           <TextField
                             name="endDate"
@@ -596,6 +784,8 @@ export const Profile = () => {
                             className="w-36"
                             type="date"
                             value={element.endDate}
+                            disabled={editEducation}
+                            onChange={(e) => handleEduChange(index, e)}
                           />
                         </div>
                       </div>

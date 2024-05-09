@@ -2,9 +2,6 @@ import React from "react";
 import {
   Button,
   TableHead,
-  Table,
-  TableBody,
-  TableCell,
   TableRow,
   Select,
   MenuItem,
@@ -260,112 +257,51 @@ export const DashboardTimeSheet = () => {
             </Select>
           </div>
 
-          {timeSheet ? (
-            <>
-              {/* table submit */}
-              <StyledTableContainer
-                sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
-                <Table aria-label="customized table" stickyHeader>
-                  <StyledTableHead>
-                    <TableRow>
-                      <TableCell
-                        style={{ fontWeight: "bold", color: "#475467" }}>
-                        Date Range
-                      </TableCell>
-                      <TableCell
-                        style={{ fontWeight: "bold", color: "#475467" }}>
-                        Date
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{ fontWeight: "bold", color: "#475467" }}>
-                        Hours
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{ fontWeight: "bold", color: "#475467" }}>
-                        Status
-                      </TableCell>
-                      <TableCell> </TableCell>
-                    </TableRow>
-                  </StyledTableHead>
-                  <TableBody>
-                    {userTimesheet.map((row) => (
-                      <StyledTableRow key={row.name}>
-                        <TableCell>{row.dateRange}</TableCell>
-                        <TableCell>{row.date}</TableCell>
-
-                        <TableCell align="center">{row.hoursWorked}</TableCell>
-                        <TableCell align="center">{row.status}</TableCell>
-                        <TableCell align="center">
-                          {row.status === "Rejected" ? (
-                            <Button
-                              size="small"
-                              variant="contained"
-                              style={{
-                                color: "#ffffff",
-                                backgroundColor: "#53783B",
-                              }}>
-                              Resubmit
-                            </Button>
-                          ) : (
-                            ""
-                          )}
-                        </TableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </StyledTableContainer>
-              <div className="mt-6 flex justify-center">
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  style={{ color: "#ffffff", backgroundColor: "#53783B" }}>
-                  Submit
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* table  approval */}
-              <Box sx={{ height: 400 }}>
-                <DataGrid
-                  rows={userTimesheet}
-                  columns={columns}
-                  pageSizeOptions={false}
-                  disableRowSelectionOnClick
-                  hideFooter
-                  editMode="row"
-                  processRowUpdate={saveDeviceCell}
-                />
-              </Box>
-              <div className="mt-6 grid grid-flow-col justify-around">
+          <>
+            {/* table  approval */}
+            <Box sx={{ height: 400 }}>
+              <DataGrid
+                rows={userTimesheet}
+                columns={columns}
+                pageSizeOptions={false}
+                disableRowSelectionOnClick
+                hideFooter
+                editMode="row"
+                processRowUpdate={saveDeviceCell}
+              />
+            </Box>
+            <div className="mt-6 grid grid-flow-col justify-around">
+              <div>
+                <text>{submittion ? submittion?.name : "Select File"}</text>
                 <Button
                   component="label"
                   role={undefined}
                   tabIndex={-1}
                   variant="outlined"
-                  style={{ color: "#344054", borderColor: "#53783B" }}
+                  style={{
+                    color: "#344054",
+                    borderColor: "#53783B",
+                    marginLeft: 5,
+                  }}
                   startIcon={
                     <CloudUploadOutlined fontSize="large" color="primary" />
                   }>
                   Proof of Submission
                   <VisuallyHiddenInput
                     type="file"
-                    onChange={(e) => setSubmission(e.target.value)}
+                    onChange={(e) => setSubmission(e.target.files[0])}
                   />
                 </Button>
-
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  style={{ color: "#ffffff", backgroundColor: "#53783B" }}>
-                  Submit for Approval
-                </Button>
               </div>
-            </>
-          )}
+
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                style={{ color: "#ffffff", backgroundColor: "#53783B" }}>
+                Submit for Approval
+              </Button>
+            </div>
+          </>
         </div>
       </div>
     </div>
