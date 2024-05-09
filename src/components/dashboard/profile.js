@@ -15,6 +15,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { message } from 'antd';
 
 export const Profile = () => {
   const [editProfile, setEditProfile] = React.useState(true);
