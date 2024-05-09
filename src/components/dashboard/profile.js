@@ -15,6 +15,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { message } from 'antd';
 
 export const Profile = () => {
   const [editProfile, setEditProfile] = React.useState(true);
@@ -171,13 +172,15 @@ export const Profile = () => {
       alert("Update and Confirm not same!");
       return;
     }
+    const currentPassword = password.curret;
+    const newPassword = password.update;
     const user = JSON.parse(localStorage.getItem("token"));
 
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+        "http://localhost:8080/xen/updatePassword?userId=" +
           user.userId,
-        { password },
+        { currentPassword, newPassword },
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -186,7 +189,8 @@ export const Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-          // navigate('/user/onboard');
+          message.success("password updated successfully")
+          navigate('/logout');
         }
       })
       .catch((error) => {
