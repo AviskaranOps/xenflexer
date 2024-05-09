@@ -35,7 +35,7 @@ const Login = () => {
     const role = "";
     try {
       const response = await axios.post(
-        "http://localhost:8080/xen/login",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/login",
         {
           username,
           password

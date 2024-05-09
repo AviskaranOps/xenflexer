@@ -53,7 +53,7 @@ export const Benefit = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserBenefits?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserBenefits?userId=" +
           user.userId,
         {
           headers: {
@@ -75,7 +75,7 @@ export const Benefit = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserBenefits?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserBenefits?userId=" +
           user.userId,
         {
           headers: {

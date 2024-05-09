@@ -178,7 +178,7 @@ export const Profile = () => {
 
     axios
       .post(
-        "http://localhost:8080/xen/updatePassword?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/updatePassword?userId=" +
           user.userId,
         { currentPassword, newPassword },
         {
