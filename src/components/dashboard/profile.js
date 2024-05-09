@@ -363,7 +363,10 @@ export const Profile = () => {
                       },
                     }}
                     startIcon={<EditOutlined />}
-                    onClick={() => setEditProfile(false)}>
+                    onClick={() => {
+                      // setEditProfile(false);
+                      navigate("/user/onboard");
+                    }}>
                     Edit Profile
                   </Button>
                 ) : (
@@ -436,7 +439,7 @@ export const Profile = () => {
                 />
               </div>
               <div className="pt-5 grid grid-cols-2 ">
-                <label>designation</label>
+                <label>Designation</label>
                 <TextField
                   size="small"
                   placeholder="Enter Status"
@@ -532,7 +535,10 @@ export const Profile = () => {
                       },
                     }}
                     startIcon={<EditOutlined />}
-                    onClick={() => setEditExperiance(false)}>
+                    onClick={() => {
+                      // setEditExperiance(false);
+                      navigate("/user/onboard", { state: 1 });
+                    }}>
                     Edit Experience
                   </Button>
                 ) : (
@@ -677,7 +683,10 @@ export const Profile = () => {
                       },
                     }}
                     startIcon={<EditOutlined />}
-                    onClick={() => setEditEducation(false)}>
+                    onClick={() => {
+                      // setEditEducation(false);
+                      navigate("/user/onboard", { state: 2 });
+                    }}>
                     Edit Education
                   </Button>
                 ) : (
