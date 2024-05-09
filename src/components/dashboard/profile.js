@@ -125,16 +125,18 @@ export const Profile = () => {
       .then((response) => {
         console.log(response.data);
         const data = response.data;
+        setImage(URL.createObjectURL(data?.profileImg))
         const profile = {
           name: user.username,
           email: user.email,
-          phone: data.userInfo.mobile,
+          phone: data.userInfo?.mobile,
           designation: "",
-          xenspireEmploye: data.userInfo.xenspireIsTheEmployer,
-          country: data.userInfo.country,
+          xenspireEmploye: data.userInfo?.xenspireIsTheEmployer,
+          country: data.userInfo?.country,
           state: "",
-          wantTobe: data.userInfo.doYouWantXenspireToBe,
+          wantTobe: data.userInfo?.doYouWantXenspireToBe,
         };
+        setProfile(profile);
         var eduList = [];
         for (var edu of data.education) {
           const education = {
@@ -146,6 +148,7 @@ export const Profile = () => {
           };
           eduList.push(education);
         }
+        setEducationData(eduList);
         var expList = [];
         for (var exp of data.workExperience) {
           const experience = {
@@ -158,8 +161,6 @@ export const Profile = () => {
           };
           expList.push(experience);
         }
-        setProfile(profile);
-        setEducationData(eduList);
         setExperianceData(expList);
       })
       .catch((error) => {
@@ -268,7 +269,7 @@ export const Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-          // navigate('/user/onboard');
+            navigate('/user/onboard');
         }
       })
       .catch((error) => {
@@ -277,9 +278,27 @@ export const Profile = () => {
   };
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
+      const user = JSON.parse(localStorage.getItem("token"));
+      const formData = new FormData();
+      formData.append("profileImg", event.target.files[0]);
+        axios
+          .post(
+            "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadProfileImg?userId=" +user.userId,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user.accessToken}`,
+              },
+            }
+          ).then(response => {
+              setImage(URL.createObjectURL(response.data.profileImg))
+          }).catch(error => {
+
+          })
     }
   };
+
+
 
   let handleEduChange = (i, e) => {
     let newFormValues = [...educationData];
