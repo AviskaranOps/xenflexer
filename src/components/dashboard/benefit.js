@@ -14,9 +14,11 @@ import { PopUp } from "../common/popup";
 import { FiberManualRecord } from "@mui/icons-material";
 import { SideNav } from "../widgets/sidenav";
 import { Dummy_benefits } from "../utils/dummy";
+import { useEffect } from "react";
+import axios from 'axios';
 
 export const Benefit = () => {
-  const [array, serArray] = React.useState(Dummy_benefits);
+  const [array, setArray] = React.useState([]);
   const [dialogeOpen, setDialogeOpen] = React.useState(false);
   const [dialogeData, setDialogeData] = React.useState();
 
@@ -47,11 +49,52 @@ export const Benefit = () => {
     }
   `;
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "http://localhost:8080/xen/getUserBenefits?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setArray(response.data);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
+
   const onCloseDialoge = () => {
     setDialogeOpen(false);
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "http://localhost:8080/xen/getUserBenefits?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setArray(response.data);
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+
   };
 
   const RenderStatus = ({ data }) => {
+    console.log("status = ", data);
     let colorCode = "";
     let BgColorCode = "";
     if (data === "Active") {
@@ -120,12 +163,12 @@ export const Benefit = () => {
               <TableBody>
                 {array.map((row, index) => (
                   <StyledTableRow key={index}>
-                    <TableCell align="center">{row.benefits}</TableCell>
+                    <TableCell align="center">{row?.benefits}</TableCell>
                     <TableCell align="center">
                       <RenderStatus data={row.status} />
                     </TableCell>
                     <TableCell align="center">{row.effectiveDate}</TableCell>
-                    <TableCell align="center">$ {row.cost}</TableCell>
+                    <TableCell align="center">{row.cost}</TableCell>
                     <TableCell align="center">
                       <Button
                         style={{ color: "white", borderColor: "#7F56D9" }}

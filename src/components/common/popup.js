@@ -13,12 +13,14 @@ import {
 import check from "../../assets/images/check-icon.png";
 import { useRef } from "react";
 import axios from "axios";
+import { act } from "react-dom/test-utils";
 
 export const PopUp = ({ open, data, onClose }) => {
   const [renderPopUp, setRenderPopUp] = React.useState("");
   const [activateSwitch, setActivateSwitch] = React.useState(true);
   const [date, setDate] = React.useState("");
   const [file, setFile] = React.useState("");
+  const [doc, setDoc] = React.useState();
   let uptoRef = useRef("");
   let educationRef = useRef("");
   let KbenefitsRef = useRef("");
@@ -67,7 +69,7 @@ export const PopUp = ({ open, data, onClose }) => {
   };
 
   // Render Options
-  const DateSwithchDialog = () => {
+  const DateSwithchDialog = (name) => {
     return (
       <div>
         {/* switch */}
@@ -107,7 +109,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#D0D5DD",
             }}
             onClick={() => {
-              handleSubmit(activateSwitch, date);
+              handleActivateBenefit(name.name, date, activateSwitch,  data.cost);
             }}>
             Raise Request
           </Button>
@@ -116,7 +118,7 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  const SwitchTextFile = () => {
+  const SwitchTextFile = (name) => {
     return (
       <div>
         {/* switch */}
@@ -158,7 +160,7 @@ export const PopUp = ({ open, data, onClose }) => {
             <VisuallyHiddenInput
               type="file"
               onChange={(e) => setFile(e.target.files[0])}
-              accept="image/png, image/jpeg,image/jpg"
+              //accept="image/png, image/jpeg,image/jpg"
             />
           </Button>
         </div>
@@ -172,7 +174,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#D0D5DD",
             }}
             onClick={() => {
-              handleSubmit(uptoRef.current.value, activateSwitch, file);
+              handleSubmit("", "",uptoRef.current.value, name.name);
             }}>
             Raise Request
           </Button>
@@ -181,7 +183,7 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  const EducationDialog = () => {
+  const EducationDialog = (name) => {
     return (
       <div>
         {/* text Filed */}
@@ -215,7 +217,8 @@ export const PopUp = ({ open, data, onClose }) => {
             Document
             <VisuallyHiddenInput
               type="file"
-              accept="image/png, image/jpeg,image/jpg"
+              // accept="image/png, image/jpeg,image/jpg"
+              onChange={(e) => setFile(e.target.files[0])}
             />
           </Button>
         </div>
@@ -228,7 +231,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#D0D5DD",
             }}
             onClick={() => {
-              handleSubmit(educationRef.current.value, file);
+              handleSubmit(educationRef.current.value, 0, 0, name.name);
             }}>
             Raise Request
           </Button>
@@ -237,7 +240,7 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  const Kbenefits = () => {
+  const Kbenefits = (name) => {
     return (
       <div>
         {/* switch */}
@@ -271,7 +274,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#D0D5DD",
             }}
             onClick={() => {
-              handleSubmit(KbenefitsRef.current.value, activateSwitch);
+              handleSubmit("", KbenefitsRef.current.value, 0, name.name);
             }}>
             Raise Request
           </Button>
@@ -280,7 +283,7 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  const EmigrationDialog = () => {
+  const EmigrationDialog = (name) => {
     return (
       <div>
         {/* switch */}
@@ -348,53 +351,82 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  // handle submit
-  const handleSubmit = async (data1, data2, data3, data4) => {
-    console.log(data1, data2, data3, data4);
-    try {
-      const response = await axios.post("http://localhost:3000/api/popup/", {
-        data1,
-        data2,
-        data3,
-        data4,
-      });
 
-      if (response.status === 200) {
-        console.log("addtimesheet save successfully");
-      } else {
-        console.log("addtimesheet save failed");
-      }
-    } catch (error) {
-      console.error("addtimesheet save error:", error.message);
-    }
-    onClose();
+  const handleActivateBenefit = async(name, date, activate, cost) => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    await axios.post("http://localhost:8080/xen/saveBenefit?userId="+user.userId, {
+        name,
+        activate,
+        date,
+        cost
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+      })
+      .then(respsone => {
+
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
+  }
+  // handle submit
+  const handleSubmit = async (reason, portion, amount,name) => {
+    const formData = new FormData();
+    formData.append("doc", file);
+    formData.append("reason", reason);
+    formData.append("portion", portion);
+    formData.append("amount", amount);
+    formData.append("name", name);
+
+    const user = JSON.parse(localStorage.getItem("token"));
+    await axios
+      .post(
+        "http://localhost:8080/xen/saveBenefitwithDoc?userId=" +user.userId,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.error("document save error:", error.message);
+      });
+      onClose();
   };
 
   // which render run
   const RenderData = ({ render }) => {
     switch (render) {
       case "legal":
-        return <DateSwithchDialog />;
+        return <DateSwithchDialog name={data.benefits}/>;
       case "medical":
-        return <DateSwithchDialog />;
+        return <DateSwithchDialog name={data.benefits}/>;
       case "immigration/attorney":
-        return <EmigrationDialog />;
+        return <EmigrationDialog name={data.benefits}/>;
       case "dental":
-        return <DateSwithchDialog />;
+        return <DateSwithchDialog name={data.benefits}/>;
       case "vision":
-        return <DateSwithchDialog />;
+        return <DateSwithchDialog name={data.benefits}/>;
       case "short":
-        return <DateSwithchDialog />;
+        return <DateSwithchDialog name={data.benefits}/>;
       case "long":
-        return <DateSwithchDialog />;
+        return <DateSwithchDialog name={data.benefits}/>;
       case "education":
-        return <EducationDialog />;
+        return <EducationDialog name={data.benefits}/>;
       case "401k":
-        return <Kbenefits />;
+        return <Kbenefits name={data.benefits} />;
       case "family":
-        return <SwitchTextFile />;
+        return <SwitchTextFile name={data.benefits} />;
       case "commuter":
-        return <SwitchTextFile />;
+        return <SwitchTextFile name={data.benefits} />;
       default:
         break;
     }

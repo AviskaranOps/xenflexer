@@ -98,7 +98,7 @@ export const Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-          // navigate('/user/onboard');
+         // navigate('/user/onboard');
         }
       })
       .catch((error) => {
@@ -124,24 +124,26 @@ export const Profile = () => {
         const profile = {
           name: user.username,
           email: user.email,
-          phone: data.userInfo.mobile,
+          phone: data.userInfo?.mobile,
           designation: "",
-          xenspireEmploye: data.userInfo.xenspireIsTheEmployer,
-          country: data.userInfo.country,
+          xenspireEmploye: data.userInfo?.xenspireIsTheEmployer,
+          country: data.userInfo?.country,
           state: "",
-          wantTobe: data.userInfo.doYouWantXenspireToBe,
+          wantTobe: data.userInfo?.doYouWantXenspireToBe,
         };
+        setProfile(profile);
         var eduList = [];
         for (var edu of data.education) {
           const education = {
             school: edu.school,
             graduation: edu.graduation,
             field: edu.field,
-            startDate: edu.startDate.substring(0, 11),
-            endDate: edu.endDate.substring(0, 11),
+            startDate: edu?.startDate.substring(0, 11),
+            endDate: edu?.endDate.substring(0, 11),
           };
           eduList.push(education);
         }
+        setEducationData(eduList);
         var expList = [];
         for (var exp of data.workExperience) {
           const experience = {
@@ -149,13 +151,11 @@ export const Profile = () => {
             companyName: exp.companyName,
             location: exp.location,
             radioValue: exp.currentCompany,
-            startDate: new Date(exp.startDate.substring(0, 11)),
-            endDate: new Date(exp.endDate.substring(0, 11)),
+            startDate: new Date(exp?.startDate.substring(0, 11)),
+            endDate: new Date(exp?.endDate.substring(0, 11)),
           };
           expList.push(experience);
         }
-        setProfile(profile);
-        setEducationData(eduList);
         setExperianceData(expList);
       })
       .catch((error) => {
@@ -374,7 +374,7 @@ export const Profile = () => {
                   setProfile({ ...profile, xenspireEmploye: e.target.value })
                 }
                 renderValue={(selected) => {
-                  if (selected.length === 0) {
+                  if (selected?.length === 0) {
                     return <text>Yes / No</text>;
                   }
                   return selected;
@@ -397,7 +397,7 @@ export const Profile = () => {
                   setProfile({ ...profile, wantTobe: e.target.value })
                 }
                 renderValue={(selected) => {
-                  if (selected.length === 0) {
+                  if (selected?.length === 0) {
                     return <text>Yes / No</text>;
                   }
                   return selected;
