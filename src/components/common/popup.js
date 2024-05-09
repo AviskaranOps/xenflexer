@@ -14,6 +14,7 @@ import check from "../../assets/images/check-icon.png";
 import { useRef } from "react";
 import axios from "axios";
 import { act } from "react-dom/test-utils";
+import { useEffect } from "react";
 
 export const PopUp = ({ open, data, onClose }) => {
   const [renderPopUp, setRenderPopUp] = React.useState("");
@@ -21,12 +22,20 @@ export const PopUp = ({ open, data, onClose }) => {
   const [date, setDate] = React.useState("");
   const [file, setFile] = React.useState("");
   const [doc, setDoc] = React.useState();
+  const [benefitParams, setBenefitParams] = React.useState();
+  const [reason, setReason] = React.useState("");
+  const [amount, setAmount] = React.useState("");
+  const [portion, setPortion] = React.useState("");
+  const [visa, setVisa] = React.useState("");
+  const [gc, setGc] = React.useState("");
+  const [otherHelp, setOtherHelp] = React.useState("");
+
   let uptoRef = useRef("");
   let educationRef = useRef("");
   let KbenefitsRef = useRef("");
-  let visaRef = useRef("");
-  let gcRef = useRef("");
-  let otherRef = useRef("");
+  const visaRef = useRef("");
+  const gcRef = useRef("");
+  const otherRef = useRef("");
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -39,6 +48,50 @@ export const PopUp = ({ open, data, onClose }) => {
     whiteSpace: "nowrap",
     width: 1,
   });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    console.log(data);
+    axios
+      .get(
+        "http://localhost:8080/xen/getBenefitParams?userId="+user.userId + "&name="+data.benefits,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if(isEmpty(response.data) === false){
+          let name = data?.benefits?.toLowerCase();
+          if (name?.includes("education")) {
+              setReason(data.reason)
+          } else if (name?.includes("401k")) {
+              setPortion(data.portion)
+          } else if (name?.includes("family care")) {
+              setAmount(response.data.amount)
+          } else if (name?.includes("commuter")) {
+              setAmount(response.data.amount);
+          } else if(name?.includes("immigration")){
+              setVisa(response.data.visa);
+              setGc(response.data.gc);
+              setOtherHelp(response.data.otherHelp);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  }, []);
+
+
+  function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+  }
 
   const setPopUp = () => {
     let name = data?.benefits?.toLowerCase();
@@ -337,11 +390,11 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#D0D5DD",
             }}
             onClick={() =>
-              handleSubmit(
+              handleImmigrationSubmit(
                 visaRef.current.value,
                 gcRef.current.value,
                 otherRef.current.value,
-                activateSwitch
+                name.name
               )
             }>
             Raise Request
@@ -389,6 +442,28 @@ export const PopUp = ({ open, data, onClose }) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.error("document save error:", error.message);
+      });
+      onClose();
+  };
+
+  const handleImmigrationSubmit = async (visa, gc, otherHelp, name) => {
+
+    const user = JSON.parse(localStorage.getItem("token"));
+    await axios
+      .post(
+        "http://localhost:8080/xen/saveImmigrationBenefit?userId=" +user.userId,
+         { visa, gc, otherHelp, name },
+        {
+          headers: {
             Authorization: `Bearer ${user.accessToken}`,
           },
         }
