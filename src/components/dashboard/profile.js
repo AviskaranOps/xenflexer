@@ -530,7 +530,7 @@ export const Profile = () => {
                 </Select>
               </div>
               <div className="pt-5 grid grid-cols-2 ">
-                <label>Want to be Xenspire <b/> Employee?</label>
+                <label>Want to be Xenspire {'\n'}Employee?</label>
                 <Select
                   size="small"
                   disabled={profile.xenspireEmploye === "Yes" || editProfile}
@@ -879,13 +879,13 @@ export const Profile = () => {
               />
             </div>
             <div className="pt-5 grid grid-flow-col ">
-              <label>Update Password</label>
+              <label>New Password</label>
               <TextField
                 required
                 type="password"
                 size="small"
                 name="update"
-                placeholder="Enter Update Password"
+                placeholder="Enter New Password"
                 value={password.update}
                 onChange={(e) =>
                   setPassword({ ...password, update: e.target.value })

@@ -6,6 +6,8 @@ import avtar from "../../assets/images/Avatar.png";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
 import { useEffect } from "react";
 import axios from "axios";
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 export const AdminProfile = () => {
   const [editProfile, setEditProfile] = React.useState(false);
@@ -23,6 +25,8 @@ export const AdminProfile = () => {
     confirm: "",
   });
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
@@ -52,6 +56,37 @@ export const AdminProfile = () => {
         console.error("info save error:", error.message);
       });
   }, []);
+
+
+  const update_password = (e) => {
+    e.preventDefault();
+    if (password.update !== password.confirm) {
+      alert("Update and Confirm not same!");
+      return;
+    }
+    const currentPassword = password.curret;
+    const newPassword = password.update;
+    const user = JSON.parse(localStorage.getItem("token"));
+
+    axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/updatePassword?userId=" +
+          user.userId,
+        { currentPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+          message.success("password updated successfully")
+          navigate('/logout');
+      })
+      .catch((error) => {
+        console.error("info save error:", error.message);
+      });
+  };
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -132,7 +167,7 @@ export const AdminProfile = () => {
               />
             </div>
             <div className="pt-5 grid grid-cols-2 ">
-              <label>Phone</label>
+              <label>Phone No</label>
               <TextField
                 type="tel"
                 size="small"
@@ -157,7 +192,7 @@ export const AdminProfile = () => {
               />
             </div>
             <div className="pt-5 grid grid-cols-2 ">
-              <label>Designation</label>
+              <label>Current Designation</label>
               <TextField
                 size="small"
                 placeholder="Enter your Designation"
@@ -170,7 +205,7 @@ export const AdminProfile = () => {
             </div>
           </div>
           {/* update password */}
-          <div className="px-56 pb-28">
+          <form className="px-56 pb-28" onSubmit={update_password}>
             <div className="flex justify-end">
               <Button
                 style={{ color: "white", borderColor: "#7F56D9" }}
@@ -181,13 +216,15 @@ export const AdminProfile = () => {
                   "&:hover": {
                     backgroundColor: "#7B964A",
                   },
-                }}>
+                }}
+                type="submit">
                 Update Password
               </Button>
             </div>
-            <div className="pt-5 grid grid-cols-2 ">
+            <div className="pt-5 grid grid-flow-col ">
               <label>Current Password</label>
               <TextField
+                required
                 type="password"
                 size="small"
                 name="current"
@@ -198,22 +235,24 @@ export const AdminProfile = () => {
                 }
               />
             </div>
-            <div className="pt-5 grid grid-cols-2 ">
-              <label>Update Password</label>
+            <div className="pt-5 grid grid-flow-col ">
+              <label>New Password</label>
               <TextField
+                required
                 type="password"
                 size="small"
                 name="update"
-                placeholder="Enter Update Password"
+                placeholder="Enter New Password"
                 value={password.update}
                 onChange={(e) =>
                   setPassword({ ...password, update: e.target.value })
                 }
               />
             </div>
-            <div className="pt-5 grid grid-cols-2 ">
+            <div className="pt-5 grid grid-flow-col ">
               <label>Confirm Password</label>
               <TextField
+                required
                 type="password"
                 size="small"
                 name="confirm"
@@ -224,7 +263,7 @@ export const AdminProfile = () => {
                 }
               />
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
