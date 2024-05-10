@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export const My_Information = ({ next, back }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
-  const [country, setCountry] = React.useState("");
+  const [countre, setCountre] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [no, setNo] = React.useState("");
   const [project, setProject] = React.useState("");
@@ -83,7 +83,7 @@ export const My_Information = ({ next, back }) => {
         if (response.status != 204) {
           const data = response.data;
           setHearAboutUs(data.howDidYouHearAboutUs);
-          setCountry(data.country);
+          setCountre(data.country);
           setDoYouWant(data.doYouWantXenspireToBe);
           data.email !== "" ? setEmail(data.email) : setLoginEmail();
           setNo(data.mobile);
@@ -102,11 +102,10 @@ export const My_Information = ({ next, back }) => {
     const mobile = no;
     const how_did_you_hear_about_us = hearAboutUs;
     const working_on_project = project;
-    const country_name = country.name;
+    const country = countre.name;
     const xenspire_is_the_employer = xenspire;
     const do_you_want_xenspire_to_be = doYouWant;
     const user = JSON.parse(localStorage.getItem("token"));
-    console.log(country_name);
     const my_info = true;
     await axios
       .post(
@@ -114,7 +113,7 @@ export const My_Information = ({ next, back }) => {
           user.userId,
         {
           how_did_you_hear_about_us,
-          country_name,
+          country,
           xenspire_is_the_employer,
           email,
           mobile,
@@ -222,11 +221,11 @@ export const My_Information = ({ next, back }) => {
             disablePortal
             size="small"
             id="combo-box-demo"
-            value={country}
+            value={countre}
             options={countries}
             getOptionLabel={(option) => option.name}
             onChange={(event, newValue) => {
-              setCountry(newValue);
+              setCountre(newValue);
             }}
             sx={{
               color: "#53783B",

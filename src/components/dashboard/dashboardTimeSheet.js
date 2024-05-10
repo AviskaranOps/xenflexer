@@ -45,7 +45,7 @@ export const DashboardTimeSheet = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheets?userId="+user.userId,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -55,6 +55,7 @@ export const DashboardTimeSheet = () => {
       .then((response) => {
         console.log(response.data);
         setTimesheets(response.data);
+        setTimeSheet(response.data[0].name);
       })
       .catch((error) => {
         console.error("info save error:", error.message);

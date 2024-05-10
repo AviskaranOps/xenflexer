@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { message } from 'antd';
 
 export const Profile = () => {
-  const [editProfile, setEditProfile] = React.useState(true);
+  const [editProfile, setEditProfile] = React.useState(false);
   const [editExperience, setEditExperiance] = React.useState(true);
   const [editEducation, setEditEducation] = React.useState(true);
 
@@ -110,6 +110,30 @@ export const Profile = () => {
       });
   }, []);
 
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("token"));
+    axios
+      .get(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserProfileImg?userId=" +
+          user.userId,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then(response => {
+              console.log(response);
+                setImage(URL.createObjectURL(new Blob(response.data, {type: "image/png"})));
+            })
+      .catch(error => {
+          console.log(error.message);
+      })
+    }, []);
+
+
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
@@ -120,12 +144,12 @@ export const Profile = () => {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
           },
-        }
+        },
+
       )
       .then((response) => {
         console.log(response.data);
         const data = response.data;
-        setImage(URL.createObjectURL(data?.profileImg))
         const profile = {
           name: user.username,
           email: user.email,
@@ -341,7 +365,7 @@ export const Profile = () => {
               {image && editProfile ? (
                 <img
                   src={image}
-                  alt="check"
+                  alt="profile"
                   className="w-full h-full rounded-full"
                 />
               ) : (
@@ -412,7 +436,7 @@ export const Profile = () => {
                 <label>Name</label>
                 <TextField
                   size="small"
-                  placeholder="Enter your Name"
+                  placeholder="FullName"
                   value={profile.name}
                   disabled={editProfile}
                   onChange={(e) =>
@@ -425,7 +449,7 @@ export const Profile = () => {
                 <TextField
                   type="email"
                   size="small"
-                  placeholder="Enter your Email"
+                  placeholder="Email Address"
                   value={profile.email}
                   disabled={editProfile}
                   onChange={(e) =>
@@ -438,7 +462,7 @@ export const Profile = () => {
                 <TextField
                   type="tel"
                   size="small"
-                  placeholder="Enter your Phone NO."
+                  placeholder="Phone No"
                   value={profile.phone}
                   disabled={editProfile}
                   onChange={(e) =>
@@ -450,7 +474,7 @@ export const Profile = () => {
                 <label>Country</label>
                 <TextField
                   size="small"
-                  placeholder="your Country"
+                  placeholder="Country Name"
                   value={profile.country}
                   disabled={editProfile}
                   onChange={(e) =>
@@ -462,7 +486,7 @@ export const Profile = () => {
                 <label>Designation</label>
                 <TextField
                   size="small"
-                  placeholder="Enter Status"
+                  placeholder="Current Designation"
                   value={profile.designation}
                   disabled={editProfile}
                   onChange={(e) =>
@@ -474,7 +498,7 @@ export const Profile = () => {
                 <label>State</label>
                 <TextField
                   size="small"
-                  placeholder="your state"
+                  placeholder="Your State"
                   value={profile.state}
                   disabled={editProfile}
                   onChange={(e) =>
@@ -506,7 +530,7 @@ export const Profile = () => {
                 </Select>
               </div>
               <div className="pt-5 grid grid-cols-2 ">
-                <label>Want to be Xenspire Employee?</label>
+                <label>Want to be Xenspire <b/> Employee?</label>
                 <Select
                   size="small"
                   disabled={profile.xenspireEmploye === "Yes" || editProfile}
