@@ -139,7 +139,7 @@ export const My_Information = ({ next, back }) => {
 
   return (
     <div>
-      <form className="mx-40" onSubmit={handleSubmit}>
+      <form className="mx-80 mt-8" onSubmit={handleSubmit}>
         <div className="grid grid-flow-col justify-between items-center">
           <FormLabel style={{ color: "#344054" }}>
             How did you hear about Us?
