@@ -11,16 +11,21 @@ import axios from "axios";
 import { message } from "antd";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Country, State, City } from "country-state-city";
 
 export const My_Information = ({ next, back }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
-  const [countre, setCountre] = React.useState("");
+  const [countre, setCountre] = React.useState();
+  const [state, setState] = React.useState();
+  const [city, setCity] = React.useState();
   const [email, setEmail] = React.useState("");
   const [no, setNo] = React.useState("");
   const [project, setProject] = React.useState("");
   const [xenspire, setXenspire] = React.useState("");
   const [doYouWant, setDoYouWant] = React.useState("");
   const [countries, setCountries] = React.useState([]);
+  const [states, setStates] = React.useState([]);
+  const [citys, setCitys] = React.useState([]);
   const [comm, setComm] = React.useState([]);
   const [onNext, setOnNext] = React.useState(false);
 
@@ -46,6 +51,17 @@ export const My_Information = ({ next, back }) => {
   };
 
   useEffect(() => {
+    if (countre !== null) {
+      setStates(State.getStatesOfCountry(countre?.isoCode));
+    }
+    if (state !== null) {
+      setCitys(City.getCitiesOfState(countre?.isoCode, state?.isoCode));
+    }
+  }, [countre, state]);
+
+  useEffect(() => {
+    setCountries(Country.getAllCountries());
+
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
@@ -57,7 +73,7 @@ export const My_Information = ({ next, back }) => {
         }
       )
       .then((response) => {
-        setCountries(response.data.country);
+        // setCountries(response.data.country);
         setComm(response.data.communication);
       })
       .catch((error) => {
@@ -226,6 +242,8 @@ export const My_Information = ({ next, back }) => {
             getOptionLabel={(option) => option.name}
             onChange={(event, newValue) => {
               setCountre(newValue);
+              setState(null);
+              setCity(null);
             }}
             sx={{
               color: "#53783B",
@@ -248,6 +266,83 @@ export const My_Information = ({ next, back }) => {
             className="w-72"
             renderInput={(params) => (
               <TextField {...params} placeholder="Select the Country" />
+            )}
+          />
+        </div>
+        <div className="mt-4 grid grid-flow-col justify-between items-center">
+          <FormLabel style={{ color: "#344054" }}>State</FormLabel>
+
+          <Autocomplete
+            disablePortal
+            size="small"
+            id="combo-box-demo"
+            disabled={countre === null}
+            value={state}
+            options={states}
+            getOptionLabel={(option) => option.name}
+            onChange={(event, newValue) => {
+              setState(newValue);
+              setCity(null);
+            }}
+            sx={{
+              color: "#53783B",
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "& .MuiAutocomplete-inputRoot": {
+                color: "#53783B",
+              },
+              ".MuiSvgIcon-root ": {
+                color: "#7B964A",
+              },
+            }}
+            className="w-72"
+            renderInput={(params) => (
+              <TextField {...params} placeholder="Select the State" />
+            )}
+          />
+        </div>
+        <div className="mt-4 grid grid-flow-col justify-between items-center">
+          <FormLabel style={{ color: "#344054" }}>City</FormLabel>
+
+          <Autocomplete
+            disablePortal
+            size="small"
+            id="combo-box-demo"
+            disabled={state === null}
+            value={city}
+            options={citys}
+            getOptionLabel={(option) => option.name}
+            onChange={(event, newValue) => {
+              setCity(newValue);
+            }}
+            sx={{
+              color: "#53783B",
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(123, 150, 74, 1)",
+              },
+              "& .MuiAutocomplete-inputRoot": {
+                color: "#53783B",
+              },
+              ".MuiSvgIcon-root ": {
+                color: "#7B964A",
+              },
+            }}
+            className="w-72"
+            renderInput={(params) => (
+              <TextField {...params} placeholder="Select the City" />
             )}
           />
         </div>

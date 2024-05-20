@@ -31,6 +31,7 @@ import { Benefit } from "./components/dashboard/benefit";
 import { Documents } from "./components/dashboard/documents";
 import AdminUnauthorized from "./components/common/adminUnauthorized";
 import UserUnauthorized from "./components/common/userUnauthorized";
+import { New_Profile } from "./components/dashboard/new_profile";
 
 function App() {
   return (
@@ -45,7 +46,7 @@ function App() {
         <Route path="clientHire" element={<ContactUp />} />
         <Route path="contact" element={<Contact_Us />} />
         <Route path="logout" element={<Logout />} />
-        <Route path="" element={<PrivateRoute requiredRole="ROLE_ADMIN"/>} >
+        <Route path="" element={<PrivateRoute requiredRole="ROLE_ADMIN" />}>
           <Route path="forgotPass" element={<Forgot_Pass />} />
           <Route path="admin" element={<AdminHome />} />
           <Route path="admin/profile" element={<AdminProfile />} />
@@ -54,18 +55,17 @@ function App() {
           <Route path="admin/create" element={<CreateTimeSheet />} />
           <Route path="admin/pendingApproval" element={<PendingApproval />} />
           <Route path="pdfview" element={<PdfView />} />
-          <Route path="admin/unauthorized" element={<AdminUnauthorized/>}/>
+          <Route path="admin/unauthorized" element={<AdminUnauthorized />} />
         </Route>
-        <Route path="" element={<PrivateRoute requiredRole="ROLE_USER"/>} >
+        <Route path="" element={<PrivateRoute requiredRole="ROLE_USER" />}>
           <Route path="user/onboard" element={<Home />} />
-          <Route path="user/profile" element={<Profile />}/>
+          <Route path="user/myprofile" element={<New_Profile />} />
           <Route path="user/timesheet" element={<DashboardTimeSheet />} />
           <Route path="user/benefit" element={<Benefit />} />
           <Route path="user/payroll" element={<Payroll />} />
           <Route path="user/documnets" element={<Documents />} />
-          <Route path="user/unauthorized" element={<UserUnauthorized/>}/>
+          <Route path="user/unauthorized" element={<UserUnauthorized />} />
           <Route path="*" element={<Navigate to="login" replace />} />
-
         </Route>
       </Routes>
     </Router>
