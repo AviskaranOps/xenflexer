@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Checkbox,
-  Collapse,
-  FormControlLabel,
-  FormLabel,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Button, Collapse, IconButton } from "@mui/material";
 import {
   EditOutlined,
   KeyboardArrowDownTwoTone,
@@ -22,7 +12,6 @@ import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Divider, message } from "antd";
 import { SideNavProfile } from "../widgets/sidenavProfile";
-import Footer from "../widgets/footer";
 
 export const New_Profile = () => {
   const location = useLocation();
@@ -369,7 +358,7 @@ export const New_Profile = () => {
       <div className="flex">
         <SideNavProfile />
 
-        <div className="w-full mt-24 px-4">
+        <div className="w-full mt-24 px-10">
           <div>
             {pathSegments.map((segment, index) => (
               <span

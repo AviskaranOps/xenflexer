@@ -6,58 +6,32 @@ import {
   Select,
   TextField,
   Autocomplete,
+  Card,
+  InputAdornment,
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Country, State, City } from "country-state-city";
+import { Country } from "country-state-city";
+import { EmailOutlined, PhoneOutlined } from "@mui/icons-material";
 
-export const My_Information = ({ next, back }) => {
+export const My_Information = ({ next }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
   const [countre, setCountre] = React.useState();
-  const [state, setState] = React.useState();
-  const [city, setCity] = React.useState();
   const [email, setEmail] = React.useState("");
   const [no, setNo] = React.useState("");
   const [project, setProject] = React.useState("");
   const [xenspire, setXenspire] = React.useState("");
   const [doYouWant, setDoYouWant] = React.useState("");
   const [countries, setCountries] = React.useState([]);
-  const [states, setStates] = React.useState([]);
-  const [citys, setCitys] = React.useState([]);
-  const [comm, setComm] = React.useState([]);
-  const [onNext, setOnNext] = React.useState(false);
+  const [comm, setComm] = React.useState([{ name: "abc" }]);
 
   const yes_no = ["Yes", "No"];
-  const names = [
-    "Oliver Hansen",
-    "Van Henry",
-    "April Tucker",
-    "Ralph Hubbard",
-    "Omar Alexander",
-    "Carlos Abbott",
-    "Miriam Wagner",
-    "Bradley Wilkerson",
-    "Virginia Andrews",
-    "Kelly Snyder",
-  ];
-
-  const navigate = useNavigate();
 
   const setLoginEmail = () => {
     let email = JSON.parse(localStorage.getItem("token")).email;
     setEmail(email);
   };
-
-  useEffect(() => {
-    if (countre !== null) {
-      setStates(State.getStatesOfCountry(countre?.isoCode));
-    }
-    if (state !== null) {
-      setCitys(City.getCitiesOfState(countre?.isoCode, state?.isoCode));
-    }
-  }, [countre, state]);
 
   useEffect(() => {
     setCountries(Country.getAllCountries());
@@ -96,7 +70,7 @@ export const My_Information = ({ next, back }) => {
       )
       .then((response) => {
         console.log(response);
-        if (response.status != 204) {
+        if (response.status !== 204) {
           const data = response.data;
           setHearAboutUs(data.howDidYouHearAboutUs);
           setCountre(data.country);
@@ -105,7 +79,6 @@ export const My_Information = ({ next, back }) => {
           setNo(data.mobile);
           setProject(data.workingOnProject);
           setXenspire(data.xenspireIsTheEmployer);
-          setOnNext(true);
         }
       })
       .catch((error) => {
@@ -115,10 +88,11 @@ export const My_Information = ({ next, back }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    next();
     const mobile = no;
     const how_did_you_hear_about_us = hearAboutUs;
     const working_on_project = project;
-    const country = countre.name;
+    const country = countre?.name;
     const xenspire_is_the_employer = xenspire;
     const do_you_want_xenspire_to_be = doYouWant;
     const user = JSON.parse(localStorage.getItem("token"));
@@ -146,7 +120,6 @@ export const My_Information = ({ next, back }) => {
       .then((response) => {
         message.success("Data saved successfully");
         console.log(response.data);
-        setOnNext(true);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -154,399 +127,181 @@ export const My_Information = ({ next, back }) => {
   };
 
   return (
-    <div>
-      <form className="mx-80 mt-8" onSubmit={handleSubmit}>
-        <div className="grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>
-            How did you hear about Us?
-          </FormLabel>
-          <Select
-            size="small"
-            displayEmpty
-            value={hearAboutUs}
-            onChange={(e) => setHearAboutUs(e.target.value)}
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return (
-                  <text style={{ color: "#53783B" }}>Select from the list</text>
-                );
-              }
-              return selected;
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72">
-            {comm.map((name) => (
-              <MenuItem key={name.name} value={name.name}>
-                {name.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>Country</FormLabel>
-          {/* <Select
-            size="small"
-            displayEmpty
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return (
-                  <text style={{ color: "#53783B" }}>Select the Country</text>
-                );
-              }
-              return selected;
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72">
-            {countries.map((name) => (
-              <MenuItem key={name.name} value={name.name}>
-                {name.name}
-              </MenuItem>
-            ))}
-          </Select> */}
-          <Autocomplete
-            disablePortal
-            size="small"
-            id="combo-box-demo"
-            value={countre}
-            options={countries}
-            getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => {
-              setCountre(newValue);
-              setState(null);
-              setCity(null);
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "& .MuiAutocomplete-inputRoot": {
-                color: "#53783B",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72"
-            renderInput={(params) => (
-              <TextField {...params} placeholder="Select the Country" />
-            )}
-          />
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>State</FormLabel>
+    <>
+      <form onSubmit={handleSubmit} className="w-full">
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>
+                How did you hear about Us?
+              </FormLabel>
+              <Select
+                size="small"
+                displayEmpty
+                value={hearAboutUs}
+                onChange={(e) => setHearAboutUs(e.target.value)}
+                renderValue={(selected) => {
+                  if (selected.length === 0) {
+                    return (
+                      <text style={{ color: "#B1B2B2" }}>
+                        Select from the list
+                      </text>
+                    );
+                  }
+                  return selected;
+                }}
+                className="w-72">
+                {comm.map((name) => (
+                  <MenuItem key={name.name} value={name.name}>
+                    {name.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>Country</FormLabel>
+              <Autocomplete
+                disablePortal
+                size="small"
+                id="combo-box-demo"
+                value={countre}
+                options={countries}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setCountre(newValue);
+                }}
+                className="w-72"
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Select Country" />
+                )}
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>Email</FormLabel>
+              <TextField
+                size="small"
+                type="email"
+                placeholder="Enter Email"
+                className="w-72"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailOutlined sx={{ color: "#b1b2b2" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
 
-          <Autocomplete
-            disablePortal
-            size="small"
-            id="combo-box-demo"
-            disabled={countre === null}
-            value={state}
-            options={states}
-            getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => {
-              setState(newValue);
-              setCity(null);
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "& .MuiAutocomplete-inputRoot": {
-                color: "#53783B",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72"
-            renderInput={(params) => (
-              <TextField {...params} placeholder="Select the State" />
-            )}
-          />
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>City</FormLabel>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>Mobile</FormLabel>
+              <TextField
+                size="small"
+                type="tel"
+                placeholder="Enter Mobile"
+                className="w-72"
+                value={no}
+                onChange={(e) => setNo(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneOutlined sx={{ color: "#b1b2b2" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>
+                Working on the Project?
+              </FormLabel>
+              <Select
+                size="small"
+                displayEmpty
+                value={project}
+                onChange={(e) => setProject(e.target.value)}
+                renderValue={(selected) => {
+                  if (selected.length === 0) {
+                    return <text style={{ color: "#B1B2B2" }}>Yes / No</text>;
+                  }
+                  return selected;
+                }}
+                className="w-72">
+                {yes_no.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>
+                Xenspire is the Employer?
+              </FormLabel>
+              <Select
+                size="small"
+                displayEmpty
+                value={xenspire}
+                onChange={(e) => setXenspire(e.target.value)}
+                renderValue={(selected) => {
+                  if (selected.length === 0) {
+                    return <text style={{ color: "#B1B2B3" }}>Yes / No</text>;
+                  }
+                  return selected;
+                }}
+                className="w-72">
+                {yes_no.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
 
-          <Autocomplete
-            disablePortal
-            size="small"
-            id="combo-box-demo"
-            disabled={state === null}
-            value={city}
-            options={citys}
-            getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => {
-              setCity(newValue);
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "& .MuiAutocomplete-inputRoot": {
-                color: "#53783B",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72"
-            renderInput={(params) => (
-              <TextField {...params} placeholder="Select the City" />
-            )}
-          />
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>Email</FormLabel>
-          <TextField
-            size="small"
-            type="email"
-            placeholder="Enter Email"
-            className="w-72"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              input: { color: "#53783B" },
-            }}
-          />
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>Mobile</FormLabel>
-          <TextField
-            size="small"
-            type="tel"
-            placeholder="Enter Mobile"
-            className="w-72"
-            value={no}
-            onChange={(e) => setNo(e.target.value)}
-            sx={{
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-              input: { color: "#53783B" },
-            }}
-          />
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>
-            Working on the Project?
-          </FormLabel>
-          <Select
-            size="small"
-            displayEmpty
-            value={project}
-            onChange={(e) => setProject(e.target.value)}
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return <text style={{ color: "#D1D1D1" }}>Yes / No</text>;
-              }
-              return selected;
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72">
-            {yes_no.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>
-            Xenspire is the Employer?
-          </FormLabel>
-          <Select
-            size="small"
-            displayEmpty
-            value={xenspire}
-            onChange={(e) => setXenspire(e.target.value)}
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return <text style={{ color: "#D1D1D1" }}>Yes / No</text>;
-              }
-              return selected;
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72">
-            {yes_no.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-        <div className="mt-4 grid grid-flow-col justify-between items-center">
-          <FormLabel style={{ color: "#344054" }}>
-            Do you want Xenspire to be?
-          </FormLabel>
-          <Select
-            disabled={xenspire === "Yes"}
-            size="small"
-            displayEmpty
-            value={doYouWant}
-            onChange={(e) => setDoYouWant(e.target.value)}
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return <text style={{ color: "#D1D1D1" }}>Yes / No</text>;
-              }
-              return selected;
-            }}
-            sx={{
-              color: "#53783B",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(123, 150, 74, 1)",
-              },
-              ".MuiSvgIcon-root ": {
-                color: "#7B964A",
-              },
-            }}
-            className="w-72">
-            {yes_no.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>
+                Do you want Xenspire to be?
+              </FormLabel>
+              <Select
+                disabled={xenspire === "Yes"}
+                size="small"
+                displayEmpty
+                value={doYouWant}
+                onChange={(e) => setDoYouWant(e.target.value)}
+                renderValue={(selected) => {
+                  if (selected.length === 0) {
+                    return <text style={{ color: "#B1B2B2" }}>Yes / No</text>;
+                  }
+                  return selected;
+                }}
+                className="w-72">
+                {yes_no.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+          </div>
+        </Card>
         <div className="mt-5 justify-end flex">
           <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            disabled
-            sx={{
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            onClick={back}>
-            Previous
-          </Button>
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
+            style={{ color: "white" }}
             variant="contained"
             sx={{
               marginLeft: 5,
-              backgroundColor: "#7B964A",
+              backgroundColor: "#729434",
               "&:hover": {
-                backgroundColor: "#7B964A",
+                backgroundColor: "#729434",
               },
             }}
             type="submit">
-            Save
-          </Button>
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            disabled={!onNext}
-            sx={{
-              marginLeft: 5,
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            onClick={next}>
-            Next
+            Save & Continue
           </Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };

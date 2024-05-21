@@ -11,6 +11,7 @@ import {
   ChevronRightOutlined,
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
+  LogoutOutlined,
   PeopleAltOutlined,
   PieChartOutlined,
 } from "@mui/icons-material";
@@ -100,7 +101,11 @@ export const SideNavProfile = ({ setUser, email }) => {
       svgicon: <PieChartOutlined />,
       path: "/user/timesheet",
     },
-    { name: "Profile", svgicon: <PeopleAltOutlined />, path: "/user/profile" },
+    {
+      name: "Profile",
+      svgicon: <PeopleAltOutlined />,
+      path: "/user/myprofile",
+    },
   ];
 
   React.useEffect(() => {
@@ -118,7 +123,7 @@ export const SideNavProfile = ({ setUser, email }) => {
     { name: "Documents", path: "/user/documnets" },
     { name: "Benefit", path: "/user/benefit" },
     { name: "Payroll", path: "/user/payroll" },
-    { name: "Profile Details", path: "/user/profile" },
+    { name: "Profile Details", path: "/user/myprofile" },
   ];
 
   return (
@@ -126,9 +131,36 @@ export const SideNavProfile = ({ setUser, email }) => {
       <AppBar
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: "#ffffff" }}>
-        <Toolbar>
-          <img src={logo2} alt="logo" width={180} />
-        </Toolbar>
+        <div className="flex justify-between items-center">
+          <Toolbar>
+            <img src={logo2} alt="logo" width={180} />
+          </Toolbar>
+
+          <div className="mx-6">
+            <div className="grid grid-flow-col gap-2 justify-between">
+              <div className="mr-1 w-6 rounded-full">
+                <img
+                  src={"https://picsum.photos/200/300.webp"}
+                  className="rounded-full"
+                  alt="avtar"
+                />
+              </div>
+              <div className="grid grid-flow-row ">
+                <text style={{ fontSize: 12, color: "#000000" }}>
+                  {JSON.parse(localStorage.getItem("token")).username}
+                </text>
+                <text style={{ fontSize: 12, color: "#6C737F" }}>
+                  {email
+                    ? email
+                    : JSON.parse(localStorage.getItem("token")).email}
+                </text>
+              </div>
+              <IconButton onClick={() => navigation("/logout")}>
+                <LogoutOutlined sx={{ color: "#9AA1B4" }} />
+              </IconButton>
+            </div>
+          </div>
+        </div>
       </AppBar>
       <div
         id="navbarIcon"

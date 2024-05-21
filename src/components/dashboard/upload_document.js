@@ -1,22 +1,13 @@
 import React from "react";
-import {
-  Button,
-  TableHead,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer,
-} from "@mui/material";
+import { Button, Card, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { UploadFileOutlined } from "@mui/icons-material";
-import pdf from "../../assets/images/pdf-icon.png";
-import jpg from "../../assets/images/jpf-icon.png";
-import mp4 from "../../assets/images/mp4-icon.png";
-import fig from "../../assets/images/fig-icon.png";
-import docx from "../../assets/images/docx-icon.png";
+import { CancelOutlined, UploadFileOutlined } from "@mui/icons-material";
 import axios from "axios";
 import { message } from "antd";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
+import pdf from "../../assets/pdf_half.png";
 
 export const Upload_Document = ({ next, back }) => {
   const [resume, setResume] = React.useState();
@@ -24,11 +15,10 @@ export const Upload_Document = ({ next, back }) => {
   const [proof, setProf] = React.useState();
   const [tax, setTax] = React.useState();
   const [agreement, setAgreement] = React.useState();
-  const [onNext, setOnNext] = React.useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setOnNext(true);
+    next();
     const formData = new FormData();
     formData.append("resume", resume);
     formData.append("certificate", certificate);
@@ -57,19 +47,6 @@ export const Upload_Document = ({ next, back }) => {
       });
   };
 
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: "#ffffff",
-    },
-    "&:nth-of-type(even)": {
-      backgroundColor: "#ffffff",
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -82,272 +59,260 @@ export const Upload_Document = ({ next, back }) => {
     width: 1,
   });
 
-  const StyledTableHead = styled(TableHead)`
-    & .MuiTableCell-root {
-      background-color: #f9fafb;
-    }
-  `;
-
-  const StyledTableContainer = styled(TableContainer)`
-    border-radius: 1rem;
-    max-width: 700px;
-    ::-webkit-scrollbar {
-      display: none;
-    }
-  `;
+  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 4,
+    width: 350,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "#D6D6D6",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      borderRadius: 5,
+      backgroundColor: "#6366F1",
+    },
+  }));
 
   return (
-    <div>
-      <form className="mx-20" onSubmit={handleSubmit}>
-        <div className="flex justify-center">
-          <text
-            style={{
-              color: "#53783B",
-              fontWeight: "bold",
-              fontSize: 28,
-            }}>
-            Upload Documents
-          </text>
-        </div>
-        {/* table */}
-        <div className="justify-center flex mt-3">
-          <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
-            <Table aria-label="customized table" stickyHeader>
-              <StyledTableHead>
-                <TableRow>
-                  <TableCell style={{ fontWeight: "bold", color: "#475467" }}>
-                    Document Name
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}>
-                    Upload File
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}>
-                    Updated Status
-                  </TableCell>
-                </TableRow>
-              </StyledTableHead>
-              <TableBody>
-                {/* pdf */}
-                <StyledTableRow key="pdf">
-                  <TableCell component="th" scope="row">
-                    <div className="grid grid-flow-col justify-start">
-                      <img src={pdf} alt="pdf logo" width={30} />
-                      <div className="items-center flex ml-5">
-                        <text style={{ color: "#101828" }}>
-                          {resume ? resume.name : "Resume"}
-                        </text>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      component="label"
-                      size="small"
-                      style={{
-                        color: "#53783B",
-                        borderColor: "#53783B",
-                        backgroundColor: "#E3F9F9",
-                      }}
-                      variant="outlined"
-                      startIcon={<UploadFileOutlined />}>
-                      Upload
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={(e) => setResume(e.target.files[0])}
-                      />
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" style={{ color: "#475467" }}>
-                    {resume ? "Uploaded" : "Pending"}
-                  </TableCell>
-                </StyledTableRow>
-                {/* jpg */}
-                <StyledTableRow key="jpg">
-                  <TableCell component="th" scope="row">
-                    <div className="grid grid-flow-col justify-start">
-                      <img src={jpg} alt="jpg logo" width={30} />
-                      <div className="items-center flex ml-5">
-                        <text style={{ color: "#101828" }}>
-                          {certificate ? certificate.name : "Certificates"}
-                        </text>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      component="label"
-                      size="small"
-                      style={{
-                        color: "#53783B",
-                        borderColor: "#53783B",
-                        backgroundColor: "#E3F9F9",
-                      }}
-                      variant="outlined"
-                      startIcon={<UploadFileOutlined />}>
-                      Upload
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={(e) => setCretificate(e.target.files[0])}
-                      />
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" style={{ color: "#475467" }}>
-                    {certificate ? "Uploaded" : "Pending"}
-                  </TableCell>
-                </StyledTableRow>
-                {/* mp4 */}
-                <StyledTableRow key="mp4">
-                  <TableCell component="th" scope="row">
-                    <div className="grid grid-flow-col justify-start">
-                      <img src={mp4} alt="mp4 logo" width={30} />
-                      <div className="items-center flex ml-5">
-                        <text style={{ color: "#101828" }}>
-                          {proof ? proof.name : "Proof of Identification"}
-                        </text>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      component="label"
-                      size="small"
-                      style={{
-                        color: "#53783B",
-                        borderColor: "#53783B",
-                        backgroundColor: "#E3F9F9",
-                      }}
-                      variant="outlined"
-                      startIcon={<UploadFileOutlined />}>
-                      Upload
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={(e) => setProf(e.target.files[0])}
-                      />
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" style={{ color: "#475467" }}>
-                    {proof ? "Uploaded" : "Pending"}
-                  </TableCell>
-                </StyledTableRow>
-                {/* fig */}
-                <StyledTableRow key="fig">
-                  <TableCell component="th" scope="row">
-                    <div className="grid grid-flow-col justify-start">
-                      <img src={fig} alt="fig logo" width={30} />
-                      <div className="items-center flex ml-5">
-                        <text style={{ color: "#101828" }}>
-                          {tax ? tax.name : "Tax Document"}
-                        </text>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      component="label"
-                      size="small"
-                      style={{
-                        color: "#53783B",
-                        borderColor: "#53783B",
-                        backgroundColor: "#E3F9F9",
-                      }}
-                      variant="outlined"
-                      startIcon={<UploadFileOutlined />}>
-                      Upload
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={(e) => setTax(e.target.files[0])}
-                      />
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" style={{ color: "#475467" }}>
-                    {tax ? "Uploaded" : "Pending"}
-                  </TableCell>
-                </StyledTableRow>
-                {/* docx */}
-                <StyledTableRow key="docx">
-                  <TableCell component="th" scope="row">
-                    <div className="grid grid-flow-col justify-start">
-                      <img src={docx} alt="docx logo" width={30} />
-                      <div className="items-center flex ml-5">
-                        <text style={{ color: "#101828" }}>
-                          {agreement ? agreement.name : "Agreement"}
-                        </text>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      component="label"
-                      size="small"
-                      style={{
-                        color: "#53783B",
-                        borderColor: "#53783B",
-                        backgroundColor: "#E3F9F9",
-                      }}
-                      variant="outlined"
-                      startIcon={<UploadFileOutlined />}>
-                      Upload
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={(e) => setAgreement(e.target.files[0])}
-                      />
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" style={{ color: "#475467" }}>
-                    {agreement ? "Uploaded" : "Pending"}
-                  </TableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table>
-          </StyledTableContainer>
-        </div>
-        <div className="mt-5 justify-end flex">
+    <>
+      <form onSubmit={handleSubmit} className="w-full">
+        {/* resume */}
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="flex">
+            <div>
+              <Button
+                component="label"
+                variant="outlined"
+                fullWidth
+                style={{
+                  color: "#729434",
+                  borderColor: "#729434",
+                }}
+                endIcon={<UploadFileOutlined />}>
+                Upload Resume
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => setResume(e.target.files[0])}
+                />
+              </Button>
+              <p style={{ fontSize: 11, color: "#000000", marginTop: 3 }}>
+                We accept{"  "}
+                <span style={{ color: "#729434" }}>
+                  .DOC, .DOCX, .RTF, .TXT, .WPS
+                </span>
+                {"  "}The size limit is{" "}
+                <span style={{ color: "#729434" }}>1MB</span>
+              </p>
+            </div>
+            <div className="grid grid-flow-col justify-start items-center gap-5 pl-5">
+              <img src={pdf} alt="pdf logo" />
+              <div>
+                <p style={{ color: "#3F3F3F", fontSize: 12 }}>
+                  {resume ? resume.name : "Please upload your Resume"}
+                </p>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </div>
+              <IconButton onClick={() => setResume()}>
+                <CancelOutlined color="error" />
+              </IconButton>
+            </div>
+          </div>
+        </Card>
+        {/* certificate */}
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="flex">
+            <div>
+              <Button
+                component="label"
+                variant="outlined"
+                fullWidth
+                style={{
+                  color: "#729434",
+                  borderColor: "#729434",
+                }}
+                endIcon={<UploadFileOutlined />}>
+                Upload Certificates
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => setCretificate(e.target.files[0])}
+                />
+              </Button>
+              <p style={{ fontSize: 11, color: "#000000", marginTop: 3 }}>
+                We accept{"  "}
+                <span style={{ color: "#729434" }}>
+                  .DOC, .DOCX, .RTF, .TXT, .WPS
+                </span>
+                {"  "}The size limit is{" "}
+                <span style={{ color: "#729434" }}>1MB</span>
+              </p>
+            </div>
+            <div className="grid grid-flow-col justify-start items-center gap-5 pl-5">
+              <img src={pdf} alt="pdf logo" />
+              <div>
+                <p style={{ color: "#3F3F3F", fontSize: 12 }}>
+                  {certificate
+                    ? certificate.name
+                    : "Please upload your Cretificate"}
+                </p>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </div>
+              <IconButton onClick={() => setCretificate()}>
+                <CancelOutlined color="error" />
+              </IconButton>
+            </div>
+          </div>
+        </Card>
+        {/* proof */}
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="flex">
+            <div>
+              <Button
+                component="label"
+                variant="outlined"
+                fullWidth
+                style={{
+                  color: "#729434",
+                  borderColor: "#729434",
+                }}
+                endIcon={<UploadFileOutlined />}>
+                Upload Proof of Identification
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => setProf(e.target.files[0])}
+                />
+              </Button>
+              <p style={{ fontSize: 11, color: "#000000", marginTop: 3 }}>
+                We accept{"  "}
+                <span style={{ color: "#729434" }}>
+                  .DOC, .DOCX, .RTF, .TXT, .WPS
+                </span>
+                {"  "}The size limit is{" "}
+                <span style={{ color: "#729434" }}>1MB</span>
+              </p>
+            </div>
+            <div className="grid grid-flow-col justify-start items-center gap-5 pl-5">
+              <img src={pdf} alt="pdf logo" />
+              <div>
+                <p style={{ color: "#3F3F3F", fontSize: 12 }}>
+                  {proof
+                    ? proof.name
+                    : "Please upload your Proof of Identification"}
+                </p>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </div>
+              <IconButton onClick={() => setProf()}>
+                <CancelOutlined color="error" />
+              </IconButton>
+            </div>
+          </div>
+        </Card>
+        {/* Tax Document */}
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="flex">
+            <div>
+              <Button
+                component="label"
+                variant="outlined"
+                fullWidth
+                style={{
+                  color: "#729434",
+                  borderColor: "#729434",
+                }}
+                endIcon={<UploadFileOutlined />}>
+                Upload Tax Document
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => setTax(e.target.files[0])}
+                />
+              </Button>
+              <p style={{ fontSize: 11, color: "#000000", marginTop: 3 }}>
+                We accept{"  "}
+                <span style={{ color: "#729434" }}>
+                  .DOC, .DOCX, .RTF, .TXT, .WPS
+                </span>
+                {"  "}The size limit is{" "}
+                <span style={{ color: "#729434" }}>1MB</span>
+              </p>
+            </div>
+            <div className="grid grid-flow-col justify-start items-center gap-5 pl-5">
+              <img src={pdf} alt="pdf logo" />
+              <div>
+                <p style={{ color: "#3F3F3F", fontSize: 12 }}>
+                  {tax ? tax.name : "Please upload your Tax Document"}
+                </p>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </div>
+              <IconButton onClick={() => setTax()}>
+                <CancelOutlined color="error" />
+              </IconButton>
+            </div>
+          </div>
+        </Card>
+        {/* Agreement */}
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="flex">
+            <div>
+              <Button
+                component="label"
+                variant="outlined"
+                fullWidth
+                style={{
+                  color: "#729434",
+                  borderColor: "#729434",
+                }}
+                endIcon={<UploadFileOutlined />}>
+                Upload Agreement
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => setAgreement(e.target.files[0])}
+                />
+              </Button>
+              <p style={{ fontSize: 11, color: "#000000", marginTop: 3 }}>
+                We accept{"  "}
+                <span style={{ color: "#729434" }}>
+                  .DOC, .DOCX, .RTF, .TXT, .WPS
+                </span>
+                {"  "}The size limit is{" "}
+                <span style={{ color: "#729434" }}>1MB</span>
+              </p>
+            </div>
+            <div className="grid grid-flow-col justify-start items-center gap-5 pl-5">
+              <img src={pdf} alt="pdf logo" />
+              <div>
+                <p style={{ color: "#3F3F3F", fontSize: 12 }}>
+                  {agreement ? agreement.name : "Please upload your Agreement"}
+                </p>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </div>
+              <IconButton onClick={() => setAgreement()}>
+                <CancelOutlined color="error" />
+              </IconButton>
+            </div>
+          </div>
+        </Card>
+        {/* button */}
+        <div className="mt-8 justify-between flex px-5">
           <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            sx={{
-              marginLeft: 5,
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
+            style={{ color: "#729434", borderColor: "#729434" }}
+            variant="outlined"
             onClick={back}>
             Previous
           </Button>
+
           <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
+            style={{ color: "white" }}
             variant="contained"
             sx={{
               marginLeft: 5,
-              backgroundColor: "#7B964A",
+              backgroundColor: "#729434",
               "&:hover": {
-                backgroundColor: "#7B964A",
+                backgroundColor: "#729434",
               },
             }}
             type="submit">
-            Save
-          </Button>
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            disabled={!onNext}
-            sx={{
-              marginLeft: 5,
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            onClick={next}>
-            Next
+            Save & Continue
           </Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };

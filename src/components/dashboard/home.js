@@ -2,24 +2,24 @@ import * as React from "react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Typography from "@mui/material/Typography";
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
-import { RadioButtonChecked } from "@mui/icons-material";
+import { Card } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useLocation } from "react-router-dom";
 import { My_Experience } from "./my_experience";
 import { My_Information } from "./my_information";
 import { Upload_Document } from "./upload_document";
 import { Volantary_Disclosures } from "./volantary_disclosures";
 import { My_Education } from "./my_education";
-import { SideNav } from "../widgets/sidenav";
-import { useLocation } from "react-router-dom";
+import { SideNavProfile } from "../widgets/sidenavProfile";
+import congrates from "../../assets/Congrats.png";
 
 const steps = [
-  "My Information",
-  "My Experience",
-  "My Education",
+  "Basic Information",
+  "Work Experience",
+  "Qualification",
   "Upload Documents",
   "Voluntary Disclosures",
 ];
@@ -41,10 +41,14 @@ export function Home() {
     setActiveStep(location.state ? location.state : 0);
   }, []);
 
+  const pathSegments = location.pathname
+    .split("/")
+    .filter((segment) => segment);
+
   const Show_Fragment = () => {
     switch (activeStep) {
       case 0:
-        return <My_Information next={handleNext} back={handleBack} />;
+        return <My_Information next={handleNext} />;
       case 1:
         return <My_Experience next={handleNext} back={handleBack} />;
       case 2:
@@ -52,7 +56,7 @@ export function Home() {
       case 3:
         return <Upload_Document next={handleNext} back={handleBack} />;
       case 4:
-        return <Volantary_Disclosures back={handleBack} />;
+        return <Volantary_Disclosures back={handleBack} next={handleNext} />;
       default:
         break;
     }
@@ -60,18 +64,18 @@ export function Home() {
 
   const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
-      top: 10,
-      left: "calc(-50% + 16px)",
-      right: "calc(50% + 16px)",
+      top: 20,
+      left: "calc(-40% + 16px)",
+      right: "calc(60% + 16px)",
     },
     [`&.${stepConnectorClasses.active}`]: {
       [`& .${stepConnectorClasses.line}`]: {
-        borderColor: "#53783B",
+        borderColor: "#729434",
       },
     },
     [`&.${stepConnectorClasses.completed}`]: {
       [`& .${stepConnectorClasses.line}`]: {
-        borderColor: "#53783B",
+        borderColor: "#729434",
       },
     },
     [`& .${stepConnectorClasses.line}`]: {
@@ -82,136 +86,101 @@ export function Home() {
     },
   }));
 
-  const QontoStepIconRoot = styled("div")(({ theme, ownerState }) => ({
-    color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
+  const ColorlibStepIconRoot = styled("div")(({ ownerState }) => ({
+    background: "#CACACA",
+    zIndex: 1,
+    color: "white",
+    width: 40,
+    height: 40,
     display: "flex",
-    height: 22,
+    borderColor: "white",
+    borderWidth: 1,
+    borderStyle: "solid",
+    opacity: 0.3,
+    borderRadius: "50%",
+    justifyContent: "center",
     alignItems: "center",
+    marginBottom: 3,
     ...(ownerState.active && {
-      color: "#568ec9",
+      opacity: 1,
+      background: "#729434",
     }),
-    "& .QontoStepIcon-completedIcon": {
-      color: "#53783B",
-      zIndex: 1,
-      fontSize: 18,
-    },
-    "& .QontoStepIcon-circle": {
-      width: 8,
-      height: 8,
-      borderRadius: "50%",
-      backgroundColor: "currentColor",
-    },
+    ...(ownerState.completed && {
+      opacity: 1,
+      background: "#729434",
+    }),
   }));
 
   function QontoStepIcon(props) {
     const { active, completed, className } = props;
 
+    const icons = {
+      1: <span style={{ fontSize: 25 }}>1</span>,
+      2: <span style={{ fontSize: 25 }}>2</span>,
+      3: <span style={{ fontSize: 25 }}>3</span>,
+      4: <span style={{ fontSize: 25 }}>4</span>,
+      5: <span style={{ fontSize: 25 }}>5</span>,
+    };
+
     return (
-      <QontoStepIconRoot ownerState={{ active }} className={className}>
-        {completed ? (
-          <RadioButtonChecked color="success" />
-        ) : (
-          <RadioButtonChecked />
-        )}
-      </QontoStepIconRoot>
+      <ColorlibStepIconRoot
+        ownerState={{ completed, active }}
+        className={className}>
+        {icons[String(props.icon)]}
+      </ColorlibStepIconRoot>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="flex">
-        <SideNav />
-        <div className="pb-20 w-full">
-          <div className="py-10">
-            <Stepper
-              activeStep={activeStep}
-              alternativeLabel
-              connector={<QontoConnector />}>
-              {steps.map((label, index) => {
-                const labelProps = {};
-
-                if (index === 0) {
-                  labelProps.optional = (
-                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                      Name and Email
-                    </Typography>
-                  );
-                }
-                if (index === 1) {
-                  labelProps.optional = (
-                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                      Your Experiences
-                    </Typography>
-                  );
-                }
-                if (index === 2) {
-                  labelProps.optional = (
-                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                      Your Education
-                    </Typography>
-                  );
-                }
-                if (index === 3) {
-                  labelProps.optional = (
-                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                      Start Collaborating
-                    </Typography>
-                  );
-                }
-                if (index === 4) {
-                  labelProps.optional = (
-                    <Typography variant="caption" sx={{ color: "#7B964A" }}>
-                      Automatic Sharing
-                    </Typography>
-                  );
-                }
-
-                return (
-                  <Step key={label}>
-                    <StepLabel
-                      onClick={() => setActiveStep(index)}
-                      sx={{
-                        ":hover": {
-                          cursor: "pointer",
-                          textDecoration: "underline",
-                        },
-                      }}
-                      StepIconComponent={QontoStepIcon}
-                      {...labelProps}>
-                      {label}
-                    </StepLabel>
-                  </Step>
-                );
-              })}
-            </Stepper>
-          </div>
-
-          {/* <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}>
-                Back
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              {isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Skip
-                </Button>
-              )}
-
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </Box>
-          </React.Fragment> */}
-          <div>
-            <Show_Fragment />
-          </div>
+    <div className="min-h-screen bg-app-lightBlue flex">
+      <SideNavProfile />
+      <div className="w-full">
+        <div className="mt-20 pl-10 py-5">
+          {pathSegments.map((segment, index) => (
+            <span
+              key={index}
+              className={`text-xl font-semibold ${
+                index === 0 ? "text-app-gray" : "text-app-gray900"
+              }`}>
+              {segment.charAt(0).toUpperCase() + segment.slice(1)}
+              {index < pathSegments.length - 1 && " / "}
+            </span>
+          ))}
         </div>
+        {activeStep === 5 ? (
+          <div className="grid grid-flow-row  mt-16 justify-center text-center">
+            <div className="flex justify-center items-center">
+              <img src={congrates} alt="congrates image" width={177} />
+            </div>
+            <p style={{ color: "#5A5A5A", fontSize: 20 }}>
+              Your Application has been <br /> successfully submitted
+            </p>
+          </div>
+        ) : (
+          <div className="pb-20 px-10">
+            <Card sx={{ borderRadius: 5, py: 3 }}>
+              <Stepper
+                activeStep={activeStep}
+                alternativeLabel
+                connector={<QontoConnector />}>
+                {steps.map((label, index) => {
+                  return (
+                    <Step key={label}>
+                      <StepLabel
+                        onClick={() => setActiveStep(index)}
+                        StepIconComponent={QontoStepIcon}>
+                        {label}
+                      </StepLabel>
+                    </Step>
+                  );
+                })}
+              </Stepper>
+            </Card>
+            <div>
+              <Show_Fragment />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
