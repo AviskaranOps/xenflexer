@@ -45,8 +45,7 @@ export const DashboardTimeSheet = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheets?userId=" +
-          user.userId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheets?userId="+user.userId,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,

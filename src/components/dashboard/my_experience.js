@@ -5,69 +5,67 @@ import {
   FormControlLabel,
   FormLabel,
   TextField,
+  Card,
+  IconButton,
 } from "@mui/material";
-import { UploadFileOutlined } from "@mui/icons-material";
+import {
+  CancelOutlined,
+  CreateOutlined,
+  DeleteOutline,
+  UploadFileOutlined,
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect } from "react";
 import { message } from "antd";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
+import pdf from "../../assets/pdf_half.png";
 
 export const My_Experience = ({ next, back }) => {
   const [file, setFile] = React.useState();
-  const [onNext, setOnNext] = React.useState(false);
-  const [experianceData, setExperianceData] = React.useState([
-    {
+  const [experianceData, setExperianceData] = React.useState({
+    job_title: "",
+    company_name: "",
+    location: "",
+    currentCompany: false,
+    start_date: "",
+    end_date: "",
+  });
+
+  const [allExperiance, setAllExperiance] = React.useState([]);
+  const [editableFiled, setEditableFiled] = React.useState();
+
+  const addEepFields = (e) => {
+    e.preventDefault();
+    setAllExperiance([...allExperiance, experianceData]);
+    setExperianceData({
       job_title: "",
       company_name: "",
       location: "",
       currentCompany: false,
       start_date: "",
       end_date: "",
-    },
-  ]);
-
-  const addEepFields = () => {
-    setExperianceData([
-      ...experianceData,
-      {
-        job_title: "",
-        company_name: "",
-        location: "",
-        currentCompany: false,
-        startDate: "",
-        endDate: "",
-      },
-    ]);
+    });
   };
 
   let handleChange = (i, e) => {
-    let newFormValues = [...experianceData];
+    let newFormValues = [...allExperiance];
     newFormValues[i][e.target.name] = e.target.value;
-    setExperianceData(newFormValues);
+    setAllExperiance(newFormValues);
   };
 
   let handleRadioChange = (i, e) => {
-    setExperianceData((prev) =>
-      prev.map((item, index) => {
-        if (index === i) {
-          return {
-            ...item,
-            currentCompany: e.target.checked,
-          };
-        } else {
-          return {
-            ...item,
-            currentCompany: false,
-          };
-        }
-      })
-    );
+    let newFormValues = [...allExperiance];
+    newFormValues[i][e.target.name] = e.target.checked;
+    setAllExperiance(newFormValues);
   };
 
   const removeExpFields = (i) => {
-    let newFormValues = [...experianceData];
+    let newFormValues = [...allExperiance];
     newFormValues.splice(i, 1);
-    setExperianceData(newFormValues);
+    setAllExperiance(newFormValues);
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -81,8 +79,6 @@ export const My_Experience = ({ next, back }) => {
     whiteSpace: "nowrap",
     width: 1,
   });
-
-  const user = JSON.parse(localStorage.getItem("token"));
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
@@ -98,7 +94,7 @@ export const My_Experience = ({ next, back }) => {
       )
       .then((response) => {
         console.log(response.data);
-        if (response.status != 204) {
+        if (response.status !== 204) {
           const data = response.data;
           const explist = [];
           for (var item of data) {
@@ -114,7 +110,6 @@ export const My_Experience = ({ next, back }) => {
           }
           setExperianceData(explist);
         }
-        setOnNext(true);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -123,12 +118,13 @@ export const My_Experience = ({ next, back }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    next();
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userExperience?userId=" +
           user.userId,
-        experianceData,
+        allExperiance,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -137,7 +133,6 @@ export const My_Experience = ({ next, back }) => {
         }
       )
       .then((response) => {
-        setOnNext(true);
         message.success("Data saved successfully");
       })
       .catch((error) => {
@@ -172,130 +167,291 @@ export const My_Experience = ({ next, back }) => {
       });
   };
 
+  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 4,
+    width: 350,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "#D6D6D6",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      borderRadius: 5,
+      backgroundColor: "#6366F1",
+    },
+  }));
+
   return (
-    <div>
-      <form className="mx-40" onSubmit={handleSubmit}>
-        <div className="flex justify-between">
-          <text
-            style={{
-              color: "#53783B",
-              fontWeight: "bold",
-              fontSize: 28,
-            }}>
-            Resume
-          </text>
-          <div>
-            <text className="text-app-border mr-10">
-              {file ? file.name : "Please upload your Resume"}
-            </text>
-            <Button
-              component="label"
-              role={undefined}
-              variant="outlined"
-              tabIndex={-1}
-              style={{
-                color: "#344054",
-                borderColor: "#53783B",
-              }}
-              startIcon={<UploadFileOutlined />}>
-              Upload Resume/CV
-              <VisuallyHiddenInput
-                type="file"
-                onChange={(e) => handleResumeUpload(e)}
-              />
-            </Button>
+    <>
+      <form onSubmit={addEepFields} className="w-full">
+        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+          <div className="flex">
+            <div>
+              <Button
+                component="label"
+                variant="outlined"
+                fullWidth
+                style={{
+                  color: "#729434",
+                  borderColor: "#729434",
+                }}
+                endIcon={<UploadFileOutlined />}>
+                Upload Resume
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => handleResumeUpload(e)}
+                />
+              </Button>
+              <p style={{ fontSize: 11, color: "#000000", marginTop: 3 }}>
+                We accept{"  "}
+                <span style={{ color: "#729434" }}>
+                  .DOC, .DOCX, .RTF, .TXT, .WPS
+                </span>
+                {"  "}The size limit is{" "}
+                <span style={{ color: "#729434" }}>1MB</span>
+              </p>
+            </div>
+            <div className="grid grid-flow-col justify-start items-center gap-5 pl-5">
+              <img src={pdf} alt="pdf logo" />
+              <div>
+                <p style={{ color: "#3F3F3F", fontSize: 12 }}>
+                  {file ? file.name : "Please upload your Resume"}
+                </p>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </div>
+              <IconButton onClick={() => setFile()}>
+                <CancelOutlined color="error" />
+              </IconButton>
+            </div>
           </div>
-        </div>
-        <div className="mt-5 flex justify-start">
-          <text
-            style={{
-              color: "#53783B",
-              fontWeight: "bold",
-              fontSize: 28,
-            }}>
-            Experience
-          </text>
-        </div>
-        <div>
-          {experianceData.map((element, index) => {
-            return (
-              <>
-                <div className="mt-14 grid grid-flow-col justify-between ">
+          <div className="grid grid-cols-3 gap-3 mt-5">
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#344054" }}>Job Title</FormLabel>
+              <TextField
+                name="job_title"
+                size="small"
+                placeholder="Enter Title"
+                className="w-72"
+                value={experianceData.job_title}
+                onChange={(e) =>
+                  setExperianceData({
+                    ...experianceData,
+                    job_title: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#344054" }}>Company Name</FormLabel>
+              <TextField
+                name="company_name"
+                size="small"
+                placeholder="Enter Company"
+                className="w-72"
+                value={experianceData.company_name}
+                onChange={(e) =>
+                  setExperianceData({
+                    ...experianceData,
+                    company_name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#344054" }}>Location</FormLabel>
+              <TextField
+                name="location"
+                size="small"
+                placeholder="Enter Location"
+                className="w-72"
+                value={experianceData.location}
+                onChange={(e) =>
+                  setExperianceData({
+                    ...experianceData,
+                    location: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="grid grid-flow-col gap-2">
+              <div className="grid grid-flow-row gap-2">
+                <FormLabel style={{ color: "#344054" }}>From Date</FormLabel>
+                <TextField
+                  required
+                  name="start_date"
+                  size="small"
+                  className="w-36"
+                  type="date"
+                  value={experianceData.start_date}
+                  onChange={(e) =>
+                    setExperianceData({
+                      ...experianceData,
+                      start_date: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="grid grid-flow-row gap-2">
+                <FormLabel style={{ color: "#344054" }}>To Date</FormLabel>
+                <TextField
+                  required={experianceData.currentCompany ? false : true}
+                  name="end_date"
+                  size="small"
+                  className="w-36"
+                  type="date"
+                  value={experianceData.end_date}
+                  disabled={experianceData.currentCompany ? true : false}
+                  onChange={(e) =>
+                    setExperianceData({
+                      ...experianceData,
+                      end_date: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="mt-8 grid grid-flow-col w-fit h-fit">
+              <div className="border border-app-gray rounded-md  px-3">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="currentCompany"
+                      size="small"
+                      checked={experianceData.currentCompany}
+                      value={experianceData.currentCompany}
+                      onChange={(e) =>
+                        setExperianceData({
+                          ...experianceData,
+                          currentCompany: e.target.checked,
+                        })
+                      }
+                      color="success"
+                    />
+                  }
+                  label="Current company"
+                />
+              </div>
+            </div>
+            <div className="mt-8 w-72 h-fit flex  justify-end">
+              <Button
+                style={{ color: "white" }}
+                variant="contained"
+                sx={{
+                  backgroundColor: "#7B964A",
+                  "&:hover": {
+                    backgroundColor: "#7B964A",
+                  },
+                }}
+                type="submit">
+                Save
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </form>
+      {/* all experiance list */}
+      {allExperiance.map((value, index) => {
+        return (
+          <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+            <div className="flex justify-between pr-5">
+              <text
+                style={{
+                  color: "#729434",
+                  fontWeight: "bold",
+                  fontSize: 28,
+                }}>
+                Experience {index + 1}
+              </text>
+              <div className="grid grid-flow-col gap-4">
+                <IconButton
+                  onClick={() => {
+                    if (editableFiled === index) {
+                      setEditableFiled();
+                    } else {
+                      setEditableFiled(index);
+                    }
+                  }}>
+                  <CreateOutlined color="primary" />
+                </IconButton>
+                <IconButton onClick={() => removeExpFields(index)}>
+                  <DeleteOutline color="error" />
+                </IconButton>
+              </div>
+            </div>
+            {editableFiled === index ? (
+              <div className="grid grid-cols-3 gap-3 mt-5">
+                <div className="grid grid-flow-row gap-2">
+                  <FormLabel style={{ color: "#344054" }}>Job Title</FormLabel>
+                  <TextField
+                    name="job_title"
+                    size="small"
+                    placeholder="Enter Title"
+                    className="w-72"
+                    value={value.job_title}
+                    onChange={(e) => handleChange(index, e)}
+                  />
+                </div>
+                <div className="grid grid-flow-row gap-2">
+                  <FormLabel style={{ color: "#344054" }}>
+                    Company Name
+                  </FormLabel>
+                  <TextField
+                    name="company_name"
+                    size="small"
+                    placeholder="Enter Company"
+                    className="w-72"
+                    value={value.company_name}
+                    onChange={(e) => handleChange(index, e)}
+                  />
+                </div>
+                <div className="grid grid-flow-row gap-2">
+                  <FormLabel style={{ color: "#344054" }}>Location</FormLabel>
+                  <TextField
+                    name="location"
+                    size="small"
+                    placeholder="Enter Location"
+                    className="w-72"
+                    value={value.location}
+                    onChange={(e) => handleChange(index, e)}
+                  />
+                </div>
+                <div className="grid grid-flow-col gap-2">
                   <div className="grid grid-flow-row gap-2">
                     <FormLabel style={{ color: "#344054" }}>
-                      Job Title
+                      From Date
                     </FormLabel>
                     <TextField
-                      name="job_title"
+                      required
+                      name="start_date"
                       size="small"
-                      placeholder="Enter Title"
-                      className="w-72"
-                      value={element.job_title}
+                      className="w-36"
+                      type="date"
+                      value={value.start_date}
                       onChange={(e) => handleChange(index, e)}
                     />
                   </div>
-                  <div className="grid grid-flow-row gap-2 ">
-                    <FormLabel style={{ color: "#344054" }}>
-                      Company Name
-                    </FormLabel>
+                  <div className="grid grid-flow-row gap-2">
+                    <FormLabel style={{ color: "#344054" }}>To Date</FormLabel>
                     <TextField
-                      name="company_name"
+                      required={value.currentCompany ? false : true}
+                      name="end_date"
                       size="small"
-                      placeholder="Enter Company"
-                      className="w-72"
-                      value={element.company_name}
+                      className="w-36"
+                      type="date"
+                      value={value.end_date}
+                      disabled={value.currentCompany ? true : false}
                       onChange={(e) => handleChange(index, e)}
                     />
                   </div>
                 </div>
-                <div className="mt-3 grid grid-flow-col justify-between ">
-                  <div className="grid grid-flow-row gap-2 ">
-                    <FormLabel style={{ color: "#344054" }}>
-                      Select Period
-                    </FormLabel>
-                    <div className="grid grid-flow-col gap-2">
-                      <TextField
-                        required
-                        name="start_date"
-                        size="small"
-                        className="w-36"
-                        type="date"
-                        value={element.start_date}
-                        onChange={(e) => handleChange(index, e)}
-                      />
-                      <TextField
-                        required={element.currentCompany ? false : true}
-                        name="end_date"
-                        size="small"
-                        className="w-36"
-                        type="date"
-                        value={element.end_date}
-                        disabled={element.currentCompany ? true : false}
-                        onChange={(e) => handleChange(index, e)}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-flow-row gap-2">
-                    <FormLabel style={{ color: "#344054" }}>Location</FormLabel>
-                    <TextField
-                      name="location"
-                      size="small"
-                      placeholder="Enter Location"
-                      className="w-72"
-                      value={element.location}
-                      onChange={(e) => handleChange(index, e)}
-                    />
-                  </div>
-                </div>
-                <div className="mt-3 grid grid-flow-col justify-between ">
+                <div className="mt-8 grid grid-flow-col w-fit h-fit">
                   <div className="border border-app-gray rounded-md  px-3">
                     <FormControlLabel
                       control={
                         <Checkbox
                           name="currentCompany"
                           size="small"
-                          checked={element.currentCompany}
-                          value={element.currentCompany}
+                          checked={value.currentCompany}
+                          value={value.currentCompany}
                           onChange={(e) => handleRadioChange(index, e)}
                           color="success"
                         />
@@ -303,82 +459,66 @@ export const My_Experience = ({ next, back }) => {
                       label="Current company"
                     />
                   </div>
-
-                  <div className="flex justify-center">
-                    <Button
-                      style={{ color: "white", borderColor: "#7F56D9" }}
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "#7B964A ",
-                        "&:hover": {
-                          backgroundColor: "#7B964A",
-                        },
-                      }}
-                      disabled={experianceData.length === 1}
-                      onClick={() => removeExpFields(index)}>
-                      Remove
-                    </Button>
-                  </div>
                 </div>
-              </>
-            );
-          })}
-        </div>
-        <div className="mt-8 justify-end flex">
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            sx={{
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            onClick={() => addEepFields()}>
-            Add Experience
-          </Button>
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            sx={{
-              marginLeft: 5,
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            onClick={back}>
-            Previous
-          </Button>
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            sx={{
-              marginLeft: 5,
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            type="submit">
-            Save
-          </Button>
-          <Button
-            style={{ color: "white", borderColor: "#7F56D9" }}
-            variant="contained"
-            disabled={!onNext}
-            sx={{
-              marginLeft: 5,
-              backgroundColor: "#7B964A",
-              "&:hover": {
-                backgroundColor: "#7B964A",
-              },
-            }}
-            onClick={next}>
-            Next
-          </Button>
-        </div>
-      </form>
-    </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 gap-3 mt-5">
+                <div className="grid grid-flow-row">
+                  <p style={{ color: "#484848", fontSize: 14 }}>Job Title:</p>
+                  <p style={{ color: "#000000", fontSize: 18 }}>
+                    {value.job_title}
+                  </p>
+                </div>
+                <div className="grid grid-flow-row">
+                  <p style={{ color: "#484848", fontSize: 14 }}>
+                    Company Name:
+                  </p>
+                  <p style={{ color: "#000000", fontSize: 18 }}>
+                    {value.company_name}
+                  </p>
+                </div>
+                <div className="grid grid-flow-row">
+                  <p style={{ color: "#484848", fontSize: 14 }}>Location:</p>
+                  <p style={{ color: "#000000", fontSize: 18 }}>
+                    {value.location}
+                  </p>
+                </div>
+                <div className="grid grid-flow-row">
+                  <p style={{ color: "#484848", fontSize: 14 }}>Period:</p>
+                  <p style={{ color: "#000000", fontSize: 18 }}>
+                    {value.start_date}
+                    {" to "}
+                    {value.currentCompany === true ? "Present" : value.end_date}
+                  </p>
+                </div>
+              </div>
+            )}
+          </Card>
+        );
+      })}
+      {/* button */}
+      <div className="mt-8 justify-between flex px-5">
+        <Button
+          style={{ color: "#729434", borderColor: "#729434" }}
+          variant="outlined"
+          onClick={back}>
+          Previous
+        </Button>
+
+        <Button
+          style={{ color: "white" }}
+          variant="contained"
+          sx={{
+            marginLeft: 5,
+            backgroundColor: "#729434",
+            "&:hover": {
+              backgroundColor: "#729434",
+            },
+          }}
+          onClick={handleSubmit}>
+          Continue
+        </Button>
+      </div>
+    </>
   );
 };

@@ -4,6 +4,7 @@
     width: 100%;
     padding: 16px;
     background-color: #53783B;
+    z-index: 1;
 
     ul {
         display: flex;

@@ -43,6 +43,7 @@ module.exports = {
         gray700: "#344054",
         gray900: "#101828",
         table: "#777a7e",
+        lightBlue: "#f1f5f9",
       },
     },
   },

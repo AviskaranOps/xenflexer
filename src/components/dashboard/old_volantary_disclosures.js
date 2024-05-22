@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Button,
-  Card,
   FormControlLabel,
   FormLabel,
   Radio,
@@ -11,14 +10,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 
-export const Volantary_Disclosures = ({ back, next }) => {
+export const Volantary_Disclosures = ({ back }) => {
   const [update, setUpdate] = React.useState();
   const [notification, setNotification] = React.useState();
   const navigation = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    next();
     const user = JSON.parse(localStorage.getItem("token"));
     if (update === "yes") setUpdate(true);
     if (notification === "yes") setNotification(true);
@@ -43,71 +41,84 @@ export const Volantary_Disclosures = ({ back, next }) => {
   };
 
   return (
-    <>
-      <form className="w-full" onSubmit={handleSubmit}>
-        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
-          <FormLabel sx={{ color: "#000000", fontSize: 18, fontWeight: 500 }}>
+    <div>
+      <form className="mx-40" onSubmit={handleSubmit}>
+        <div className="my-5">
+          <text
+            style={{
+              color: "#53783B",
+              fontWeight: "bold",
+              fontSize: 28,
+            }}>
+            Voluntary Disclosures
+          </text>
+        </div>
+        <div>
+          <FormLabel>
             Please select YES if you are okay with receiving updates on new jobs
             being posted?
           </FormLabel>
           <RadioGroup
-            row
+            aria-labelledby="update"
             name="update"
             value={update}
-            onChange={(e) => setUpdate(e.target.value)}
-            sx={{ gap: 10, mt: 1 }}>
+            onChange={(e) => setUpdate(e.target.value)}>
             <FormControlLabel
               value="yes"
-              control={<Radio color="success" required />}
+              control={<Radio color="success" />}
               label="Yes"
             />
             <FormControlLabel
               value="no"
-              control={<Radio color="success" required />}
+              control={<Radio color="success" />}
               label="No"
             />
           </RadioGroup>
-        </Card>
-        <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
-          <FormLabel sx={{ color: "#000000", fontSize: 18, fontWeight: 500 }}>
+        </div>
+        <div className="mt-8">
+          <FormLabel>
             Please select YES if you are okay with receivingEmail Notification
             for Newsletter?
           </FormLabel>
           <RadioGroup
-            row
+            aria-labelledby="notification"
             name="notification"
             value={notification}
-            onChange={(e) => setNotification(e.target.value)}
-            sx={{ gap: 10, mt: 1 }}>
+            onChange={(e) => setNotification(e.target.value)}>
             <FormControlLabel
               value="yes"
-              control={<Radio color="success" required />}
+              control={<Radio color="success" />}
               label="Yes"
             />
             <FormControlLabel
               value="no"
-              control={<Radio color="success" required />}
+              control={<Radio color="success" />}
               label="No"
             />
           </RadioGroup>
-        </Card>
-        {/* button */}
-        <div className="mt-8 justify-between flex px-5">
+        </div>
+        <div className="mt-5 justify-end flex">
           <Button
-            style={{ color: "#729434", borderColor: "#729434" }}
-            variant="outlined"
-            onClick={back}>
-            Previous
-          </Button>
-
-          <Button
-            style={{ color: "white" }}
+            style={{ color: "white", borderColor: "#7F56D9" }}
             variant="contained"
             sx={{
               marginLeft: 5,
-              backgroundColor: "#729434",
+              backgroundColor: "#7B964A",
               "&:hover": {
-                backgroundColor: "#729434",
+                backgroundColor: "#7B964A",
+              },
+            }}
+            onClick={back}>
+            Previous
+          </Button>
+          <Button
+            style={{ color: "white", borderColor: "#7F56D9" }}
+            variant="contained"
+            sx={{
+              marginLeft: 5,
+              backgroundColor: "#7B964A",
+              "&:hover": {
+                backgroundColor: "#7B964A",
               },
             }}
             type="submit">
@@ -115,6 +126,6 @@ export const Volantary_Disclosures = ({ back, next }) => {
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
