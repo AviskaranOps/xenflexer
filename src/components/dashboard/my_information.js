@@ -17,7 +17,10 @@ import { EmailOutlined, PhoneOutlined } from "@mui/icons-material";
 
 export const My_Information = ({ next }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
-  const [countre, setCountre] = React.useState();
+  const [countre, setCountre] = React.useState({
+    "name": "select country", 
+    "value" : "-1"
+});
   const [email, setEmail] = React.useState("");
   const [no, setNo] = React.useState("");
   const [project, setProject] = React.useState("");
@@ -35,7 +38,7 @@ export const My_Information = ({ next }) => {
 
   useEffect(() => {
     setCountries(Country.getAllCountries());
-
+    console.log(Country.getAllCountries());
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
@@ -73,7 +76,10 @@ export const My_Information = ({ next }) => {
         if (response.status !== 204) {
           const data = response.data;
           setHearAboutUs(data.howDidYouHearAboutUs);
-          setCountre(data.country);
+          setCountre({
+            "name": data.country, 
+            "value" : data.country
+        });
           setDoYouWant(data.doYouWantXenspireToBe);
           data.email !== "" ? setEmail(data.email) : setLoginEmail();
           setNo(data.mobile);

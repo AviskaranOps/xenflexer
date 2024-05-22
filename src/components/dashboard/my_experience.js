@@ -26,12 +26,12 @@ import pdf from "../../assets/pdf_half.png";
 export const My_Experience = ({ next, back }) => {
   const [file, setFile] = React.useState();
   const [experianceData, setExperianceData] = React.useState({
-    job_title: "",
-    company_name: "",
+    jobTitle: "",
+    companyName: "",
     location: "",
     currentCompany: false,
-    start_date: "",
-    end_date: "",
+    startDate: "",
+    endDate: "",
   });
 
   const [allExperiance, setAllExperiance] = React.useState([]);
@@ -41,12 +41,12 @@ export const My_Experience = ({ next, back }) => {
     e.preventDefault();
     setAllExperiance([...allExperiance, experianceData]);
     setExperianceData({
-      job_title: "",
-      company_name: "",
+      jobTitle: "",
+      companyName: "",
       location: "",
       currentCompany: false,
-      start_date: "",
-      end_date: "",
+      startDate: "",
+      endDate: "",
     });
   };
 
@@ -99,16 +99,17 @@ export const My_Experience = ({ next, back }) => {
           const explist = [];
           for (var item of data) {
             const exp = {
-              job_title: item.jobTitle,
-              company_name: item.companyName,
+              jobTitle: item.jobTitle,
+              companyName: item.companyName,
               location: item.location,
               currentCompany: item.currentCompany,
               startDate: item.startDate,
               endDate: item.endDate,
             };
+            setAllExperiance([...allExperiance, exp]);
             explist.push(exp);
           }
-          setExperianceData(explist);
+          //setExperianceData(explist);
         }
       })
       .catch((error) => {
@@ -227,15 +228,15 @@ export const My_Experience = ({ next, back }) => {
             <div className="grid grid-flow-row gap-2">
               <FormLabel style={{ color: "#344054" }}>Job Title</FormLabel>
               <TextField
-                name="job_title"
+                name="jobTitle"
                 size="small"
                 placeholder="Enter Title"
                 className="w-72"
-                value={experianceData.job_title}
+                value={experianceData.jobTitle}
                 onChange={(e) =>
                   setExperianceData({
                     ...experianceData,
-                    job_title: e.target.value,
+                    jobTitle: e.target.value,
                   })
                 }
               />
@@ -243,15 +244,15 @@ export const My_Experience = ({ next, back }) => {
             <div className="grid grid-flow-row gap-2">
               <FormLabel style={{ color: "#344054" }}>Company Name</FormLabel>
               <TextField
-                name="company_name"
+                name="companyName"
                 size="small"
                 placeholder="Enter Company"
                 className="w-72"
-                value={experianceData.company_name}
+                value={experianceData.companyName}
                 onChange={(e) =>
                   setExperianceData({
                     ...experianceData,
-                    company_name: e.target.value,
+                    companyName: e.target.value,
                   })
                 }
               />
@@ -281,11 +282,11 @@ export const My_Experience = ({ next, back }) => {
                   size="small"
                   className="w-36"
                   type="date"
-                  value={experianceData.start_date}
+                  value={experianceData.startDate}
                   onChange={(e) =>
                     setExperianceData({
                       ...experianceData,
-                      start_date: e.target.value,
+                      startDate: e.target.value,
                     })
                   }
                 />
@@ -298,12 +299,12 @@ export const My_Experience = ({ next, back }) => {
                   size="small"
                   className="w-36"
                   type="date"
-                  value={experianceData.end_date}
+                  value={experianceData.endDate}
                   disabled={experianceData.currentCompany ? true : false}
                   onChange={(e) =>
                     setExperianceData({
                       ...experianceData,
-                      end_date: e.target.value,
+                      endDate: e.target.value,
                     })
                   }
                 />
@@ -342,7 +343,7 @@ export const My_Experience = ({ next, back }) => {
                   },
                 }}
                 type="submit">
-                Save
+                Add
               </Button>
             </div>
           </div>
@@ -386,7 +387,7 @@ export const My_Experience = ({ next, back }) => {
                     size="small"
                     placeholder="Enter Title"
                     className="w-72"
-                    value={value.job_title}
+                    value={value.jobTitle}
                     onChange={(e) => handleChange(index, e)}
                   />
                 </div>
@@ -399,7 +400,7 @@ export const My_Experience = ({ next, back }) => {
                     size="small"
                     placeholder="Enter Company"
                     className="w-72"
-                    value={value.company_name}
+                    value={value.companyName}
                     onChange={(e) => handleChange(index, e)}
                   />
                 </div>
@@ -425,7 +426,7 @@ export const My_Experience = ({ next, back }) => {
                       size="small"
                       className="w-36"
                       type="date"
-                      value={value.start_date}
+                      value={value.startDate}
                       onChange={(e) => handleChange(index, e)}
                     />
                   </div>
@@ -437,7 +438,7 @@ export const My_Experience = ({ next, back }) => {
                       size="small"
                       className="w-36"
                       type="date"
-                      value={value.end_date}
+                      value={value.endDate}
                       disabled={value.currentCompany ? true : false}
                       onChange={(e) => handleChange(index, e)}
                     />
@@ -466,7 +467,7 @@ export const My_Experience = ({ next, back }) => {
                 <div className="grid grid-flow-row">
                   <p style={{ color: "#484848", fontSize: 14 }}>Job Title:</p>
                   <p style={{ color: "#000000", fontSize: 18 }}>
-                    {value.job_title}
+                    {value.jobTitle}
                   </p>
                 </div>
                 <div className="grid grid-flow-row">
@@ -474,7 +475,7 @@ export const My_Experience = ({ next, back }) => {
                     Company Name:
                   </p>
                   <p style={{ color: "#000000", fontSize: 18 }}>
-                    {value.company_name}
+                    {value.companyName}
                   </p>
                 </div>
                 <div className="grid grid-flow-row">
@@ -486,9 +487,9 @@ export const My_Experience = ({ next, back }) => {
                 <div className="grid grid-flow-row">
                   <p style={{ color: "#484848", fontSize: 14 }}>Period:</p>
                   <p style={{ color: "#000000", fontSize: 18 }}>
-                    {value.start_date}
+                    {value.startDate}
                     {" to "}
-                    {value.currentCompany === true ? "Present" : value.end_date}
+                    {value.currentCompany === true ? "Present" : value.endDate}
                   </p>
                 </div>
               </div>
@@ -516,7 +517,7 @@ export const My_Experience = ({ next, back }) => {
             },
           }}
           onClick={handleSubmit}>
-          Continue
+          Save & Continue
         </Button>
       </div>
     </>

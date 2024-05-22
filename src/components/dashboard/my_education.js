@@ -93,9 +93,10 @@ export const My_Education = ({ next, back }) => {
               school: item.school,
               graduation: item.graduation,
               field: item.field,
-              startDate: new Date(item.startDate),
-              endDate: new Date(item.endDate),
+              startDate: item.startDate,
+              endDate: item.endDate,
             };
+            setAllEducation([...allEducation, exp]);
             explist.push(exp);
           }
           setEducationData(explist);
@@ -290,7 +291,7 @@ export const My_Education = ({ next, back }) => {
                   },
                 }}
                 type="submit">
-                Save
+                Add
               </Button>
             </div>
           </div>
@@ -475,7 +476,7 @@ export const My_Education = ({ next, back }) => {
             },
           }}
           onClick={handleSubmit}>
-          Continue
+          save & continue
         </Button>
       </div>
     </>

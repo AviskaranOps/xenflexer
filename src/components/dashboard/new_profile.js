@@ -382,11 +382,11 @@ export const New_Profile = () => {
               </div>
 
               <p className="text-app-gray900 text-xl font-bold">
-                Esther Howard
+              {JSON.parse(localStorage.getItem("token")).username}
               </p>
               <p className="text-app-table ">UI&UX Designer </p>
-              <p className="text-app-table ">andrewsmith@gmail.com</p>
-              <p className="text-app-table ">123456798</p>
+              <p className="text-app-table ">{profile.email}</p>
+              <p className="text-app-table ">{profile.phone}</p>
               <div className="flex justify-center mt-8">
                 <Button component="label" style={{ color: "#669F2A" }}>
                   Upload Picture
@@ -432,7 +432,7 @@ export const New_Profile = () => {
               <div className="grid grid-cols-2 pb-3">
                 <div>
                   <p className="text-app-table">CITY</p>
-                  <p className="text-app-gray900 text-lg">Haydrabad</p>
+                  <p className="text-app-gray900 text-lg">Hyderabad</p>
                 </div>
                 <div>
                   <p className="text-app-table">STATE</p>
@@ -442,7 +442,7 @@ export const New_Profile = () => {
               <div className="grid grid-cols-2 pb-3">
                 <div>
                   <p className="text-app-table">COUNTRY</p>
-                  <p className="text-app-gray900 text-lg">INDIA</p>
+                  <p className="text-app-gray900 text-lg">{profile.country}</p>
                 </div>
                 <div>
                   <p className="text-app-table">PIN CODE</p>
@@ -452,13 +452,13 @@ export const New_Profile = () => {
               <div className="grid grid-cols-2 pb-3">
                 <div>
                   <p className="text-app-table">XENSPIRE EMPLOYEE</p>
-                  <p className="text-app-gray900 text-lg">Yes</p>
+                  <p className="text-app-gray900 text-lg">{profile.xenspireEmploye}</p>
                 </div>
                 <div>
                   <p className="text-app-table">
                     WANT TO BE XENSPIRE EMPLOYEE?
                   </p>
-                  <p className="text-app-gray900 text-lg">Yes</p>
+                  <p className="text-app-gray900 text-lg">{profile.wantTobe}</p>
                 </div>
               </div>
             </Card>
