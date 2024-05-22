@@ -43,11 +43,13 @@ export const Difference = () => {
     <div className="px-12 md:px-20 lg:px-40 py-10 bg-app-moss overflow-scroll">
       <div className="mt-5 grid grid-flow-row justify-center gap-4 text-center">
         <text className="text-white text-4xl font-semibold">
-        Unleash the Power of Your Contracting Potential
+          Unleash the Power of Your Contracting Potential
         </text>
         <text className="text-white text-lg">
-        Earn more and manage freely with <b>XenFlexer</b>. Outshine the industry with tailored benefits, 
-          <br /> boundless growth, and a community that learns and prospers together.
+          Earn more and manage freely with <b>XenFlexer</b>. Outshine the
+          industry with tailored benefits,
+          <br /> boundless growth, and a community that learns and prospers
+          together.
         </text>
       </div>
       <div className="rounded-lg bg-white mt-10" style={{ minWidth: 650 }}>
@@ -84,28 +86,28 @@ export const Difference = () => {
             key={row.feature}
             className="grid grid-cols-4 px-3 border-t-2 border-t-app-border py-1">
             <div>
-              <text>{row.feature}</text>
+              <p>{row.feature}</p>
             </div>
             <div className="grid grid-flow-col justify-start">
               <Divider
                 orientation="vertical"
                 sx={{ borderWidth: 1, borderColor: "#B9B9B9", marginRight: 2 }}
               />
-              <text>{row.xenspire}</text>
+              <p>{row.xenspire}</p>
             </div>
             <div className="grid grid-flow-col justify-start">
               <Divider
                 orientation="vertical"
                 sx={{ borderWidth: 1, borderColor: "#B9B9B9", marginRight: 2 }}
               />
-              <text>{row.others}</text>
+              <p>{row.others}</p>
             </div>
             <div className="grid grid-flow-col justify-start">
               <Divider
                 orientation="vertical"
                 sx={{ borderWidth: 1, borderColor: "#B9B9B9", marginRight: 2 }}
               />
-              <text>{row.benefits}</text>
+              <p>{row.benefits}</p>
             </div>
           </div>
         ))}

@@ -15,7 +15,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { message } from 'antd';
+import { message } from "antd";
 
 export const Profile = () => {
   const [editProfile, setEditProfile] = React.useState(false);
@@ -110,7 +110,6 @@ export const Profile = () => {
       });
   }, []);
 
-
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
@@ -123,16 +122,16 @@ export const Profile = () => {
           },
         }
       )
-      .then(response => {
-              console.log(response);
-                setImage(URL.createObjectURL(new Blob(response.data, {type: "image/png"})));
-            })
-      .catch(error => {
-          console.log(error.message);
+      .then((response) => {
+        console.log(response);
+        setImage(
+          URL.createObjectURL(new Blob(response.data, { type: "image/png" }))
+        );
       })
-    }, []);
-
-
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
@@ -144,8 +143,7 @@ export const Profile = () => {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
           },
-        },
-
+        }
       )
       .then((response) => {
         console.log(response.data);
@@ -216,8 +214,8 @@ export const Profile = () => {
         }
       )
       .then((response) => {
-          message.success("password updated successfully")
-          navigate('/logout');
+        message.success("password updated successfully");
+        navigate("/logout");
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -293,7 +291,7 @@ export const Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-            navigate('/user/onboard');
+          navigate("/user/onboard");
         }
       })
       .catch((error) => {
@@ -305,24 +303,23 @@ export const Profile = () => {
       const user = JSON.parse(localStorage.getItem("token"));
       const formData = new FormData();
       formData.append("profileImg", event.target.files[0]);
-        axios
-          .post(
-            "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadProfileImg?userId=" +user.userId,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user.accessToken}`,
-              },
-            }
-          ).then(response => {
-              setImage(URL.createObjectURL(response.data.profileImg))
-          }).catch(error => {
-
-          })
+      axios
+        .post(
+          "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadProfileImg?userId=" +
+            user.userId,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        )
+        .then((response) => {
+          setImage(URL.createObjectURL(response.data.profileImg));
+        })
+        .catch((error) => {});
     }
   };
-
-
 
   let handleEduChange = (i, e) => {
     let newFormValues = [...educationData];
@@ -518,7 +515,7 @@ export const Profile = () => {
                   }
                   renderValue={(selected) => {
                     if (selected.length === 0) {
-                      return <text>Yes / No</text>;
+                      return <p>Yes / No</p>;
                     }
                     return selected;
                   }}>
@@ -530,7 +527,7 @@ export const Profile = () => {
                 </Select>
               </div>
               <div className="pt-5 grid grid-cols-2 ">
-                <label>Want to be Xenspire {'\n'}Employee?</label>
+                <label>Want to be Xenspire {"\n"}Employee?</label>
                 <Select
                   size="small"
                   disabled={profile.xenspireEmploye === "Yes" || editProfile}
@@ -541,7 +538,7 @@ export const Profile = () => {
                   }
                   renderValue={(selected) => {
                     if (selected.length === 0) {
-                      return <text>Yes / No</text>;
+                      return <p>Yes / No</p>;
                     }
                     return selected;
                   }}>
