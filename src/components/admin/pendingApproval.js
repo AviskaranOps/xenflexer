@@ -45,7 +45,7 @@ export const PendingApproval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserAndTimesheets",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserAndTimesheets",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -73,7 +73,7 @@ export const PendingApproval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserPendingTS?timesheetId=1",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -94,7 +94,7 @@ export const PendingApproval = () => {
     console.log(userId, timesheetId);
     axios
       .get(
-        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
           userId +
           "&timesheetId=" +
           timesheetId,
@@ -172,7 +172,7 @@ export const PendingApproval = () => {
     const tId = timesheets.find((item) => item["name"] === name);
     axios
       .get(
-        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
           userId +
           "&timesheetId=" +
           tId.id,
@@ -205,7 +205,7 @@ export const PendingApproval = () => {
     // const timeshId = JSON.parse(tId);
     axios
       .get(
-        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
           uId.id +
           "&timesheetId=" +
           tId.id,
@@ -228,7 +228,7 @@ export const PendingApproval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .post(
-        "http://localhost:8080/xen/saveUserPendingTimesheet",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
         userTimesheet,
         {
           headers: {

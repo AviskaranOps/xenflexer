@@ -19,7 +19,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
       const username = name;
-      await axios.post("http://localhost:8080/xen/signup", 
+      await axios.post("https://xenflexer.northcentralus.cloudapp.azure.com/xen/signup", 
         {
           username,
           email,

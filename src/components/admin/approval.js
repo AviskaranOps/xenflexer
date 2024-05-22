@@ -61,7 +61,7 @@ export const Approval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getTimesheets",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getTimesheets",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -81,7 +81,7 @@ export const Approval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserList",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserList",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -108,7 +108,7 @@ export const Approval = () => {
     // const selectedValues = applicable.map((option) => option.id);
     // await axios
     //   .post(
-    //     "http://localhost:8080/xen/createTimesheet?userId=" +
+    //     "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
     //       user.userId,
     //     {
     //       name: name,

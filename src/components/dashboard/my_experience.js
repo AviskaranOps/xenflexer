@@ -84,7 +84,7 @@ export const My_Experience = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserExperience?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserExperience?userId=" +
           user.userId,
         {
           headers: {
@@ -123,7 +123,7 @@ export const My_Experience = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
-        "http://localhost:8080/xen/userExperience?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userExperience?userId=" +
           user.userId,
         allExperiance,
         {
@@ -150,7 +150,7 @@ export const My_Experience = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
-        "http://localhost:8080/xen/uploadResume?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadResume?userId=" +
           user.userId,
         formData,
         {

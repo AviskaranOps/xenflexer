@@ -24,7 +24,7 @@ export const Volantary_Disclosures = ({ back, next }) => {
     if (notification === "yes") setNotification(true);
     await axios
       .post(
-        "http://localhost:8080/xen/userDisclosure?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userDisclosure?userId=" +
           user.userId,
         { update, notification },
         {

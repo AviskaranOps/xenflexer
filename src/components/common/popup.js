@@ -54,7 +54,7 @@ export const PopUp = ({ open, data, onClose }) => {
     console.log(data);
     axios
       .get(
-        "http://localhost:8080/xen/getBenefitParams?userId="+user.userId + "&name="+data.benefits,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getBenefitParams?userId="+user.userId + "&name="+data.benefits,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -407,7 +407,7 @@ export const PopUp = ({ open, data, onClose }) => {
 
   const handleActivateBenefit = async(name, date, activate, cost) => {
     const user = JSON.parse(localStorage.getItem("token"));
-    await axios.post("http://localhost:8080/xen/saveBenefit?userId="+user.userId, {
+    await axios.post("https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefit?userId="+user.userId, {
         name,
         activate,
         date,
@@ -437,7 +437,7 @@ export const PopUp = ({ open, data, onClose }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
-        "http://localhost:8080/xen/saveBenefitwithDoc?userId=" +user.userId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefitwithDoc?userId=" +user.userId,
         formData,
         {
           headers: {
@@ -460,7 +460,7 @@ export const PopUp = ({ open, data, onClose }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
-        "http://localhost:8080/xen/saveImmigrationBenefit?userId=" +user.userId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveImmigrationBenefit?userId=" +user.userId,
          { visa, gc, otherHelp, name },
         {
           headers: {

@@ -42,7 +42,7 @@ export const My_Information = ({ next }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getCountryAndComm",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getCountryAndComm",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -63,7 +63,7 @@ export const My_Information = ({ next }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getUserInformation?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserInformation?userId=" +
           user.userId,
         {
           headers: {
@@ -105,7 +105,7 @@ export const My_Information = ({ next }) => {
     const my_info = true;
     await axios
       .post(
-        "http://localhost:8080/xen/userInformation?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId=" +
           user.userId,
         {
           how_did_you_hear_about_us,

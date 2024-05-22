@@ -31,7 +31,7 @@ export const AdminProfile = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "http://localhost:8080/xen/getAdminProfile?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getAdminProfile?userId=" +
           user.userId,
         {
           headers: {
@@ -70,7 +70,7 @@ export const AdminProfile = () => {
 
     axios
       .post(
-        "http://localhost:8080/xen/updatePassword?userId=" +
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/updatePassword?userId=" +
           user.userId,
         { currentPassword, newPassword },
         {
