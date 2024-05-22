@@ -170,10 +170,8 @@ export const SideNavProfile = ({ setUser, email }) => {
       </div>
       <Drawer variant="permanent" open={open} className="z-0">
         <DrawerHeader sx={{ backgroundColor: "#ffffff" }} />
-        <div className="h-full bg-app-LightTeal bg-white pt-2">
+        <div className="h-full bg-white pt-2">
           <List>
-            {/* icon */}
-
             {data.map((data, index) => (
               <ListItemButton
                 key={index}

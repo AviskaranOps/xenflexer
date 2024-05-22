@@ -4,22 +4,24 @@ import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import {
-  ChevronRightOutlined,
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
   LogoutOutlined,
   PeopleAltOutlined,
   PieChartOutlined,
 } from "@mui/icons-material";
-import { AppBar, Toolbar } from "@mui/material";
+import logo1 from "../../assets/images/Logo.png";
 import logo2 from "../../assets/images/app-logo.png";
 import Footer from "./footer";
 import home from "../../assets/images/home-icon.png";
+import avtar from "../../assets/images/Avatar.png";
 
 export const SideNavAdmin = ({ setUser, email }) => {
   const navigation = useNavigate();
@@ -115,51 +117,33 @@ export const SideNavAdmin = ({ setUser, email }) => {
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: "#ffffff" }}>
-        <div className="flex justify-between items-center">
-          <Toolbar>
-            <img src={logo2} alt="logo" width={180} />
-          </Toolbar>
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader sx={{ backgroundColor: "#ffffff" }}>
+          <IconButton onClick={handleDrawer}>
+            {open ? <ChevronLeftIcon /> : <MenuIcon />}
+          </IconButton>
+        </DrawerHeader>
 
-          <div className="mx-6">
-            <div className="grid grid-flow-col gap-2 justify-between">
-              <div className="mr-1 w-6 rounded-full">
-                <img
-                  src={"https://picsum.photos/200/300.webp"}
-                  className="rounded-full"
-                  alt="avtar"
-                />
-              </div>
-              <div className="grid grid-flow-row ">
-                <text style={{ fontSize: 12, color: "#000000" }}>
-                  {JSON.parse(localStorage.getItem("token")).username}
-                </text>
-                <text style={{ fontSize: 12, color: "#6C737F" }}>
-                  {JSON.parse(localStorage.getItem("token")).role}
-                </text>
-              </div>
-              <IconButton onClick={() => navigation("/logout")}>
-                <LogoutOutlined sx={{ color: "#9AA1B4" }} />
-              </IconButton>
-            </div>
-          </div>
-        </div>
-      </AppBar>
-      <div
-        id="navbarIcon"
-        className=" justify-center z-10 flex w-8 mt-24 overflow-visible bg-white shadow-xl rounded-full fixed h-8"
-        style={{ marginLeft: open ? 233 : 50 }}>
-        <IconButton onClick={handleDrawer}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightOutlined />}
-        </IconButton>
-      </div>
-      <Drawer variant="permanent" open={open} className="z-0">
-        <DrawerHeader sx={{ backgroundColor: "#ffffff" }} />
-
-        <div className="h-full bg-white pt-2">
+        <div className="h-full bg-app-LightTeal bg-white">
           <List>
+            {/* logo */}
+            <ListItem
+              sx={{
+                justifyContent: open ? "initial" : "center",
+                px: 2,
+              }}>
+              <ListItemIcon
+                sx={{
+                  justifyContent: "center",
+                  flex: 1,
+                }}>
+                {open ? (
+                  <img src={logo2} alt="logo" width={180} />
+                ) : (
+                  <img src={logo1} alt="logo" width={45} />
+                )}
+              </ListItemIcon>
+            </ListItem>
             {data.map((data, index) => (
               <ListItemButton
                 key={index}
@@ -262,8 +246,30 @@ export const SideNavAdmin = ({ setUser, email }) => {
               ))}
           </List>
         </div>
+        {open && (
+          <div className="mx-6 border-t-2 border-app-cycle mb-20">
+            <div className="grid grid-flow-col mt-3 justify-between">
+              <div className="mr-1">
+                <img src={avtar} className="w-10" alt="avtar" />
+              </div>
+              <div className="grid grid-flow-row ">
+                <text style={{ fontSize: 12 }}>
+                  {JSON.parse(localStorage.getItem("token")).username}
+                </text>
+                <text style={{ fontSize: 12 }}>
+                  {email
+                    ? email
+                    : JSON.parse(localStorage.getItem("token")).email}
+                </text>
+              </div>
+              <IconButton onClick={() => navigation("/logout")}>
+                <LogoutOutlined color="success" />
+              </IconButton>
+            </div>
+          </div>
+        )}
+        <Footer />
       </Drawer>
-      <Footer />
     </>
   );
 };

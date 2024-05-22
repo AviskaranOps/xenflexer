@@ -15,12 +15,10 @@ import {
   IconButton,
   DialogTitle,
   DialogActions,
-  Card,
-  InputAdornment,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Dummy_Approval, get_Data } from "../utils/dummy";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
 import { useEffect } from "react";
 import axios from "axios";
@@ -30,12 +28,10 @@ import {
   CloseOutlined,
   DeleteOutlineOutlined,
   EditOutlined,
-  SearchOutlined,
 } from "@mui/icons-material";
 
 export const Approval = () => {
   const navigation = useNavigate();
-  const location = useLocation();
   const [dialogeOpen, setDialogeOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
@@ -44,8 +40,6 @@ export const Approval = () => {
   const [userList, setUserList] = React.useState([]);
   const [id, setId] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const [searchUser, setSearchUser] = React.useState("");
-  const [selectStatus, setSelectStatus] = React.useState("");
 
   const handleClickOpen = (data) => {
     setOpen(true);
@@ -60,10 +54,6 @@ export const Approval = () => {
   React.useState(() => {
     get_Data();
   }, []);
-
-  const pathSegments = location.pathname
-    .split("/")
-    .filter((segment) => segment);
 
   const [timesheets, setTimesheets] = React.useState([]);
 
@@ -177,7 +167,6 @@ export const Approval = () => {
   const StyledTableHead = styled(TableHead)`
     & .MuiTableCell-root {
       background-color: #f9fafb;
-      z-index: 0;
     }
   `;
 
@@ -190,169 +179,122 @@ export const Approval = () => {
   `;
 
   return (
-    <div className="min-h-screen bg-app-lightBlue pb-28">
+    <div className="min-h-screen bg-white">
       <div className="flex w-full">
         <SideNavAdmin />
-        <div className="w-full mt-24 px-10">
-          <div className="mt-1">
-            {pathSegments.map((segment, index) => (
-              <span
-                key={index}
-                className={`text-xl font-semibold ${
-                  index === 0 ? "text-app-gray" : "text-app-gray900"
-                }`}>
-                {segment.charAt(0).toUpperCase() + segment.slice(1)}
-                {index < pathSegments.length - 1 && " / "}
-              </span>
-            ))}
+        <div className="mx-20 pt-10 pb-20 w-full">
+          <div className="flex justify-center pb-10">
+            <text
+              style={{
+                color: "#53783B",
+                fontWeight: "bold",
+                fontSize: 28,
+              }}>
+              Employee Approval
+            </text>
           </div>
-          <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
-            <div className="grid grid-flow-col justify-between mb-5">
-              <div className="grid grid-flow-col justify-start gap-5">
-                <div>
-                  <Select
-                    value={selectStatus}
-                    onChange={(e) => setSelectStatus(e)}
-                    options={userList}
-                    getOptionLabel={getOptionLabel}
-                    getOptionValue={getOptionValue}
-                    placeholder="Select..."
-                    isSearchable // Enable searching
-                    styles={{
-                      control: (base) => ({
-                        ...base,
-                        minWidth: 280,
-                        maxWidth: 350,
-                      }),
-                    }}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    size="small"
-                    placeholder="Search for User"
-                    value={searchUser}
-                    onChange={(e) => setSearchUser(e.target.value)}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchOutlined />
-                        </InputAdornment>
-                      ),
-                    }}
-                    sx={{ minWidth: 280, maxWidth: 350 }}
-                  />
-                </div>
-              </div>
-              <div>
-                <Button
-                  variant="contained"
-                  style={{ backgroundColor: "#729434", color: "#ffffff" }}>
-                  Create
-                </Button>
-              </div>
-            </div>
-            {/* table */}
-            <StyledTableContainer
-              sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
-              <Table aria-label="customized table" stickyHeader>
-                <StyledTableHead>
-                  <TableRow>
+          {/* table */}
+          <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+            <Table aria-label="customized table" stickyHeader>
+              <StyledTableHead>
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    style={{ fontWeight: "bold", color: "#475467" }}>
+                    Name
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    style={{ fontWeight: "bold", color: "#475467" }}>
+                    Start Date
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    style={{ fontWeight: "bold", color: "#475467" }}>
+                    End Date
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    style={{ fontWeight: "bold", color: "#475467" }}>
+                    Status
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    style={{ fontWeight: "bold", color: "#475467" }}>
+                    Action
+                  </TableCell>
+                </TableRow>
+              </StyledTableHead>
+              <TableBody>
+                {timesheets.map((row) => (
+                  <StyledTableRow key={row.id}>
                     <TableCell
-                      align="left"
-                      style={{ fontWeight: "bold", color: "#475467" }}>
-                      Name
+                      align="center"
+                      onClick={() => {
+                        navigation("/admin/pendingApproval", {
+                          state: row?.id,
+                        });
+                      }}>
+                      {row.name}
                     </TableCell>
                     <TableCell
                       align="center"
-                      style={{ fontWeight: "bold", color: "#475467" }}>
-                      Start Date
+                      onClick={() => {
+                        navigation("/admin/pendingApproval", {
+                          state: row?.id,
+                        });
+                      }}>
+                      {row.startDate}
                     </TableCell>
                     <TableCell
                       align="center"
-                      style={{ fontWeight: "bold", color: "#475467" }}>
-                      End Date
+                      onClick={() => {
+                        navigation("/admin/pendingApproval", {
+                          state: row?.id,
+                        });
+                      }}>
+                      {row.endDate}
                     </TableCell>
                     <TableCell
                       align="center"
-                      style={{ fontWeight: "bold", color: "#475467" }}>
-                      Status
+                      onClick={() => {
+                        navigation("/admin/pendingApproval", {
+                          state: row?.id,
+                        });
+                      }}>
+                      {row.status}
                     </TableCell>
-                    <TableCell
-                      align="center"
-                      style={{ fontWeight: "bold", color: "#475467" }}>
-                      Action
+                    <TableCell align="center">
+                      <div className="flex justify-center items-center h-6 gap-2">
+                        <Button
+                          style={{ color: "white", borderColor: "#7F56D9" }}
+                          variant="contained"
+                          size="small"
+                          color="primary"
+                          startIcon={<EditOutlined />}
+                          onClick={() => onEditDialoge(row)}>
+                          Edit
+                        </Button>
+                        <Button
+                          style={{ color: "white", borderColor: "#7F56D9" }}
+                          variant="contained"
+                          size="small"
+                          color="error"
+                          startIcon={<DeleteOutlineOutlined />}
+                          onClick={() => {
+                            handleClickOpen(row);
+                          }}>
+                          Delete
+                        </Button>
+                      </div>
                     </TableCell>
-                  </TableRow>
-                </StyledTableHead>
-                <TableBody>
-                  {timesheets.map((row) => (
-                    <StyledTableRow key={row.id}>
-                      <TableCell
-                        align="left"
-                        onClick={() => {
-                          navigation("/admin/pendingApproval", {
-                            state: row?.id,
-                          });
-                        }}>
-                        {row.name}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        onClick={() => {
-                          navigation("/admin/pendingApproval", {
-                            state: row?.id,
-                          });
-                        }}>
-                        {row.startDate}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        onClick={() => {
-                          navigation("/admin/pendingApproval", {
-                            state: row?.id,
-                          });
-                        }}>
-                        {row.endDate}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        onClick={() => {
-                          navigation("/admin/pendingApproval", {
-                            state: row?.id,
-                          });
-                        }}>
-                        {row.status}
-                      </TableCell>
-                      <TableCell align="center">
-                        <div className="flex justify-center items-center h-6 gap-2">
-                          <IconButton onClick={() => onEditDialoge(row)}>
-                            <EditOutlined color="success" />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => {
-                              handleClickOpen(row);
-                            }}>
-                            <DeleteOutlineOutlined color="error" />
-                          </IconButton>
-                        </div>
-                      </TableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </StyledTableContainer>
-          </Card>
-          <div className="flex justify-end my-3">
-            <Button
-              variant="contained"
-              style={{ backgroundColor: "#729434", color: "#ffffff" }}>
-              SUBMIT FOR APPROVAL
-            </Button>
-          </div>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </StyledTableContainer>
         </div>
       </div>
-
       {/* Dialog */}
       <Dialog
         open={dialogeOpen}
@@ -488,6 +430,7 @@ export const Approval = () => {
           </div>
         </DialogContent>
       </Dialog>
+
       {/* alert Dialog */}
 
       <Dialog

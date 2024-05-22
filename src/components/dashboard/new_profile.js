@@ -382,7 +382,7 @@ export const New_Profile = () => {
               </div>
 
               <p className="text-app-gray900 text-xl font-bold">
-              {JSON.parse(localStorage.getItem("token")).username}
+                {JSON.parse(localStorage.getItem("token")).username}
               </p>
               <p className="text-app-table ">UI&UX Designer </p>
               <p className="text-app-table ">{profile.email}</p>
@@ -452,7 +452,9 @@ export const New_Profile = () => {
               <div className="grid grid-cols-2 pb-3">
                 <div>
                   <p className="text-app-table">XENSPIRE EMPLOYEE</p>
-                  <p className="text-app-gray900 text-lg">{profile.xenspireEmploye}</p>
+                  <p className="text-app-gray900 text-lg">
+                    {profile.xenspireEmploye}
+                  </p>
                 </div>
                 <div>
                   <p className="text-app-table">
@@ -519,32 +521,35 @@ export const New_Profile = () => {
               timeout="auto"
               unmountOnExit
               sx={{ pl: 5 }}>
-              {yes_no.map((data, index) => {
+              {experianceData.map((data, index) => {
                 return (
                   <>
                     <div className="grid grid-cols-3 gap-y-3" key={index}>
                       <div>
                         <p className="text-app-table">JOB TITLE</p>
-                        <p className="text-app-gray900 text-lg">
-                          UI&UX DESIGNER
-                        </p>
+                        <p className="text-app-gray900 text-lg">{data.title}</p>
                       </div>
                       <div>
                         <p className="text-app-table">COMPANY NAME</p>
-                        <p className="text-app-gray900 text-lg">XYZ COMPANY</p>
+                        <p className="text-app-gray900 text-lg">
+                          {data.companyName}
+                        </p>
                       </div>
                       <div>
                         <p className="text-app-table">Select Period</p>
                         <p className="text-app-gray900 text-lg">
-                          05-07-2023 TO 21-07-2024
+                          {data.startDate} to{" "}
+                          {data.radioValue ? "Present" : data.endDate}
                         </p>
                       </div>
                       <div>
                         <p className="text-app-table">LOCATION</p>
-                        <p className="text-app-gray900 text-lg">Haydrabad</p>
+                        <p className="text-app-gray900 text-lg">
+                          {data.location}
+                        </p>
                       </div>
                     </div>
-                    {data.length === index + 1 ? "" : <Divider />}
+                    {experianceData.length === index + 1 ? "" : <Divider />}
                   </>
                 );
               })}
@@ -605,32 +610,34 @@ export const New_Profile = () => {
               timeout="auto"
               unmountOnExit
               sx={{ pl: 5 }}>
-              {yes_no.map((data, index) => {
+              {educationData.map((data, index) => {
                 return (
                   <>
                     <div className="grid grid-cols-3 gap-y-3" key={index}>
                       <div>
                         <p className="text-app-table">SCHOOL/UNIVERSITY</p>
-                        <p className="text-app-gray900 text-lg">IIM</p>
+                        <p className="text-app-gray900 text-lg">
+                          {data.school}
+                        </p>
                       </div>
                       <div>
                         <p className="text-app-table">Graduation</p>
                         <p className="text-app-gray900 text-lg">
-                          MIDDLE SCHOOL
+                          {data.graduation}
                         </p>
                       </div>
                       <div>
                         <p className="text-app-table">Select Period</p>
                         <p className="text-app-gray900 text-lg">
-                          05-07-2023 TO 21-07-2024
+                          {data.startDate} to {data.endDate}
                         </p>
                       </div>
                       <div>
                         <p className="text-app-table">Field of Study</p>
-                        <p className="text-app-gray900 text-lg">MBA</p>
+                        <p className="text-app-gray900 text-lg">{data.field}</p>
                       </div>
                     </div>
-                    {data.length === index + 1 ? "" : <Divider />}
+                    {educationData.length === index + 1 ? "" : <Divider />}
                   </>
                 );
               })}
