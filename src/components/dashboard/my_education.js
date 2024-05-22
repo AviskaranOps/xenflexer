@@ -75,7 +75,7 @@ export const My_Education = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserEducation?userId=" +
+        "http://localhost:8080/xen/getUserEducation?userId=" +
           user.userId,
         {
           headers: {
@@ -93,9 +93,10 @@ export const My_Education = ({ next, back }) => {
               school: item.school,
               graduation: item.graduation,
               field: item.field,
-              startDate: new Date(item.startDate),
-              endDate: new Date(item.endDate),
+              startDate: item.startDate,
+              endDate: item.endDate,
             };
+            setAllEducation([...allEducation, exp]);
             explist.push(exp);
           }
           setEducationData(explist);
@@ -110,7 +111,7 @@ export const My_Education = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getGraduationList",
+        "http://localhost:8080/xen/getGraduationList",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -132,7 +133,7 @@ export const My_Education = ({ next, back }) => {
     console.log(allEducation);
     await axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userEducation?userId=" +
+        "http://localhost:8080/xen/userEducation?userId=" +
           user.userId,
         allEducation,
         {
@@ -290,7 +291,7 @@ export const My_Education = ({ next, back }) => {
                   },
                 }}
                 type="submit">
-                Save
+                Add
               </Button>
             </div>
           </div>
@@ -475,7 +476,7 @@ export const My_Education = ({ next, back }) => {
             },
           }}
           onClick={handleSubmit}>
-          Continue
+          save & continue
         </Button>
       </div>
     </>

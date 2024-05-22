@@ -21,7 +21,7 @@ export const ContactUp = () => {
     const last_name = lname;
     const work_email = email;
     const message = msg;
-      await axios.post("https://xenflexer.northcentralus.cloudapp.azure.com/xen/contactSales/", {
+      await axios.post("http://localhost:8080/xen/contactSales/", {
         first_name,
         last_name,
         work_email,

@@ -92,7 +92,7 @@ export const Profile = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+        "http://localhost:8080/xen/getUserOnboarded?userId=" +
           user.userId,
         {
           headers: {
@@ -115,7 +115,7 @@ export const Profile = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserProfileImg?userId=" +
+        "http://localhost:8080/xen/getUserProfileImg?userId=" +
           user.userId,
         {
           headers: {
@@ -138,7 +138,7 @@ export const Profile = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userProfile?userId=" +
+        "http://localhost:8080/xen/userProfile?userId=" +
           user.userId,
         {
           headers: {
@@ -206,7 +206,7 @@ export const Profile = () => {
 
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/updatePassword?userId=" +
+        "http://localhost:8080/xen/updatePassword?userId=" +
           user.userId,
         { currentPassword, newPassword },
         {
@@ -230,7 +230,7 @@ export const Profile = () => {
     // save profile
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+        "http://localhost:8080/xen/getUserOnboarded?userId=" +
           user.userId,
         { profile, image },
         {
@@ -256,7 +256,7 @@ export const Profile = () => {
     // save Education
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+        "http://localhost:8080/xen/getUserOnboarded?userId=" +
           user.userId,
         { educationData },
         {
@@ -282,7 +282,7 @@ export const Profile = () => {
     // save Experience
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
+        "http://localhost:8080/xen/getUserOnboarded?userId=" +
           user.userId,
         { experianceData },
         {
@@ -307,7 +307,7 @@ export const Profile = () => {
       formData.append("profileImg", event.target.files[0]);
         axios
           .post(
-            "https://xenflexer.northcentralus.cloudapp.azure.com/xen/uploadProfileImg?userId=" +user.userId,
+            "http://localhost:8080/xen/uploadProfileImg?userId=" +user.userId,
             formData,
             {
               headers: {

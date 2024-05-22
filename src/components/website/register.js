@@ -51,7 +51,7 @@ export const Register = () => {
     const job_type = typeJob;
     const contract_type = jobbType.toString();
     const joining_preference = joinTeam.toString();
-      await axios.post("https://xenflexer.northcentralus.cloudapp.azure.com/xen/interestSignup", {
+      await axios.post("http://localhost:8080/xen/interestSignup", {
         full_name,
         email,
         phone_number,

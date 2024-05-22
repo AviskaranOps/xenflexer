@@ -17,7 +17,7 @@ export const CreateTimeSheet = ({ add_Data }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserList",
+        "http://localhost:8080/xen/getUserList",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -56,7 +56,7 @@ export const CreateTimeSheet = ({ add_Data }) => {
     const selectedValues = applicable.map((option) => option.id);
     await axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
+        "http://localhost:8080/xen/createTimesheet?userId=" +
           user.userId,
         {
           name: name,

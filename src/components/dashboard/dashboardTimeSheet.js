@@ -45,7 +45,7 @@ export const DashboardTimeSheet = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheets?userId=" +
+        "http://localhost:8080/xen/getUserTimesheets?userId=" +
           user.userId,
         {
           headers: {
@@ -67,7 +67,7 @@ export const DashboardTimeSheet = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" +
           user.userId,
         {
           headers: {
@@ -114,7 +114,7 @@ export const DashboardTimeSheet = () => {
     e.preventDefault();
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserTimesheet",
+        "http://localhost:8080/xen/saveUserTimesheet",
         userTimesheet,
         {
           headers: {
@@ -137,7 +137,7 @@ export const DashboardTimeSheet = () => {
     console.log(e);
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheetDetail?userId=" +
+        "http://localhost:8080/xen/getUserTimesheetDetail?userId=" +
           user.userId +
           "&timesheetId=" +
           e.target.value.id,

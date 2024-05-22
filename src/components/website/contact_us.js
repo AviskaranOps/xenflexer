@@ -24,7 +24,7 @@ export const Contact_Us = () => {
     const company_name = company; 
     const phone_number = no;
     const Reason_for_reaching_out = msg
-        await axios.post("https://xenflexer.northcentralus.cloudapp.azure.com/xen/contactus/", {
+        await axios.post("http://localhost:8080/xen/contactus/", {
           first_name,
           last_name,
           email,

@@ -49,7 +49,7 @@ export const My_Education = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserEducation?userId=" +
+        "http://localhost:8080/xen/getUserEducation?userId=" +
           user.userId,
         {
           headers: {
@@ -85,7 +85,7 @@ export const My_Education = ({ next, back }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getGraduationList",
+        "http://localhost:8080/xen/getGraduationList",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -105,7 +105,7 @@ export const My_Education = ({ next, back }) => {
     console.log(educationData);
     await axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userEducation?userId=" +
+        "http://localhost:8080/xen/userEducation?userId=" +
           user.userId,
         educationData,
         {

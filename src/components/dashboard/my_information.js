@@ -17,7 +17,10 @@ import { EmailOutlined, PhoneOutlined } from "@mui/icons-material";
 
 export const My_Information = ({ next }) => {
   const [hearAboutUs, setHearAboutUs] = React.useState("");
-  const [countre, setCountre] = React.useState();
+  const [countre, setCountre] = React.useState({
+    "name": "select country", 
+    "value" : "-1"
+});
   const [email, setEmail] = React.useState("");
   const [no, setNo] = React.useState("");
   const [project, setProject] = React.useState("");
@@ -35,11 +38,11 @@ export const My_Information = ({ next }) => {
 
   useEffect(() => {
     setCountries(Country.getAllCountries());
-
+    console.log(Country.getAllCountries());
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getCountryAndComm",
+        "http://localhost:8080/xen/getCountryAndComm",
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -60,7 +63,7 @@ export const My_Information = ({ next }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserInformation?userId=" +
+        "http://localhost:8080/xen/getUserInformation?userId=" +
           user.userId,
         {
           headers: {
@@ -73,7 +76,10 @@ export const My_Information = ({ next }) => {
         if (response.status !== 204) {
           const data = response.data;
           setHearAboutUs(data.howDidYouHearAboutUs);
-          setCountre(data.country);
+          setCountre({
+            "name": data.country, 
+            "value" : data.country
+        });
           setDoYouWant(data.doYouWantXenspireToBe);
           data.email !== "" ? setEmail(data.email) : setLoginEmail();
           setNo(data.mobile);
@@ -99,7 +105,7 @@ export const My_Information = ({ next }) => {
     const my_info = true;
     await axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId=" +
+        "http://localhost:8080/xen/userInformation?userId=" +
           user.userId,
         {
           how_did_you_hear_about_us,
