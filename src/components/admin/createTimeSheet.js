@@ -1,12 +1,14 @@
 import React from "react";
-import { Button, FormLabel, TextField } from "@mui/material";
+import { Button, Card, FormLabel, TextField } from "@mui/material";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
 import axios from "axios";
 import { message } from "antd";
 import Select from "react-select";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const CreateTimeSheet = ({ add_Data }) => {
+  const location = useLocation();
   const [name, setName] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
   const [endDate, setEndDate] = React.useState("");
@@ -49,6 +51,10 @@ export const CreateTimeSheet = ({ add_Data }) => {
   const getOptionLabel = (option) => option.username;
   const getOptionValue = (option) => option.id;
 
+  const pathSegments = location.pathname
+    .split("/")
+    .filter((segment) => segment);
+
   const handleClick = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("token"));
@@ -89,140 +95,85 @@ export const CreateTimeSheet = ({ add_Data }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-app-lightBlue pb-28">
       <div className="flex w-full">
         <SideNavAdmin />
-        <div className="mx-32 pt-10 pb-20 w-full">
-          <div className="flex justify-center">
-            <text
-              style={{
-                color: "#53783B",
-                fontWeight: "bold",
-                fontSize: 28,
-              }}>
-              Create TimeSheet
-            </text>
+        <div className="w-full mt-24 px-10">
+          <div className="mt-1">
+            {pathSegments.map((segment, index) => (
+              <span
+                key={index}
+                className={`text-xl font-semibold ${
+                  index === 0 ? "text-app-gray" : "text-app-gray900"
+                }`}>
+                {segment.charAt(0).toUpperCase() + segment.slice(1)}
+                {index < pathSegments.length - 1 && " / "}
+              </span>
+            ))}
           </div>
-          <form className="mt-16 mx-14" onSubmit={handleClick}>
-            <div className="grid grid-flow-col justify-between items-center">
-              <FormLabel style={{ color: "#344054" }}>Name</FormLabel>
-              <TextField
-                required
-                size="small"
-                label="Select name"
-                className="w-72"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                sx={{
-                  ".MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  ".MuiSvgIcon-root ": {
-                    color: "#7B964A",
-                  },
-                  input: { color: "#53783B" },
-                }}
-              />
-            </div>
-            <div className="mt-4 grid grid-flow-col justify-between items-center">
-              <FormLabel style={{ color: "#344054" }}>From Date</FormLabel>
-              <TextField
-                required
-                size="small"
-                type="date"
-                className="w-72"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                sx={{
-                  ".MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  ".MuiSvgIcon-root ": {
-                    color: "#7B964A",
-                  },
-                  input: { color: "#53783B" },
-                }}
-              />
-            </div>
-            <div className="mt-4 grid grid-flow-col justify-between items-center">
-              <FormLabel style={{ color: "#344054" }}>To Date</FormLabel>
-              <TextField
-                required
-                size="small"
-                type="date"
-                className="w-72"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                sx={{
-                  ".MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  ".MuiSvgIcon-root ": {
-                    color: "#7B964A",
-                  },
-                  input: { color: "#53783B" },
-                }}
-              />
-            </div>
-            <div className="mt-4 grid grid-flow-col justify-between items-center">
-              <FormLabel style={{ color: "#344054" }}>Applicable To</FormLabel>
-              <Select
-                value={applicable}
-                onChange={handleChange}
-                options={userList}
-                getOptionLabel={getOptionLabel}
-                getOptionValue={getOptionValue}
-                placeholder="Select..."
-                isMulti // Allow multiple selections
-                isSearchable // Enable searching
-              />
-              {/* <Select
-                size="small"
-                displayEmpty
-                multiple
-                value={applicable}
-                onChange={(e) => setApplicable(e.target.value)}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return (
-                      <text style={{ color: "#53783B" }}>Select from the list</text>
-                    );
-                  }
-                  return selected + ", ";
-                }}
-                sx={{
-                  color: "#53783B",
-                  ".MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(123, 150, 74, 1)",
-                  },
-                  ".MuiSvgIcon-root ": {
-                    color: "#7B964A",
-                  },
-                }}
-                className="w-72">
-                {names.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select> */}
-            </div>
-            <div className="mt-5 justify-end flex">
+          <form onSubmit={handleClick}>
+            <Card sx={{ borderRadius: 5, p: 3, mt: 2, overflow: "visible" }}>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-flow-row">
+                  <FormLabel style={{ color: "#344054" }}>Name</FormLabel>
+                  <TextField
+                    required
+                    size="small"
+                    placeholder="Select name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    style={{ width: 320 }}
+                  />
+                </div>
+                <div className="grid grid-flow-col gap-4 justify-between">
+                  <div className="grid grid-flow-row">
+                    <FormLabel style={{ color: "#344054" }}>
+                      From Date
+                    </FormLabel>
+                    <TextField
+                      required
+                      size="small"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-flow-row">
+                    <FormLabel style={{ color: "#344054" }}>To Date</FormLabel>
+                    <TextField
+                      required
+                      size="small"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-flow-row justify-end">
+                  <FormLabel style={{ color: "#344054" }}>
+                    Applicable To
+                  </FormLabel>
+                  <Select
+                    value={applicable}
+                    onChange={handleChange}
+                    options={userList}
+                    getOptionLabel={getOptionLabel}
+                    getOptionValue={getOptionValue}
+                    placeholder="Select..."
+                    isMulti // Allow multiple selections
+                    isSearchable // Enable searching
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        width: 320,
+                        zIndex: 2,
+                      }),
+                    }}
+                  />
+                </div>
+              </div>
+            </Card>
+            <div className="my-5 justify-end flex">
               <Button
                 style={{ color: "white", borderColor: "#7F56D9" }}
                 variant="contained"

@@ -3,9 +3,8 @@ import styles from "./login.module.css";
 import logo from "../../assets/images/app-logo.png";
 import loginImage from "../../assets/images/login-app-icon.png";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from 'antd';
-import axios  from "axios";
-
+import { message } from "antd";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,14 +16,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isAuthenticated = JSON.parse(localStorage.getItem('token'));
+    const isAuthenticated = JSON.parse(localStorage.getItem("token"));
     console.log(isAuthenticated);
-    if(isAuthenticated) {
-      if(isAuthenticated.role === 'ROLE_ADMIN') {
-        navigate('/admin')
+    if (isAuthenticated) {
+      if (isAuthenticated.role === "ROLE_ADMIN") {
+        navigate("/admin");
       }
-      if(isAuthenticated.role === 'ROLE_USER') {
-        navigate('/user/onboard')
+      if (isAuthenticated.role === "ROLE_USER") {
+        navigate("/user/onboard");
       }
     }
   }, []);
@@ -38,25 +37,25 @@ const Login = () => {
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/login",
         {
           username,
-          password
+          password,
         }
       );
       console.log(response);
       if (response.status === 200) {
         console.log(response.data);
-        localStorage.setItem('token', JSON.stringify(response.data));
+        localStorage.setItem("token", JSON.stringify(response.data));
         message.success("LogedIn successfully");
-        //role = response.data.role;
+        // role = response.data.role;
       } else {
         message.error("Login failed");
       }
       const role = JSON.parse(localStorage.getItem("token")).role;
       console.log("role = ", role);
-      if(role === 'ROLE_ADMIN') {
-        navigate('/admin')
+      if (role === "ROLE_ADMIN") {
+        navigate("/admin");
       }
-      if(role === 'ROLE_USER') {
-        navigate('/user/profile')
+      if (role === "ROLE_USER") {
+        navigate("/user/profile");
       }
     } catch (error) {
       console.error(error.message);
