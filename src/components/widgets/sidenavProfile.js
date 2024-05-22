@@ -150,9 +150,7 @@ export const SideNavProfile = ({ setUser, email }) => {
                   {JSON.parse(localStorage.getItem("token")).username}
                 </text>
                 <text style={{ fontSize: 12, color: "#6C737F" }}>
-                  {email
-                    ? email
-                    : JSON.parse(localStorage.getItem("token")).email}
+                  {JSON.parse(localStorage.getItem("token")).role}
                 </text>
               </div>
               <IconButton onClick={() => navigation("/logout")}>
@@ -270,14 +268,16 @@ export const SideNavProfile = ({ setUser, email }) => {
                   sx={{
                     justifyContent: "left",
                     px: 2.5,
-                    pl: 9,
+                    pl: 8,
                     borderRadius: 2,
-                    ":hover": { backgroundColor: "#CEEAB0" },
+                    // ":hover": { backgroundColor: "#CEEAB0" },
                   }}
                   onClick={() => navigation(data.path)}>
-                  <text style={{ color: "#344054", fontWeight: "500" }}>
-                    {data.name}
-                  </text>
+                  <div className="px-2 rounded-lg  opacity-40 hover:bg-black hover:text-white">
+                    <text className="hover:text-white font-medium text-app-text">
+                      {data.name}
+                    </text>
+                  </div>
                 </ListItemButton>
               ))}
           </List>

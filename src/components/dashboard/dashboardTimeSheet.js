@@ -1,24 +1,17 @@
 import React from "react";
-import {
-  Button,
-  TableHead,
-  TableRow,
-  Select,
-  MenuItem,
-  FormLabel,
-  TableContainer,
-  Box,
-} from "@mui/material";
+import { Button, Select, MenuItem, FormLabel, Box, Card } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CloudUploadOutlined } from "@mui/icons-material";
 import axios from "axios";
-import { DummyData, get_Data } from "../utils/dummy";
-import { SideNav } from "../widgets/sidenav";
 import { useEffect } from "react";
 import { message } from "antd";
 import { DataGrid } from "@mui/x-data-grid";
+import { useLocation } from "react-router-dom";
+import { SideNavProfile } from "../widgets/sidenavProfile";
+import { DummyData, get_Data } from "../utils/dummy";
 
 export const DashboardTimeSheet = () => {
+  const location = useLocation();
   const [timeSheet, setTimeSheet] = React.useState("");
   const [submittion, setSubmission] = React.useState("");
   const [array, setArray] = React.useState(DummyData);
@@ -40,6 +33,10 @@ export const DashboardTimeSheet = () => {
   React.useState(() => {
     get_Data();
   }, []);
+
+  const pathSegments = location.pathname
+    .split("/")
+    .filter((segment) => segment);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
@@ -76,26 +73,13 @@ export const DashboardTimeSheet = () => {
         }
       )
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data, "userTimeSheet");
         setUserTimesheet(response.data);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
       });
   }, []);
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: "#ffffff",
-    },
-    "&:nth-of-type(even)": {
-      backgroundColor: "#ffffff",
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -156,20 +140,6 @@ export const DashboardTimeSheet = () => {
       });
   };
 
-  const StyledTableHead = styled(TableHead)`
-    & .MuiTableCell-root {
-      background-color: #f9fafb;
-    }
-  `;
-
-  const StyledTableContainer = styled(TableContainer)`
-    border-radius: 1rem;
-    max-height: 400px;
-    ::-webkit-scrollbar {
-      display: none;
-    }
-  `;
-
   const columns = [
     {
       field: "dateRange",
@@ -208,102 +178,95 @@ export const DashboardTimeSheet = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex">
-        <SideNav />
-        <div className="mx-32 pt-10 pb-20 w-full">
-          <div className="flex justify-center">
-            <text
-              style={{
-                color: "#53783B",
-                fontWeight: "bold",
-                fontSize: 28,
-              }}>
-              Timesheet Dashboard
-            </text>
+        <SideNavProfile />
+        <div className="my-20 w-full">
+          <div className="pl-10 py-5 ">
+            {pathSegments.map((segment, index) => (
+              <span
+                key={index}
+                className={`text-xl font-semibold ${
+                  index === 0 ? "text-app-gray" : "text-app-gray900"
+                }`}>
+                {segment.charAt(0).toUpperCase() + segment.slice(1)}
+                {index < pathSegments.length - 1 && " / "}
+              </span>
+            ))}
           </div>
-          <div className="my-8 grid grid-flow-col justify-around">
-            <FormLabel sx={{ color: "#344054" }}>Select TimeSheet</FormLabel>
-            <Select
-              size="small"
-              displayEmpty
-              value={timeSheet}
-              onChange={(e) => handleTimesheetSelect(e)}
-              renderValue={(selected) => {
-                if (selected.length === 0) {
-                  return (
-                    <text style={{ color: "#53783B" }}>Select TimeSheet</text>
-                  );
-                }
-                return selected;
-              }}
-              sx={{
-                color: "#53783B",
-                ".MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(123, 150, 74, 1)",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(123, 150, 74, 1)",
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(123, 150, 74, 1)",
-                },
-                ".MuiSvgIcon-root ": {
-                  color: "#7B964A",
-                },
-              }}
-              className="w-72">
-              {timesheets.map((item) => (
-                <MenuItem key={item.id} value={item}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-
-          <>
-            {/* table  approval */}
-            <Box sx={{ height: 400 }}>
-              <DataGrid
-                rows={userTimesheet}
-                columns={columns}
-                pageSizeOptions={false}
-                disableRowSelectionOnClick
-                hideFooter
-                editMode="row"
-                processRowUpdate={saveDeviceCell}
-              />
-            </Box>
-            <div className="mt-6 grid grid-flow-col justify-around">
-              <div>
-                <text>{submittion ? submittion?.name : "Select File"}</text>
+          <Card sx={{ borderRadius: 5, m: 4, mt: 0 }}>
+            <div className="grid grid-flow-col my-5 justify-between px-10">
+              <div className="flex items-end">
                 <Button
                   component="label"
-                  role={undefined}
-                  tabIndex={-1}
                   variant="outlined"
                   style={{
-                    color: "#344054",
-                    borderColor: "#53783B",
-                    marginLeft: 5,
+                    color: "#729434",
+                    borderColor: "#729434",
+                    borderWidth: 2,
+                    width: 300,
+                    height: 42,
                   }}
                   startIcon={
-                    <CloudUploadOutlined fontSize="large" color="primary" />
+                    <CloudUploadOutlined fontSize="large" color="success" />
                   }>
-                  Proof of Submission
+                  Proof Of Submission
                   <VisuallyHiddenInput
                     type="file"
                     onChange={(e) => setSubmission(e.target.files[0])}
                   />
                 </Button>
               </div>
-
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                style={{ color: "#ffffff", backgroundColor: "#53783B" }}>
-                Submit for Approval
-              </Button>
+              <div className="grid grid-flow-row">
+                <FormLabel sx={{ color: "#344054" }}>
+                  Select TimeSheet
+                </FormLabel>
+                <Select
+                  size="small"
+                  displayEmpty
+                  value={timeSheet}
+                  onChange={(e) => handleTimesheetSelect(e)}
+                  renderValue={(selected) => {
+                    if (selected?.length === 0) {
+                      return (
+                        <text style={{ color: "#B1B2B2" }}>
+                          Select TimeSheet
+                        </text>
+                      );
+                    }
+                    return selected;
+                  }}
+                  className="w-72">
+                  {timesheets.map((item) => (
+                    <MenuItem key={item.id} value={item}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
-          </>
+
+            {/* table  approval */}
+            <div className="px-10 pb-5">
+              <Box sx={{ height: 400 }}>
+                <DataGrid
+                  rows={userTimesheet}
+                  columns={columns}
+                  pageSizeOptions={false}
+                  disableRowSelectionOnClick
+                  hideFooter
+                  editMode="row"
+                  processRowUpdate={saveDeviceCell}
+                />
+              </Box>
+            </div>
+          </Card>
+          <div className="my-6 px-10 flex justify-end">
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              style={{ color: "#ffffff", backgroundColor: "#53783B" }}>
+              Submit for Approval
+            </Button>
+          </div>
         </div>
       </div>
     </div>

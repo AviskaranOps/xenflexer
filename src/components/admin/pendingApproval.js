@@ -425,7 +425,7 @@ export const PendingApproval = () => {
               {/* view documents */}
               <div className="mt-5 p-4">
                 <div className="grid grid-flow-row">
-                  <text>View Documents </text>
+                  <p>View Documents </p>
                   <FormLabel>Download receipt for January 2022.</FormLabel>
                 </div>
                 <div>
@@ -482,8 +482,8 @@ export const PendingApproval = () => {
                         <div className="grid grid-flow-col justify-start gap-5 pl-5">
                           <img src={avtar} alt="avtar" />
                           <div className="grid grid-flow-row">
-                            <text>{data.username}</text>
-                            <text>{data.status}</text>
+                            <p>{data.username}</p>
+                            <p>{data.status}</p>
                           </div>
                         </div>
                       </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { CloseOutlined, UploadFileOutlined } from "@mui/icons-material";
+import { HighlightOffOutlined, UploadFileOutlined } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -10,10 +10,8 @@ import {
   TextField,
   styled,
 } from "@mui/material";
-import check from "../../assets/images/check-icon.png";
 import { useRef } from "react";
 import axios from "axios";
-import { act } from "react-dom/test-utils";
 import { useEffect } from "react";
 
 export const PopUp = ({ open, data, onClose }) => {
@@ -54,7 +52,10 @@ export const PopUp = ({ open, data, onClose }) => {
     console.log(data);
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getBenefitParams?userId="+user.userId + "&name="+data.benefits,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getBenefitParams?userId=" +
+          user.userId +
+          "&name=" +
+          data.benefits,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -62,20 +63,20 @@ export const PopUp = ({ open, data, onClose }) => {
         }
       )
       .then((response) => {
-        if(isEmpty(response.data) === false){
+        if (isEmpty(response.data) === false) {
           let name = data?.benefits?.toLowerCase();
           if (name?.includes("education")) {
-              setReason(data.reason)
+            setReason(data.reason);
           } else if (name?.includes("401k")) {
-              setPortion(data.portion)
+            setPortion(data.portion);
           } else if (name?.includes("family care")) {
-              setAmount(response.data.amount)
+            setAmount(response.data.amount);
           } else if (name?.includes("commuter")) {
-              setAmount(response.data.amount);
-          } else if(name?.includes("immigration")){
-              setVisa(response.data.visa);
-              setGc(response.data.gc);
-              setOtherHelp(response.data.otherHelp);
+            setAmount(response.data.amount);
+          } else if (name?.includes("immigration")) {
+            setVisa(response.data.visa);
+            setGc(response.data.gc);
+            setOtherHelp(response.data.otherHelp);
           }
         }
       })
@@ -84,11 +85,9 @@ export const PopUp = ({ open, data, onClose }) => {
       });
   }, []);
 
-
   function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
     }
     return true;
   }
@@ -124,32 +123,38 @@ export const PopUp = ({ open, data, onClose }) => {
   // Render Options
   const DateSwithchDialog = (name) => {
     return (
-      <div>
+      <div className="px-5">
         {/* switch */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
+        <div className="grid grid-flow-col justify-between py-2">
+          <p style={{ color: "#57595A" }}>
             Do you wish to activate
             <br /> the {data?.benefits}
-          </lable>
+          </p>
           <Switch
             checked={activateSwitch}
             onChange={(e) => setActivateSwitch(e.target.checked)}
-            color="success"
+            sx={{
+              "&.MuiSwitch-root .Mui-checked": {
+                color: "#729434",
+              },
+              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                backgroundColor: "#B1D570",
+              },
+            }}
           />
         </div>
 
         {/* Date  */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
-            Effective starting date
-            <br /> for the plan
-          </lable>
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>
+            Effective starting date for the plan
+          </p>
           <TextField
             type="date"
             size="small"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            sx={{ width: 150, marginLeft: 6 }}
+            sx={{ width: 280 }}
           />
         </div>
 
@@ -158,11 +163,11 @@ export const PopUp = ({ open, data, onClose }) => {
           <Button
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
+              color: "#729434",
+              borderColor: "#729434",
             }}
             onClick={() => {
-              handleActivateBenefit(name.name, date, activateSwitch,  data.cost);
+              handleActivateBenefit(name.name, date, activateSwitch, data.cost);
             }}>
             Raise Request
           </Button>
@@ -173,40 +178,40 @@ export const PopUp = ({ open, data, onClose }) => {
 
   const SwitchTextFile = (name) => {
     return (
-      <div>
+      <div className="px-5">
         {/* switch */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>Avail this benefit ($25 for month)</lable>
+        <div className="grid grid-flow-col justify-between py-2">
+          <p style={{ color: "#57595A" }}>Avail this benefit ($25 for month)</p>
           <Switch
             checked={activateSwitch}
             onChange={(e) => setActivateSwitch(e.target.checked)}
-            color="success"
+            sx={{
+              "&.MuiSwitch-root .Mui-checked": {
+                color: "#729434",
+              },
+              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                backgroundColor: "#B1D570",
+              },
+            }}
           />
         </div>
 
         {/* text Filed */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>Enter Amount upto $2500</lable>
-          <TextField
-            size="small"
-            inputRef={uptoRef}
-            sx={{ width: 150, marginLeft: 6 }}
-          />
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>Enter Amount upto $2500</p>
+          <TextField size="small" inputRef={uptoRef} sx={{ width: 280 }} />
         </div>
 
         {/* upload */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
-            Upload Relevant
-            <br /> Documents
-          </lable>
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>Upload Relevant Documents</p>
           <Button
             component="label"
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
-              width: 150,
+              color: "#729434",
+              borderColor: "#729434",
+              width: 280,
             }}
             startIcon={<UploadFileOutlined />}>
             Document
@@ -223,11 +228,11 @@ export const PopUp = ({ open, data, onClose }) => {
           <Button
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
+              color: "#729434",
+              borderColor: "#729434",
             }}
             onClick={() => {
-              handleSubmit("", "",uptoRef.current.value, name.name);
+              handleSubmit("", "", uptoRef.current.value, name.name);
             }}>
             Raise Request
           </Button>
@@ -238,33 +243,26 @@ export const PopUp = ({ open, data, onClose }) => {
 
   const EducationDialog = (name) => {
     return (
-      <div>
+      <div className="px-5">
         {/* text Filed */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>
             Explain briefly why you want
             <br /> to claim the benefit
-          </lable>
-          <TextField
-            size="small"
-            inputRef={educationRef}
-            sx={{ width: 150, marginLeft: 6 }}
-          />
+          </p>
+          <TextField size="small" inputRef={educationRef} sx={{ width: 280 }} />
         </div>
 
         {/* upload */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
-            Upload Relevant
-            <br /> Documents
-          </lable>
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>Upload Relevant Documents</p>
           <Button
             component="label"
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
-              width: 150,
+              color: "#729434",
+              borderColor: "#729434",
+              width: 280,
             }}
             startIcon={<UploadFileOutlined />}>
             Document
@@ -280,8 +278,8 @@ export const PopUp = ({ open, data, onClose }) => {
           <Button
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
+              color: "#729434",
+              borderColor: "#729434",
             }}
             onClick={() => {
               handleSubmit(educationRef.current.value, 0, 0, name.name);
@@ -295,27 +293,30 @@ export const PopUp = ({ open, data, onClose }) => {
 
   const Kbenefits = (name) => {
     return (
-      <div>
+      <div className="px-5">
         {/* switch */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
+        <div className="grid grid-flow-col justify-between py-2">
+          <p style={{ color: "#57595A" }}>
             Available this benefit
             <br /> ($25 per mobth)
-          </lable>
+          </p>
           <Switch
             checked={activateSwitch}
             onChange={(e) => setActivateSwitch(e.target.checked)}
-            color="success"
+            sx={{
+              "&.MuiSwitch-root .Mui-checked": {
+                color: "#729434",
+              },
+              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                backgroundColor: "#B1D570",
+              },
+            }}
           />
         </div>
         {/* text Filed */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>Your Portion (Upto 6%)</lable>
-          <TextField
-            size="small"
-            inputRef={KbenefitsRef}
-            sx={{ width: 150, marginLeft: 6 }}
-          />
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>Your Portion (Upto 6%)</p>
+          <TextField size="small" inputRef={KbenefitsRef} sx={{ width: 280 }} />
         </div>
 
         {/* Button */}
@@ -323,8 +324,8 @@ export const PopUp = ({ open, data, onClose }) => {
           <Button
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
+              color: "#729434",
+              borderColor: "#729434",
             }}
             onClick={() => {
               handleSubmit("", KbenefitsRef.current.value, 0, name.name);
@@ -338,46 +339,56 @@ export const PopUp = ({ open, data, onClose }) => {
 
   const EmigrationDialog = (name) => {
     return (
-      <div>
+      <div className="px-5">
         {/* switch */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>
+        <div className="grid grid-flow-col justify-between py-2">
+          <p style={{ color: "#57595A" }}>
             Do you wish to activate
             <br /> the {data?.benefits}
-          </lable>
+          </p>
           <Switch
             checked={activateSwitch}
             onChange={(e) => setActivateSwitch(e.target.checked)}
-            color="success"
+            sx={{
+              "&.MuiSwitch-root .Mui-checked": {
+                color: "#729434",
+              },
+              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                backgroundColor: "#B1D570",
+              },
+            }}
           />
         </div>
         {/* text Filed */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>Visa</lable>
+        <div className="grid grid-flow-row  py-2">
+          <p style={{ color: "#57595A" }}>Visa</p>
           <TextField
             size="small"
+            placeholder="Visa"
             inputRef={visaRef}
-            sx={{ width: 150, marginLeft: 6 }}
+            sx={{ width: 280 }}
           />
         </div>
 
         {/* text Filed */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>GC</lable>
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>GC</p>
           <TextField
             size="small"
+            placeholder="GC"
             inputRef={gcRef}
-            sx={{ width: 150, marginLeft: 6 }}
+            sx={{ width: 280 }}
           />
         </div>
 
         {/* text Filed */}
-        <div className="grid grid-flow-col justify-between py-3">
-          <lable>Other Help (Book an hour)</lable>
+        <div className="grid grid-flow-row py-2">
+          <p style={{ color: "#57595A" }}>Other Help (Book an hour)</p>
           <TextField
             size="small"
+            placeholder="Other Help"
             inputRef={otherRef}
-            sx={{ width: 150, marginLeft: 6 }}
+            sx={{ width: 280 }}
           />
         </div>
 
@@ -386,8 +397,8 @@ export const PopUp = ({ open, data, onClose }) => {
           <Button
             variant="outlined"
             style={{
-              color: "#344054",
-              borderColor: "#D0D5DD",
+              color: "#729434",
+              borderColor: "#729434",
             }}
             onClick={() =>
               handleImmigrationSubmit(
@@ -404,29 +415,31 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-
-  const handleActivateBenefit = async(name, date, activate, cost) => {
+  const handleActivateBenefit = async (name, date, activate, cost) => {
     const user = JSON.parse(localStorage.getItem("token"));
-    await axios.post("https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefit?userId="+user.userId, {
-        name,
-        activate,
-        date,
-        cost
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${user.accessToken}`,
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefit?userId=" +
+          user.userId,
+        {
+          name,
+          activate,
+          date,
+          cost,
         },
-      })
-      .then(respsone => {
-
-      })
-      .catch(error => {
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((respsone) => {})
+      .catch((error) => {
         console.log(error.message);
-      })
-  }
+      });
+  };
   // handle submit
-  const handleSubmit = async (reason, portion, amount,name) => {
+  const handleSubmit = async (reason, portion, amount, name) => {
     const formData = new FormData();
     formData.append("doc", file);
     formData.append("reason", reason);
@@ -437,7 +450,8 @@ export const PopUp = ({ open, data, onClose }) => {
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefitwithDoc?userId=" +user.userId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefitwithDoc?userId=" +
+          user.userId,
         formData,
         {
           headers: {
@@ -446,56 +460,52 @@ export const PopUp = ({ open, data, onClose }) => {
           },
         }
       )
-      .then((response) => {
-
-      })
+      .then((response) => {})
       .catch((error) => {
         console.error("document save error:", error.message);
       });
-      onClose();
+    onClose();
   };
 
   const handleImmigrationSubmit = async (visa, gc, otherHelp, name) => {
-
     const user = JSON.parse(localStorage.getItem("token"));
     await axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveImmigrationBenefit?userId=" +user.userId,
-         { visa, gc, otherHelp, name },
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveImmigrationBenefit?userId=" +
+          user.userId,
+        { visa, gc, otherHelp, name },
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
           },
         }
       )
-      .then((response) => {
-
-      })
+      .then((response) => {})
       .catch((error) => {
         console.error("document save error:", error.message);
       });
-      onClose();
+    onClose();
   };
 
   // which render run
   const RenderData = ({ render }) => {
     switch (render) {
       case "legal":
-        return <DateSwithchDialog name={data.benefits}/>;
+        return <DateSwithchDialog name={data.benefits} />;
       case "medical":
-        return <DateSwithchDialog name={data.benefits}/>;
+        return <DateSwithchDialog name={data.benefits} />;
       case "immigration/attorney":
-        return <EmigrationDialog name={data.benefits}/>;
+        return <EmigrationDialog name={data.benefits} />;
       case "dental":
-        return <DateSwithchDialog name={data.benefits}/>;
+        return <DateSwithchDialog name={data.benefits} />;
       case "vision":
-        return <DateSwithchDialog name={data.benefits}/>;
+        return <DateSwithchDialog name={data.benefits} />;
       case "short":
-        return <DateSwithchDialog name={data.benefits}/>;
+        return <DateSwithchDialog name={data.benefits} />;
       case "long":
-        return <DateSwithchDialog name={data.benefits}/>;
+        return <DateSwithchDialog name={data.benefits} />;
       case "education":
-        return <EducationDialog name={data.benefits}/>;
+        return <EducationDialog name={data.benefits} />;
       case "401k":
         return <Kbenefits name={data.benefits} />;
       case "family":
@@ -515,14 +525,12 @@ export const PopUp = ({ open, data, onClose }) => {
     <Dialog
       open={open}
       // onClose={onClose}
-      aria-labelledby="responsive-dialog-title">
+      aria-labelledby="responsive-dialog-title"
+      PaperProps={{ sx: { borderRadius: "16px" } }}>
       <DialogContent>
-        <div className="flex justify-center pt-5">
-          <img src={check} alt="dialog icon" width={50} />
-        </div>
         <div className="justify-center  text-center p-5">
           <DialogContentText
-            sx={{ color: "black", fontWeight: "600", fontSize: 22 }}>
+            sx={{ color: "black", fontWeight: "600", fontSize: 18 }}>
             {data?.benefits || ""}
           </DialogContentText>
         </div>
@@ -530,7 +538,7 @@ export const PopUp = ({ open, data, onClose }) => {
         <RenderData render={renderPopUp} />
         <div className="absolute right-3 top-3">
           <IconButton onClick={onClose}>
-            <CloseOutlined />
+            <HighlightOffOutlined color="error" />
           </IconButton>
         </div>
       </DialogContent>

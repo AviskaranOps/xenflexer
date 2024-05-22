@@ -45,7 +45,8 @@ export const DashboardTimeSheet = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheets?userId="+user.userId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserTimesheets?userId=" +
+          user.userId,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -273,7 +274,7 @@ export const DashboardTimeSheet = () => {
             </Box>
             <div className="mt-6 grid grid-flow-col justify-around">
               <div>
-                <text>{submittion ? submittion?.name : "Select File"}</text>
+                <p>{submittion ? submittion?.name : "Select File"}</p>
                 <Button
                   component="label"
                   role={undefined}
