@@ -73,13 +73,47 @@ export const DashboardTimeSheet = () => {
         }
       )
       .then((response) => {
-        console.log(response.data, "userTimeSheet");
-        setUserTimesheet(response.data);
+        if (response?.data?.length === 1) {
+          let startDate = "2024-05-25"; // response?.data?.startDate
+          let endDate = "2024-06-10"; // response?.data?.endDate
+          let newTimeSheetData = getDetailsFromDate(startDate, endDate);
+          // console.log(newTimeSheetData);
+          setUserTimesheet(newTimeSheetData);
+        } else {
+          setUserTimesheet(response?.data);
+        }
       })
       .catch((error) => {
         console.error("info save error:", error.message);
       });
   }, []);
+
+  function getDetailsFromDate(startDate, endDate) {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+
+    let newDays = [];
+    let index = 0;
+
+    function formatDate(date) {
+      let year = date.getFullYear();
+      let month = (date.getMonth() + 1).toString().padStart(2, "0");
+      let day = date.getDate().toString().padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    while (start <= end) {
+      newDays.push({
+        id: index++,
+        dateRange: `${startDate}-to-${endDate}`,
+        date: formatDate(start),
+        hoursWorked: 0,
+      });
+      start.setDate(start.getDate() + 1);
+    }
+
+    return newDays;
+  }
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
