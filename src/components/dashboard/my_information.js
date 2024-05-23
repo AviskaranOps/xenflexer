@@ -27,6 +27,9 @@ export const My_Information = ({ next }) => {
   const [xenspire, setXenspire] = React.useState("");
   const [doYouWant, setDoYouWant] = React.useState("");
   const [countries, setCountries] = React.useState([]);
+  const [city, setCity] = React.useState("");
+  const [state, setState] = React.useState("");
+  const [zipcode, setZipCode] = React.useState();
   const [comm, setComm] = React.useState([{ name: "abc" }]);
 
   const yes_no = ["Yes", "No"];
@@ -85,6 +88,9 @@ export const My_Information = ({ next }) => {
           setNo(data.mobile);
           setProject(data.workingOnProject);
           setXenspire(data.xenspireIsTheEmployer);
+          setCity(data.city);
+          setState(data.state);
+          setZipCode(data.zipcode);
         }
       })
       .catch((error) => {
@@ -103,6 +109,7 @@ export const My_Information = ({ next }) => {
     const do_you_want_xenspire_to_be = doYouWant;
     const user = JSON.parse(localStorage.getItem("token"));
     const my_info = true;
+    console.log(city, state, zipcode);
     await axios
       .post(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/userInformation?userId=" +
@@ -116,6 +123,9 @@ export const My_Information = ({ next }) => {
           working_on_project,
           do_you_want_xenspire_to_be,
           my_info,
+          state,
+          city,
+          zipcode
         },
         {
           headers: {
@@ -165,24 +175,6 @@ export const My_Information = ({ next }) => {
               </Select>
             </div>
             <div className="grid grid-flow-row gap-2">
-              <FormLabel style={{ color: "#57595A" }}>Country</FormLabel>
-              <Autocomplete
-                disablePortal
-                size="small"
-                id="combo-box-demo"
-                value={countre}
-                options={countries}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  setCountre(newValue);
-                }}
-                className="w-72"
-                renderInput={(params) => (
-                  <TextField {...params} placeholder="Select Country" />
-                )}
-              />
-            </div>
-            <div className="grid grid-flow-row gap-2">
               <FormLabel style={{ color: "#57595A" }}>Email</FormLabel>
               <TextField
                 size="small"
@@ -200,7 +192,6 @@ export const My_Information = ({ next }) => {
                 }}
               />
             </div>
-
             <div className="grid grid-flow-row gap-2">
               <FormLabel style={{ color: "#57595A" }}>Mobile</FormLabel>
               <TextField
@@ -265,7 +256,6 @@ export const My_Information = ({ next }) => {
                 ))}
               </Select>
             </div>
-
             <div className="grid grid-flow-row gap-2">
               <FormLabel style={{ color: "#57595A" }}>
                 Do you want Xenspire to be?
@@ -289,6 +279,78 @@ export const My_Information = ({ next }) => {
                   </MenuItem>
                 ))}
               </Select>
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>city</FormLabel>
+              <TextField
+                size="small"
+                type="text"
+                placeholder="Enter City"
+                className="w-72"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                // InputProps={{
+                //   startAdornment: (
+                //     <InputAdornment position="start">
+                //       <EmailOutlined sx={{ color: "#b1b2b2" }} />
+                //     </InputAdornment>
+                //   ),
+                // }}
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>state</FormLabel>
+              <TextField
+                size="small"
+                type="text"
+                placeholder="Enter State"
+                className="w-72"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                // InputProps={{
+                //   startAdornment: (
+                //     <InputAdornment position="start">
+                //       <EmailOutlined sx={{ color: "#b1b2b2" }} />
+                //     </InputAdornment>
+                //   ),
+                // }}
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>Country</FormLabel>
+              <Autocomplete
+                disablePortal
+                size="small"
+                id="combo-box-demo"
+                value={countre}
+                options={countries}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setCountre(newValue);
+                }}
+                className="w-72"
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Select Country" />
+                )}
+              />
+            </div>
+            <div className="grid grid-flow-row gap-2">
+              <FormLabel style={{ color: "#57595A" }}>zipCode</FormLabel>
+              <TextField
+                size="small"
+                type="tel"
+                placeholder="Enter Zipcode"
+                className="w-72"
+                value={zipcode}
+                onChange={(e) => setZipCode(e.target.value)}
+                // InputProps={{
+                //   startAdornment: (
+                //     <InputAdornment position="start">
+                //       <PhoneOutlined sx={{ color: "#b1b2b2" }} />
+                //     </InputAdornment>
+                //   ),
+                // }}
+              />
             </div>
           </div>
         </Card>

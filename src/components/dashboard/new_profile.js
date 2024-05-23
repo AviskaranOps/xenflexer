@@ -158,6 +158,9 @@ export const New_Profile = () => {
           country: data.userInfo?.country,
           state: "",
           wantTobe: data.userInfo?.doYouWantXenspireToBe,
+          city : data.city,
+          state : data.state,
+          zipcode : data.zipcode 
         };
         setProfile(profile);
         var eduList = [];
@@ -179,8 +182,8 @@ export const New_Profile = () => {
             companyName: exp.companyName,
             location: exp.location,
             radioValue: exp.currentCompany,
-            startDate: new Date(exp.startDate.substring(0, 11)),
-            endDate: new Date(exp.endDate.substring(0, 11)),
+            startDate: exp.startDate,
+            endDate: exp.endDate,
           };
           expList.push(experience);
         }
@@ -432,11 +435,11 @@ export const New_Profile = () => {
               <div className="grid grid-cols-2 pb-3">
                 <div>
                   <p className="text-app-table">CITY</p>
-                  <p className="text-app-gray900 text-lg">Hyderabad</p>
+                  <p className="text-app-gray900 text-lg">{profile.city}</p>
                 </div>
                 <div>
                   <p className="text-app-table">STATE</p>
-                  <p className="text-app-gray900 text-lg">TELANAGANA</p>
+                  <p className="text-app-gray900 text-lg">{profile.state}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 pb-3">
@@ -446,7 +449,7 @@ export const New_Profile = () => {
                 </div>
                 <div>
                   <p className="text-app-table">PIN CODE</p>
-                  <p className="text-app-gray900 text-lg">500034</p>
+                  <p className="text-app-gray900 text-lg">{profile.zipcode}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 pb-3">

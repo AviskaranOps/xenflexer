@@ -150,7 +150,7 @@ export const SideNavProfile = ({ setUser, email }) => {
                   {JSON.parse(localStorage.getItem("token")).username}
                 </text>
                 <text style={{ fontSize: 12, color: "#6C737F" }}>
-                  {JSON.parse(localStorage.getItem("token")).role}
+                  {JSON.parse(localStorage.getItem("token")).email}
                 </text>
               </div>
               <IconButton onClick={() => navigation("/logout")}>
