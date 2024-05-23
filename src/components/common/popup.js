@@ -19,18 +19,10 @@ export const PopUp = ({ open, data, onClose }) => {
   const [activateSwitch, setActivateSwitch] = React.useState(true);
   const [date, setDate] = React.useState("");
   const [file, setFile] = React.useState("");
-  const [doc, setDoc] = React.useState();
-  const [benefitParams, setBenefitParams] = React.useState();
   const [reason, setReason] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [portion, setPortion] = React.useState("");
-  const [visa, setVisa] = React.useState("");
-  const [gc, setGc] = React.useState("");
-  const [otherHelp, setOtherHelp] = React.useState("");
 
-  let uptoRef = useRef("");
-  let educationRef = useRef("");
-  let KbenefitsRef = useRef("");
   const visaRef = useRef("");
   const gcRef = useRef("");
   const otherRef = useRef("");
@@ -49,7 +41,7 @@ export const PopUp = ({ open, data, onClose }) => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
-    console.log(data);
+    // console.log(data);
     axios
       .get(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getBenefitParams?userId=" +
@@ -74,9 +66,9 @@ export const PopUp = ({ open, data, onClose }) => {
           } else if (name?.includes("commuter")) {
             setAmount(response.data.amount);
           } else if (name?.includes("immigration")) {
-            setVisa(response.data.visa);
-            setGc(response.data.gc);
-            setOtherHelp(response.data.otherHelp);
+            visaRef.current.value = response.data.visa;
+            gcRef.current.value = response.data.gc;
+            otherRef.current.value = response.data.otherHelp;
           }
         }
       })
@@ -122,6 +114,7 @@ export const PopUp = ({ open, data, onClose }) => {
 
   // Render Options
   const DateSwithchDialog = (name) => {
+    // switch , date ,
     return (
       <div className="px-5">
         {/* switch */}
@@ -167,7 +160,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#729434",
             }}
             onClick={() => {
-              handleActivateBenefit(name.name, date, activateSwitch, data.cost);
+              handleActivateBenefit(name.name, activateSwitch, data.cost);
             }}>
             Raise Request
           </Button>
@@ -177,6 +170,7 @@ export const PopUp = ({ open, data, onClose }) => {
   };
 
   const SwitchTextFile = (name) => {
+    // switch, text , file
     return (
       <div className="px-5">
         {/* switch */}
@@ -199,7 +193,14 @@ export const PopUp = ({ open, data, onClose }) => {
         {/* text Filed */}
         <div className="grid grid-flow-row py-2">
           <p style={{ color: "#57595A" }}>Enter Amount upto $2500</p>
-          <TextField size="small" inputRef={uptoRef} sx={{ width: 280 }} />
+          <TextField
+            key="amount"
+            size="small"
+            autoFocus="autoFocus"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            sx={{ width: 280 }}
+          />
         </div>
 
         {/* upload */}
@@ -221,6 +222,7 @@ export const PopUp = ({ open, data, onClose }) => {
               //accept="image/png, image/jpeg,image/jpg"
             />
           </Button>
+          <p style={{ color: "#729434" }}>{file ? file.name : ""}</p>
         </div>
 
         {/* Button */}
@@ -232,7 +234,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#729434",
             }}
             onClick={() => {
-              handleSubmit("", "", uptoRef.current.value, name.name);
+              handleSubmiWithFile(amount, name.name);
             }}>
             Raise Request
           </Button>
@@ -242,6 +244,7 @@ export const PopUp = ({ open, data, onClose }) => {
   };
 
   const EducationDialog = (name) => {
+    // text,file
     return (
       <div className="px-5">
         {/* text Filed */}
@@ -250,7 +253,14 @@ export const PopUp = ({ open, data, onClose }) => {
             Explain briefly why you want
             <br /> to claim the benefit
           </p>
-          <TextField size="small" inputRef={educationRef} sx={{ width: 280 }} />
+          <TextField
+            key="reason"
+            size="small"
+            autoFocus="autoFocus"
+            sx={{ width: 280 }}
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
         </div>
 
         {/* upload */}
@@ -272,6 +282,7 @@ export const PopUp = ({ open, data, onClose }) => {
               onChange={(e) => setFile(e.target.files[0])}
             />
           </Button>
+          <p style={{ color: "#729434" }}>{file ? file.name : ""}</p>
         </div>
         {/* Button */}
         <div className="flex justify-center mt-4">
@@ -282,7 +293,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#729434",
             }}
             onClick={() => {
-              handleSubmit(educationRef.current.value, 0, 0, name.name);
+              handleSubmiWithFile(reason, name.name);
             }}>
             Raise Request
           </Button>
@@ -292,6 +303,7 @@ export const PopUp = ({ open, data, onClose }) => {
   };
 
   const Kbenefits = (name) => {
+    // switch , text
     return (
       <div className="px-5">
         {/* switch */}
@@ -316,7 +328,14 @@ export const PopUp = ({ open, data, onClose }) => {
         {/* text Filed */}
         <div className="grid grid-flow-row py-2">
           <p style={{ color: "#57595A" }}>Your Portion (Upto 6%)</p>
-          <TextField size="small" inputRef={KbenefitsRef} sx={{ width: 280 }} />
+          <TextField
+            key="portion"
+            size="small"
+            autoFocus="autoFocus"
+            value={portion}
+            onChange={(e) => setPortion(e.target.value)}
+            sx={{ width: 280 }}
+          />
         </div>
 
         {/* Button */}
@@ -328,7 +347,7 @@ export const PopUp = ({ open, data, onClose }) => {
               borderColor: "#729434",
             }}
             onClick={() => {
-              handleSubmit("", KbenefitsRef.current.value, 0, name.name);
+              handleSubmit(portion, name.name);
             }}>
             Raise Request
           </Button>
@@ -415,8 +434,11 @@ export const PopUp = ({ open, data, onClose }) => {
     );
   };
 
-  const handleActivateBenefit = async (name, date, activate, cost) => {
+  // handle submit
+
+  const handleActivateBenefit = async (name, activate, cost) => {
     const user = JSON.parse(localStorage.getItem("token"));
+    console.log(name, activate, cost, "---active Benefit");
     await axios
       .post(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefit?userId=" +
@@ -424,7 +446,6 @@ export const PopUp = ({ open, data, onClose }) => {
         {
           name,
           activate,
-          date,
           cost,
         },
         {
@@ -437,17 +458,17 @@ export const PopUp = ({ open, data, onClose }) => {
       .catch((error) => {
         console.log(error.message);
       });
+    onClose();
   };
-  // handle submit
-  const handleSubmit = async (reason, portion, amount, name) => {
+
+  // new added
+  const handleSubmiWithFile = async (data, name) => {
+    const user = JSON.parse(localStorage.getItem("token"));
     const formData = new FormData();
     formData.append("doc", file);
-    formData.append("reason", reason);
-    formData.append("portion", portion);
-    formData.append("amount", amount);
+    formData.append("data", data);
     formData.append("name", name);
-
-    const user = JSON.parse(localStorage.getItem("token"));
+    console.log(file?.name, data, name, "---with file");
     await axios
       .post(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefitwithDoc?userId=" +
@@ -467,8 +488,34 @@ export const PopUp = ({ open, data, onClose }) => {
     onClose();
   };
 
+  // data some changes
+  const handleSubmit = async (portion, name) => {
+    const user = JSON.parse(localStorage.getItem("token"));
+
+    console.log(portion, name, "---handleSubmit without file");
+
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefitwithDoc?userId=" +
+          user.userId,
+        { portion, name },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {})
+      .catch((error) => {
+        console.error("document save error:", error.message);
+      });
+    onClose();
+  };
+
   const handleImmigrationSubmit = async (visa, gc, otherHelp, name) => {
     const user = JSON.parse(localStorage.getItem("token"));
+    console.log(visa, gc, otherHelp, name, "---ImmiGration");
     await axios
       .post(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveImmigrationBenefit?userId=" +
@@ -491,11 +538,9 @@ export const PopUp = ({ open, data, onClose }) => {
   const RenderData = ({ render }) => {
     switch (render) {
       case "legal":
-        return <DateSwithchDialog name={data.benefits} />;
+        return <DateSwithchDialog name={data.benefits} />; // handleActivateBenefit
       case "medical":
         return <DateSwithchDialog name={data.benefits} />;
-      case "immigration/attorney":
-        return <EmigrationDialog name={data.benefits} />;
       case "dental":
         return <DateSwithchDialog name={data.benefits} />;
       case "vision":
@@ -504,14 +549,16 @@ export const PopUp = ({ open, data, onClose }) => {
         return <DateSwithchDialog name={data.benefits} />;
       case "long":
         return <DateSwithchDialog name={data.benefits} />;
+      case "immigration/attorney":
+        return <EmigrationDialog name={data.benefits} />; // handleImmigrationSubmit
       case "education":
-        return <EducationDialog name={data.benefits} />;
+        return <EducationDialog name={data.benefits} />; // handleSubmiWithFile
       case "401k":
-        return <Kbenefits name={data.benefits} />;
+        return <Kbenefits name={data.benefits} />; // handleSubmit
       case "family":
-        return <SwitchTextFile name={data.benefits} />;
+        return <SwitchTextFile name={data.benefits} />; // handleSubmiWithFile
       case "commuter":
-        return <SwitchTextFile name={data.benefits} />;
+        return <SwitchTextFile name={data.benefits} />; // handleSubmiWithFile
       default:
         break;
     }
