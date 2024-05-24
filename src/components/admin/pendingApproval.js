@@ -26,7 +26,7 @@ import { SideNavAdmin } from "../widgets/sideNavAdmin";
 export const PendingApproval = () => {
   const navigation = useNavigate();
   const history = useLocation();
-  const [data, setData] = React.useState(Dummy_Pending);
+  const [data, setData] = React.useState([]);
   const [searchData, setSearchData] = React.useState([]);
   const [selected, setSelected] = React.useState([]);
   const [name, setName] = React.useState("");
@@ -35,7 +35,7 @@ export const PendingApproval = () => {
   const [timesheets, setTimesheets] = React.useState([]);
   const [userList, setUserList] = React.useState([]);
   const [userTimesheet, setUserTimesheet] = React.useState([]);
-  const [pendingts, setPendingts] = React.useState([]);
+  const [pendingData, setPendingData] = React.useState([]);
   const [searchPendingData, setSearchPendingData] = React.useState([]);
   const [openDialoge, setOpenDialoge] = React.useState(false);
   //   const [userId, setUserId] = React.useState(0);
@@ -88,7 +88,8 @@ export const PendingApproval = () => {
     console.log("timesheetId = " + timesheetId);
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId="+ timesheetId,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=" +
+          timesheetId,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -98,6 +99,7 @@ export const PendingApproval = () => {
       .then((response) => {
         console.log(response.data, "pending------");
         setSearchPendingData(response.data);
+        setPendingData(response.data);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -224,7 +226,8 @@ export const PendingApproval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet?userId=" + user.id,
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet?userId=" +
+          user.id,
         userTimesheet,
         {
           headers: {
@@ -247,17 +250,17 @@ export const PendingApproval = () => {
   };
 
   const searchHandle = () => {
-    const newData = data.find((d) => d.timesheetName === search);
+    const newData = data.find((d) => d?.timesheetName === search);
     setSearchData(newData ? [newData] : data);
   };
 
   const pandingSearchHandler = () => {
     // const newData = data.find((d) => d.timesheetName === pandingSearch);
-    const newData = data.filter((data) =>
-      data.timesheetName.toLowerCase().includes(pandingSearch.toLowerCase())
+    const newData = pendingData.filter((data) =>
+      data?.username?.toLowerCase().includes(pandingSearch?.toLowerCase())
     );
 
-    setSearchPendingData(newData.length > 0 ? newData : data);
+    setSearchPendingData(newData.length > 0 ? newData : pendingData);
   };
 
   React.useEffect(() => {
@@ -266,7 +269,7 @@ export const PendingApproval = () => {
 
   React.useEffect(() => {
     if (pandingSearch === "") {
-      setSearchPendingData(data);
+      setSearchPendingData(pendingData);
       return;
     }
     pandingSearchHandler();
@@ -522,8 +525,12 @@ export const PendingApproval = () => {
                 {searchPendingData.map((value, index) => {
                   return (
                     <div
-                      className="grid grid-flow-col justify-start gap-5 my-2 items-center"
-                      key={index}>
+                      className="grid grid-flow-col justify-start gap-5 my-2 items-center hover:cursor-pointer"
+                      key={index}
+                      onClick={() => {
+                        handleUserSelectChange(value.username, "user");
+                        setSearch(value.username);
+                      }}>
                       <img src={avtar} alt="user image" width={50} />
                       <p
                         // hover
