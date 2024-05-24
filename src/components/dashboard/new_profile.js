@@ -22,6 +22,7 @@ export const New_Profile = () => {
   const [colapse, setColapse] = React.useState("experience");
 
   const [image, setImage] = React.useState("");
+  const [imgUrl, setImgUrl] = React.useState("");
 
   const pathSegments = path.split("/").filter((segment) => segment);
 
@@ -91,6 +92,7 @@ export const New_Profile = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
+    setImgUrl("https://localhost:8080/xen/userProfileImg?userId=" + user.id);
     axios
       .get(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
@@ -103,7 +105,7 @@ export const New_Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-          // navigate('/user/onboard');
+            navigate('/user/onboard');
         }
       })
       .catch((error) => {
@@ -156,11 +158,10 @@ export const New_Profile = () => {
           designation: "",
           xenspireEmploye: data.userInfo?.xenspireIsTheEmployer,
           country: data.userInfo?.country,
-          state: "",
           wantTobe: data.userInfo?.doYouWantXenspireToBe,
-          city : data.city,
-          state : data.state,
-          zipcode : data.zipcode 
+          city : data.userInfo.city,
+          state : data.userInfo.state,
+          zipcode : data.userInfo.zipcode 
         };
         setProfile(profile);
         var eduList = [];
@@ -378,7 +379,8 @@ export const New_Profile = () => {
             <Card className="min-w-96 justify-center text-center flex">
               <div className="justify-center items-center flex">
                 <img
-                  src={image || "https://picsum.photos/200/300.webp"}
+                  src={imgUrl}
+                  // src={image || "https://picsum.photos/200/300.webp"}
                   alt="profile"
                   className="w-24 h-24 rounded-full"
                 />
