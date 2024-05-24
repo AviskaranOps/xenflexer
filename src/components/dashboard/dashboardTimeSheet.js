@@ -73,10 +73,11 @@ export const DashboardTimeSheet = () => {
         }
       )
       .then((response) => {
-        if (response?.data?.length === 1) {
-          let startDate = "2024-05-25"; // response?.data?.startDate
-          let endDate = "2024-06-10"; // response?.data?.endDate
-          let newTimeSheetData = getDetailsFromDate(startDate, endDate);
+        console.log(response.data);
+        if (Array.isArray(response?.data) === false) {
+          let startDate = response.data.startDate; // response?.data?.startDate
+          let endDate = response.data.endDate; // response?.data?.endDate
+          let newTimeSheetData = getDetailsFromDate(startDate, endDate, response?.data?.timesheetId);
           // console.log(newTimeSheetData);
           setUserTimesheet(newTimeSheetData);
         } else {
@@ -88,7 +89,7 @@ export const DashboardTimeSheet = () => {
       });
   }, []);
 
-  function getDetailsFromDate(startDate, endDate) {
+  function getDetailsFromDate(startDate, endDate, timesheetId) {
     let start = new Date(startDate);
     let end = new Date(endDate);
 
@@ -105,6 +106,8 @@ export const DashboardTimeSheet = () => {
     while (start <= end) {
       newDays.push({
         id: index++,
+        utdId: 0,
+        timesheetId : timesheetId,
         dateRange: `${startDate}-to-${endDate}`,
         date: formatDate(start),
         hoursWorked: 0,
@@ -132,7 +135,7 @@ export const DashboardTimeSheet = () => {
     e.preventDefault();
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserTimesheet",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserTimesheet?userId=" + user.userId,
         userTimesheet,
         {
           headers: {

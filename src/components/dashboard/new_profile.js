@@ -22,6 +22,7 @@ export const New_Profile = () => {
   const [colapse, setColapse] = React.useState("experience");
 
   const [image, setImage] = React.useState("");
+  const [imgUrl, setImgUrl] = React.useState("");
 
   const pathSegments = path.split("/").filter((segment) => segment);
 
@@ -91,6 +92,7 @@ export const New_Profile = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
+    setImgUrl("https://localhost:8080/xen/userProfileImg?userId=" + user.id);
     axios
       .get(
         "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserOnboarded?userId=" +
@@ -103,7 +105,7 @@ export const New_Profile = () => {
       )
       .then((response) => {
         if (response.data.onboarded === false) {
-          // navigate('/user/onboard');
+            navigate('/user/onboard');
         }
       })
       .catch((error) => {
@@ -156,8 +158,10 @@ export const New_Profile = () => {
           designation: "",
           xenspireEmploye: data.userInfo?.xenspireIsTheEmployer,
           country: data.userInfo?.country,
-          state: "",
           wantTobe: data.userInfo?.doYouWantXenspireToBe,
+          city : data.userInfo.city,
+          state : data.userInfo.state,
+          zipcode : data.userInfo.zipcode 
         };
         setProfile(profile);
         var eduList = [];
@@ -179,8 +183,8 @@ export const New_Profile = () => {
             companyName: exp.companyName,
             location: exp.location,
             radioValue: exp.currentCompany,
-            startDate: new Date(exp.startDate.substring(0, 11)),
-            endDate: new Date(exp.endDate.substring(0, 11)),
+            startDate: exp.startDate,
+            endDate: exp.endDate,
           };
           expList.push(experience);
         }
@@ -193,7 +197,7 @@ export const New_Profile = () => {
 
   const yes_no = ["Yes", "No"];
 
-  const update_password = (e) => {
+  const update_password = (e) => {  
     e.preventDefault();
     if (password.update !== password.confirm) {
       alert("Update and Confirm not same!");
@@ -375,7 +379,8 @@ export const New_Profile = () => {
             <Card className="min-w-96 justify-center text-center flex">
               <div className="justify-center items-center flex">
                 <img
-                  src={image || "https://picsum.photos/200/300.webp"}
+                  src={imgUrl}
+                  // src={image || "https://picsum.photos/200/300.webp"}
                   alt="profile"
                   className="w-24 h-24 rounded-full"
                 />
@@ -432,11 +437,11 @@ export const New_Profile = () => {
               <div className="grid grid-cols-2 pb-3">
                 <div>
                   <p className="text-app-table">CITY</p>
-                  <p className="text-app-gray900 text-lg">Hyderabad</p>
+                  <p className="text-app-gray900 text-lg">{profile.city}</p>
                 </div>
                 <div>
                   <p className="text-app-table">STATE</p>
-                  <p className="text-app-gray900 text-lg">TELANAGANA</p>
+                  <p className="text-app-gray900 text-lg">{profile.state}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 pb-3">
@@ -446,7 +451,7 @@ export const New_Profile = () => {
                 </div>
                 <div>
                   <p className="text-app-table">PIN CODE</p>
-                  <p className="text-app-gray900 text-lg">500034</p>
+                  <p className="text-app-gray900 text-lg">{profile.zipcode}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 pb-3">

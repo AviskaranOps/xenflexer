@@ -23,7 +23,7 @@ const Login = () => {
         navigate("/admin");
       }
       if (isAuthenticated.role === "ROLE_USER") {
-        navigate("/user/onboard");
+        navigate("/user/myprofile");
       }
     }
   }, []);
@@ -55,7 +55,7 @@ const Login = () => {
         navigate("/admin");
       }
       if (role === "ROLE_USER") {
-        navigate("/user/profile");
+        navigate("/user/myprofile");
       }
     } catch (error) {
       console.error(error.message);

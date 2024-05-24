@@ -88,7 +88,7 @@ export const SideNav = ({ setUser, email }) => {
   }));
 
   const drawer_Data = [
-    { name: "Home", icon: home, path: "/user/onboard" },
+    { name: "Home", icon: home, path: "/user/profile" },
     {
       name: "Timesheets",
       svgicon: <PieChartOutlined />,
@@ -97,7 +97,7 @@ export const SideNav = ({ setUser, email }) => {
   ];
 
   const drawer_Data_new = [
-    { name: "Home", icon: home, path: "/user/onboard" },
+    { name: "Home", icon: home, path: "/user/profile" },
     {
       name: "Timesheets",
       svgicon: <PieChartOutlined />,

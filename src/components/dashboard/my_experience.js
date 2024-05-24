@@ -97,18 +97,18 @@ export const My_Experience = ({ next, back }) => {
         if (response.status !== 204) {
           const data = response.data;
           const explist = [];
-          for (var item of data) {
-            const exp = {
-              jobTitle: item.jobTitle,
-              companyName: item.companyName,
-              location: item.location,
-              currentCompany: item.currentCompany,
-              startDate: item.startDate,
-              endDate: item.endDate,
-            };
-            setAllExperiance([...allExperiance, exp]);
-            explist.push(exp);
-          }
+          // for (var item of data) {
+          //   const exp = {
+          //     id : 
+          //     jobTitle: item.jobTitle,
+          //     companyName: item.companyName,
+          //     location: item.location,
+          //     currentCompany: item.currentCompany,
+          //     startDate: item.startDate,
+          //     endDate: item.endDate,
+          //   };
+            setAllExperiance(...allExperiance, response.data);
+            //explist.push(exp);
           //setExperianceData(explist);
         }
       })

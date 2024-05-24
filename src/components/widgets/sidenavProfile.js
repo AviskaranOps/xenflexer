@@ -86,7 +86,7 @@ export const SideNavProfile = ({ setUser, email }) => {
   }));
 
   const drawer_Data = [
-    { name: "Home", icon: home, path: "/user/onboard" },
+    { name: "Home", icon: home, path: "/user/myprofile" },
     {
       name: "Timesheets",
       svgicon: <PieChartOutlined />,
@@ -95,7 +95,7 @@ export const SideNavProfile = ({ setUser, email }) => {
   ];
 
   const drawer_Data_new = [
-    { name: "Home", icon: home, path: "/user/onboard" },
+    { name: "Home", icon: home, path: "/user/myprofile" },
     {
       name: "Timesheets",
       svgicon: <PieChartOutlined />,
@@ -150,7 +150,7 @@ export const SideNavProfile = ({ setUser, email }) => {
                   {JSON.parse(localStorage.getItem("token")).username}
                 </text>
                 <text style={{ fontSize: 12, color: "#6C737F" }}>
-                  {JSON.parse(localStorage.getItem("token")).role}
+                  {JSON.parse(localStorage.getItem("token")).email}
                 </text>
               </div>
               <IconButton onClick={() => navigation("/logout")}>
