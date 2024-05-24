@@ -1,71 +1,72 @@
 import React from "react";
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  FormLabel,
-  IconButton,
-  InputAdornment,
-  MenuItem,
-  Select,
+  TableHead,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
+  TableContainer,
+  Button,
+  FormLabel,
   TextField,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  IconButton,
+  DialogTitle,
+  DialogActions,
+  Card,
+  InputAdornment,
 } from "@mui/material";
-import { CloseOutlined, Search } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { Dummy_Approval, get_Data } from "../utils/dummy";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SideNavAdmin } from "../widgets/sideNavAdmin";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
+import axios from "axios";
 import { message } from "antd";
-import SelectReact from "react-select";
-import plusUser from "../../assets/images/user-plus-01.png";
+import Select from "react-select";
+import {
+  CloseOutlined,
+  DeleteOutlineOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@mui/icons-material";
 
 export const AdminHome = () => {
   const navigation = useNavigate();
-  const [search, setSearch] = React.useState("");
-  const [array, setArray] = React.useState([]);
-  const [oneOf, setOneof] = React.useState("");
-  const [timesheets, setTimesheets] = React.useState([]);
-  const [filterArray, setFilterArray] = React.useState([]);
-
-  // dialoge data
+  const location = useLocation();
   const [dialogeOpen, setDialogeOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
   const [endDate, setEndDate] = React.useState("");
   const [applicable, setApplicable] = React.useState([]);
   const [userList, setUserList] = React.useState([]);
+  const [id, setId] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [searchUser, setSearchUser] = React.useState("");
+  const [selectStatus, setSelectStatus] = React.useState("");
+  const [editableDialoge, setEditableDialoge] = React.useState(false);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("token"));
-    axios
-      .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUsersActiveTS",
-        {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        setArray(response.data);
-      })
-      .catch((error) => {
-        console.error("info save error:", error.message);
-      });
+  const handleClickOpen = (data) => {
+    setOpen(true);
+    setName(data?.name);
+    setId(data?.id);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  React.useState(() => {
+    get_Data();
   }, []);
 
-  const getOptionLabel = (option) => option.name || option.username;
-  const getOptionValue = (option) => option.id;
+  const pathSegments = location.pathname
+    .split("/")
+    .filter((segment) => segment);
+
+  const [timesheets, setTimesheets] = React.useState([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
@@ -88,82 +89,6 @@ export const AdminHome = () => {
   }, []);
 
   useEffect(() => {
-    setFilterArray(array);
-  }, [array]);
-
-  const filterSearch = () => {
-    const data = array.filter((e) =>
-      e?.username?.toLowerCase().includes(search?.toLowerCase())
-    );
-    setFilterArray(data ? data : array);
-  };
-
-  useEffect(() => {
-    if (search === "") {
-      return setFilterArray(array);
-    }
-    filterSearch();
-  }, [search]);
-
-  const onCloseDialoge = () => {
-    setDialogeOpen(false);
-  };
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: "#ffffff",
-    },
-    "&:nth-of-type(even)": {
-      backgroundColor: "#ffffff",
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
-  const StyledTableHead = styled(TableHead)`
-    & .MuiTableCell-root {
-      background-color: #f9fafb;
-    }
-  `;
-
-  const handleChangeDialoge = (selectedOptions) => {
-    setApplicable(selectedOptions);
-  };
-
-  const handleClickDialoge = async (e) => {
-    e.preventDefault();
-
-    const user = JSON.parse(localStorage.getItem("token"));
-    console.log(applicable);
-    const selectedValues = applicable.map((option) => option.id);
-    await axios
-      .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
-          user.userId,
-        {
-          name: name,
-          startDate: startDate,
-          endDate: endDate,
-          userIdList: selectedValues,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        message.success("saved successfully");
-      })
-      .catch((error) => {
-        console.error("volantary save error:", error.message);
-      });
-    onCloseDialoge();
-  };
-
-  useEffect(() => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .get(
@@ -183,147 +108,261 @@ export const AdminHome = () => {
       });
   }, []);
 
+  const getOptionLabel = (option) => option.username;
+  const getOptionValue = (option) => option.id;
+
+  const handleClickDialoge = async (e) => {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("token"));
+    console.log(name, startDate, endDate);
+    setDialogeOpen(false);
+    // const selectedValues = applicable.map((option) => option.id);
+    // await axios
+    //   .post(
+    //     "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
+    //       user.userId,
+    //     {
+    //       name: name,
+    //       startDate: startDate,
+    //       endDate: endDate,
+    //       userIdList: selectedValues,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${user.accessToken}`,
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     message.success("saved successfully");
+    //   })
+    //   .catch((error) => {
+    //     console.error("volantary save error:", error.message);
+    //   });
+  };
+
+  const handleChangeDialoge = (selectedOptions) => {
+    setApplicable(selectedOptions);
+  };
+
+  const onCloseDialoge = () => {
+    setDialogeOpen(false);
+    setName("");
+    setStartDate("");
+    setEndDate("");
+    setApplicable("");
+    setEditableDialoge(false);
+  };
+
+  const onEditDialoge = (data) => {
+    setDialogeOpen(true);
+    setName(data?.name);
+    setStartDate(data?.startDate);
+    setEndDate(data?.endDate);
+    setId(data?.id);
+  };
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+      backgroundColor: "#ffffff",
+    },
+    "&:nth-of-type(even)": {
+      backgroundColor: "#ffffff",
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+
+    ":hover": {
+      backgroundColor: "#f9fafb",
+      cursor: "pointer",
+    },
+  }));
+
+  const StyledTableHead = styled(TableHead)`
+    & .MuiTableCell-root {
+      background-color: #f9fafb;
+      z-index: 0;
+    }
+  `;
+
   const StyledTableContainer = styled(TableContainer)`
     border-radius: 1rem;
-    max-height: 400px;
+    max-height: 500px;
     ::-webkit-scrollbar {
       display: none;
     }
   `;
-  // max-height: 400px;
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-app-lightBlue pb-28">
       <div className="flex w-full">
         <SideNavAdmin />
-        <div className="py-16 px-10 w-full">
-          <div className="px-10 mb-5 grid grid-flow-col justify-between">
-            <TextField
-              size="small"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search Candidates"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              className="w-72 bg-app-offWhite"
-            />
-            <Button
-              style={{
-                color: "white",
-                borderColor: "#7F56D9",
-                borderRadius: 25,
-              }}
-              variant="contained"
-              sx={{
-                backgroundColor: "#7B964A",
-                "&:hover": {
-                  backgroundColor: "#7B964A",
-                },
-              }}
-              startIcon={
-                <img src={plusUser} alt="plus" style={{ width: 16 }} />
-              }
-              onClick={() => setDialogeOpen(true)}>
-              Create TimeSheet
-            </Button>
+        <div className="w-full mt-24 px-10">
+          <div className="mt-1">
+            {pathSegments.map((segment, index) => (
+              <span
+                key={index}
+                className={`text-xl font-semibold ${
+                  index === 0 ? "text-app-gray" : "text-app-gray900"
+                }`}>
+                {segment.charAt(0).toUpperCase() + segment.slice(1)}
+                {index < pathSegments.length - 1 && " / "}
+              </span>
+            ))}
           </div>
-          {/* table */}
-
-          <StyledTableContainer sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
-            <Table aria-label="customized table" stickyHeader>
-              <StyledTableHead>
-                <TableRow>
-                  <TableCell
-                    align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}>
-                    Name
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}>
-                    Email
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}>
-                    TimeSheet
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    style={{ fontWeight: "bold", color: "#475467" }}>
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </StyledTableHead>
-              <TableBody>
-                {filterArray.map((row) => (
-                  <StyledTableRow key={row.username}>
-                    <TableCell align="center">{row.username}</TableCell>
-                    <TableCell align="center">{row.email}</TableCell>
-                    <TableCell align="center">{row.timesheet}</TableCell>
-                    <TableCell align="center">
-                      <a
-                        onClick={() => navigation("/admin/approval")}
-                        className="underline hover:cursor-pointer hover:text-app-green">
-                        Approve TimeSheet
-                      </a>
+          <Card sx={{ borderRadius: 5, p: 3, mt: 2 }}>
+            <div className="grid grid-flow-col justify-between mb-5">
+              <div className="grid grid-flow-col justify-start gap-5">
+                <div>
+                  <Select
+                    value={selectStatus}
+                    onChange={(e) => setSelectStatus(e)}
+                    options={userList}
+                    getOptionLabel={getOptionLabel}
+                    getOptionValue={getOptionValue}
+                    placeholder="Select..."
+                    isSearchable // Enable searching
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        minWidth: 280,
+                        maxWidth: 350,
+                      }),
+                    }}
+                  />
+                </div>
+                <div>
+                  <TextField
+                    size="small"
+                    placeholder="Search for User"
+                    value={searchUser}
+                    onChange={(e) => setSearchUser(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchOutlined />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{ minWidth: 280, maxWidth: 350 }}
+                  />
+                </div>
+              </div>
+              <div>
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: "#729434", color: "#ffffff" }}
+                  onClick={() => {
+                    setDialogeOpen(true);
+                    setEditableDialoge(true);
+                  }}>
+                  Create
+                </Button>
+              </div>
+            </div>
+            {/* table */}
+            <StyledTableContainer
+              sx={{ borderWidth: 1, borderColor: "#D1D1D1" }}>
+              <Table aria-label="customized table" stickyHeader>
+                <StyledTableHead>
+                  <TableRow>
+                    <TableCell
+                      align="left"
+                      style={{ fontWeight: "bold", color: "#475467" }}>
+                      Name
                     </TableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </StyledTableContainer>
-
-          <div className="mt-10 ml-10">
-            {/* <Select
-                value={oneOf}
-                onChange={handleChange}
-                options={timesheets}
-                getOptionLabel={getOptionLabel}
-                getOptionValue={getOptionValue}
-                placeholder="Select Timesheet"
-                isSearchable // Enable searching
-            /> */}
-            <Select
-              size="small"
-              required
-              displayEmpty
-              value={oneOf}
-              onChange={(e) => setOneof(e.target.value)}
-              renderValue={(selected) => {
-                if (selected.length === 0) {
-                  return (
-                    <text style={{ color: "#667085" }}>TimeSheet Name</text>
-                  );
-                }
-                return selected;
-              }}
-              className="w-72">
-              {timesheets.map((data) => (
-                <MenuItem key={data.id} value={data.name}>
-                  {data.name}
-                </MenuItem>
-              ))}
-            </Select>
+                    <TableCell
+                      align="center"
+                      style={{ fontWeight: "bold", color: "#475467" }}>
+                      Start Date
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      style={{ fontWeight: "bold", color: "#475467" }}>
+                      End Date
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      style={{ fontWeight: "bold", color: "#475467" }}>
+                      Status
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      style={{ fontWeight: "bold", color: "#475467" }}>
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </StyledTableHead>
+                <TableBody>
+                  {timesheets.map((row) => (
+                    <StyledTableRow key={row.id}>
+                      <TableCell
+                        align="left"
+                        onClick={() => {
+                          navigation("/admin/pendingApproval", {
+                            state: row?.id,
+                          });
+                        }}>
+                        {row.name}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        onClick={() => {
+                          navigation("/admin/pendingApproval", {
+                            state: row?.id,
+                          });
+                        }}>
+                        {row.startDate}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        onClick={() => {
+                          navigation("/admin/pendingApproval", {
+                            state: row?.id,
+                          });
+                        }}>
+                        {row.endDate}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        onClick={() => {
+                          navigation("/admin/pendingApproval", {
+                            state: row?.id,
+                          });
+                        }}>
+                        {row.status}
+                      </TableCell>
+                      <TableCell align="center">
+                        <div className="flex justify-center items-center h-6 gap-2">
+                          <IconButton onClick={() => onEditDialoge(row)}>
+                            <EditOutlined color="success" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              handleClickOpen(row);
+                            }}>
+                            <DeleteOutlineOutlined color="error" />
+                          </IconButton>
+                        </div>
+                      </TableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
+          </Card>
+          <div className="flex justify-end my-3">
             <Button
-              style={{ color: "white", borderColor: "#7F56D9" }}
               variant="contained"
-              sx={{
-                marginLeft: 5,
-                backgroundColor: "#7B964A",
-                "&:hover": {
-                  backgroundColor: "#7B964A",
-                },
-              }}>
-              Download
+              style={{ backgroundColor: "#729434", color: "#ffffff" }}>
+              SUBMIT FOR APPROVAL
             </Button>
           </div>
         </div>
       </div>
+
       {/* Dialog */}
       <Dialog
         open={dialogeOpen}
@@ -337,7 +376,7 @@ export const AdminHome = () => {
                 fontWeight: "bold",
                 fontSize: 22,
               }}>
-              Create TimeSheet
+              {editableDialoge ? "Create" : "Update"} TimeSheet
             </DialogContentText>
           </div>
           <div className="absolute right-3 top-3">
@@ -350,7 +389,6 @@ export const AdminHome = () => {
             <form className="mt-4 mx-6" onSubmit={handleClickDialoge}>
               <div className="grid grid-flow-col justify-between items-center gap-8">
                 <FormLabel style={{ color: "#344054" }}>Name</FormLabel>
-
                 <TextField
                   required
                   size="small"
@@ -379,6 +417,7 @@ export const AdminHome = () => {
                   size="small"
                   type="date"
                   value={startDate}
+                  disabled={!editableDialoge}
                   onChange={(e) => setStartDate(e.target.value)}
                   sx={{
                     ".MuiOutlinedInput-notchedOutline": {
@@ -402,6 +441,7 @@ export const AdminHome = () => {
                   size="small"
                   type="date"
                   value={endDate}
+                  disabled={!editableDialoge}
                   onChange={(e) => setEndDate(e.target.value)}
                   sx={{
                     ".MuiOutlinedInput-notchedOutline": {
@@ -422,7 +462,7 @@ export const AdminHome = () => {
                 <FormLabel style={{ color: "#344054" }}>
                   Applicable To
                 </FormLabel>
-                <SelectReact
+                <Select
                   value={applicable}
                   onChange={handleChangeDialoge}
                   options={userList}
@@ -457,6 +497,28 @@ export const AdminHome = () => {
             </form>
           </div>
         </DialogContent>
+      </Dialog>
+      {/* alert Dialog */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">{"Are you Sure?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <p>
+              You Are About Delete This
+              <span style={{ fontWeight: "600" }}> {name}</span> TimeSheet
+            </p>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleClose} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

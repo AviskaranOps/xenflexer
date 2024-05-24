@@ -51,7 +51,7 @@ function App() {
           <Route path="admin" element={<AdminHome />} />
           <Route path="admin/profile" element={<AdminProfile />} />
           <Route path="admin/timesheet" element={<TimeSheet />} />
-          <Route path="admin/approval" element={<Approval />} />
+          <Route path="admin/approval" element={<PendingApproval />} />
           <Route path="admin/create" element={<CreateTimeSheet />} />
           <Route path="admin/pendingApproval" element={<PendingApproval />} />
           <Route path="pdfview" element={<PdfView />} />

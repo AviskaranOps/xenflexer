@@ -13,10 +13,11 @@ import {
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
   LogoutOutlined,
+  ManageAccountsOutlined,
   PeopleAltOutlined,
   PieChartOutlined,
 } from "@mui/icons-material";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Button, Fade, Menu, MenuItem, Toolbar } from "@mui/material";
 import logo2 from "../../assets/images/app-logo.png";
 import Footer from "./footer";
 import home from "../../assets/images/home-icon.png";
@@ -26,6 +27,17 @@ export const SideNavAdmin = ({ setUser, email }) => {
   const [open, setOpen] = React.useState(true);
   const [expanded, setExpanded] = React.useState(false);
   const [data, setData] = React.useState([]);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const manuOpen = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleChange = () => {
     setExpanded(!expanded);
@@ -81,10 +93,7 @@ export const SideNavAdmin = ({ setUser, email }) => {
     }),
   }));
 
-  const drawer_Data = [
-    { name: "Home", icon: home, path: "/admin" },
-    { name: "Profile", svgicon: <PeopleAltOutlined />, path: "/admin/profile" },
-  ];
+  const drawer_Data = [{ name: "Home", icon: home, path: "/admin" }];
 
   const drawer_Data_new = [
     { name: "Home", icon: home, path: "/admin" },
@@ -124,7 +133,9 @@ export const SideNavAdmin = ({ setUser, email }) => {
           </Toolbar>
 
           <div className="mx-6">
-            <div className="grid grid-flow-col gap-2 justify-between">
+            <div
+              className="grid grid-flow-col gap-2 justify-between"
+              onClick={handleClick}>
               <div className="mr-1 w-6 rounded-full">
                 <img
                   src={"https://picsum.photos/200/300.webp"}
@@ -140,10 +151,35 @@ export const SideNavAdmin = ({ setUser, email }) => {
                   {JSON.parse(localStorage.getItem("token")).role}
                 </text>
               </div>
-              <IconButton onClick={() => navigation("/logout")}>
-                <LogoutOutlined sx={{ color: "#9AA1B4" }} />
-              </IconButton>
             </div>
+            <Menu
+              id="fade-menu"
+              MenuListProps={{
+                "aria-labelledby": "fade-button",
+              }}
+              anchorEl={anchorEl}
+              open={manuOpen}
+              onClose={handleClose}
+              TransitionComponent={Fade}>
+              <MenuItem>
+                <div className="grid grid-flow-row">
+                  <text style={{ fontSize: 12, color: "#6C737F" }}>
+                    {JSON.parse(localStorage.getItem("token")).email}
+                  </text>
+                  <text style={{ fontSize: 12, color: "#6C737F" }}>
+                    {JSON.parse(localStorage.getItem("token")).username}
+                  </text>
+                </div>
+              </MenuItem>
+              <MenuItem onClick={() => navigation("/admin/profile")}>
+                <ManageAccountsOutlined sx={{ color: "#000000bd", mr: 1 }} />
+                Profile
+              </MenuItem>
+              <MenuItem onClick={() => navigation("/logout")}>
+                <LogoutOutlined sx={{ color: "#000000bd", mr: 1 }} />
+                Logout
+              </MenuItem>
+            </Menu>
           </div>
         </div>
       </AppBar>

@@ -81,15 +81,17 @@ export const Benefit = () => {
   const RenderStatus = ({ data }) => {
     let colorCode = "";
     let BgColorCode = "";
-    if (data === "Active") {
+    if (data.toLowerCase() === "active") {
       colorCode = "success";
       BgColorCode = "#ECFDF3";
-    } else if (data === "Processing") {
+    } else if (data.toLowerCase() === "processing") {
       colorCode = "warning";
       BgColorCode = "#FFFAEB";
-    } else if (data === "InActive") {
+    } else if (data.toLowerCase() === "inactive") {
       colorCode = "error";
       BgColorCode = "#FEF3F2";
+    } else {
+      return;
     }
     return (
       <Chip
