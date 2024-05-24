@@ -88,18 +88,18 @@ export const My_Education = ({ next, back }) => {
         if (response.status !== 204) {
           const data = response.data;
           const explist = [];
-          for (var item of data) {
-            const exp = {
-              school: item.school,
-              graduation: item.graduation,
-              field: item.field,
-              startDate: item.startDate,
-              endDate: item.endDate,
-            };
-            setAllEducation([...allEducation, exp]);
-            explist.push(exp);
-          }
-          setEducationData(explist);
+         // for (var item of data) {
+            // const exp = {
+            //   school: item.school,
+            //   graduation: item.graduation,
+            //   field: item.field,
+            //   startDate: item.startDate,
+            //   endDate: item.endDate,
+            // };
+            setAllEducation(...allEducation, response.data);
+          //   explist.push(exp);
+          // }
+          // setEducationData(explist);
         }
       })
       .catch((error) => {

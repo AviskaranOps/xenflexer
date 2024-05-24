@@ -72,6 +72,7 @@ export const PendingApproval = () => {
         setName(response.data.timesheets[State - 1].name);
         setUserList(response.data.users);
         setSearch(response.data.users[0].username);
+        getUserPendingTimesheets(response.data.timesheets[State - 1].id);
         getUserTimesheetDetail(
           response.data.users[0].id,
           response.data.timesheets[State - 1].id
@@ -82,11 +83,12 @@ export const PendingApproval = () => {
       });
   }, []);
 
-  useEffect(() => {
+  const getUserPendingTimesheets = (timesheetId) => {
     const user = JSON.parse(localStorage.getItem("token"));
+    console.log("timesheetId = " + timesheetId);
     axios
       .get(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId=1",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/getUserPendingTS?timesheetId="+ timesheetId,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
@@ -95,12 +97,12 @@ export const PendingApproval = () => {
       )
       .then((response) => {
         console.log(response.data, "pending------");
-        setPendingts(response.data);
+        setSearchPendingData(response.data);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
       });
-  }, []);
+  };
 
   const pathSegments = history.pathname.split("/").filter((segment) => segment);
 
@@ -211,6 +213,7 @@ export const PendingApproval = () => {
       .then((response) => {
         console.log(response.data);
         setUserTimesheet(response.data);
+        getUserPendingTimesheets(tId.id);
       })
       .catch((error) => {
         console.error("info save error:", error.message);
@@ -221,7 +224,7 @@ export const PendingApproval = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     axios
       .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet",
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveUserPendingTimesheet?userId=" + user.id,
         userTimesheet,
         {
           headers: {
@@ -385,7 +388,7 @@ export const PendingApproval = () => {
                         <TableCell
                           align="center"
                           style={{ fontWeight: "bold", color: "#19293B" }}>
-                          START DATE
+                          DATE
                         </TableCell>
                         <TableCell
                           align="center"
@@ -429,7 +432,7 @@ export const PendingApproval = () => {
                               id={labelId}
                               scope="row"
                               style={{ color: "#475569" }}>
-                              {row.timesheetName}
+                              {row.name}
                             </TableCell>
                             <TableCell
                               align="center"
@@ -523,12 +526,14 @@ export const PendingApproval = () => {
                       key={index}>
                       <img src={avtar} alt="user image" width={50} />
                       <p
+                        // hover
+                        // onClick={getUserTimesheetDetail(value.userId, value.timesheetId)}
                         style={{
                           color: "#000000",
                           fontSize: 16,
                           fontWeight: 500,
                         }}>
-                        {value.timesheetName}
+                        {value.username}
                       </p>
                     </div>
                   );

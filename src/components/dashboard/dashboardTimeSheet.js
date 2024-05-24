@@ -106,6 +106,7 @@ export const DashboardTimeSheet = () => {
     while (start <= end) {
       newDays.push({
         id: index++,
+        utdId: 0,
         timesheetId : timesheetId,
         dateRange: `${startDate}-to-${endDate}`,
         date: formatDate(start),

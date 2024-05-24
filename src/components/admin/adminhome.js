@@ -116,29 +116,29 @@ export const AdminHome = () => {
     const user = JSON.parse(localStorage.getItem("token"));
     console.log(name, startDate, endDate);
     setDialogeOpen(false);
-    // const selectedValues = applicable.map((option) => option.id);
-    // await axios
-    //   .post(
-    //     "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
-    //       user.userId,
-    //     {
-    //       name: name,
-    //       startDate: startDate,
-    //       endDate: endDate,
-    //       userIdList: selectedValues,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${user.accessToken}`,
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     message.success("saved successfully");
-    //   })
-    //   .catch((error) => {
-    //     console.error("volantary save error:", error.message);
-    //   });
+    const selectedValues = applicable.map((option) => option.id);
+    await axios
+      .post(
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/createTimesheet?userId=" +
+          user.userId,
+        {
+          name: name,
+          startDate: startDate,
+          endDate: endDate,
+          userIdList: selectedValues,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        message.success("saved successfully");
+      })
+      .catch((error) => {
+        console.error("volantary save error:", error.message);
+      });
   };
 
   const handleChangeDialoge = (selectedOptions) => {
@@ -353,13 +353,13 @@ export const AdminHome = () => {
               </Table>
             </StyledTableContainer>
           </Card>
-          <div className="flex justify-end my-3">
+          {/* <div className="flex justify-end my-3">
             <Button
               variant="contained"
               style={{ backgroundColor: "#729434", color: "#ffffff" }}>
               SUBMIT FOR APPROVAL
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -484,6 +484,7 @@ export const AdminHome = () => {
                 <Button
                   style={{ color: "white", borderColor: "#7F56D9" }}
                   variant="contained"
+                  onClick={handleClickDialoge}
                   sx={{
                     backgroundColor: "#7B964A",
                     "&:hover": {

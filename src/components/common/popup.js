@@ -495,13 +495,11 @@ export const PopUp = ({ open, data, onClose }) => {
     console.log(portion, name, "---handleSubmit without file");
 
     await axios
-      .post(
-        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/saveBenefitwithDoc?userId=" +
-          user.userId,
-        { portion, name },
+      .get( 
+        "https://xenflexer.northcentralus.cloudapp.azure.com/xen/save401kBenefit?userId=" +
+          user.userId + "&portion="+portion+"&name="+name,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${user.accessToken}`,
           },
         }

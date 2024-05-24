@@ -197,7 +197,7 @@ export const New_Profile = () => {
 
   const yes_no = ["Yes", "No"];
 
-  const update_password = (e) => {
+  const update_password = (e) => {  
     e.preventDefault();
     if (password.update !== password.confirm) {
       alert("Update and Confirm not same!");
